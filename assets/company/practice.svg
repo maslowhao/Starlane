@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 78 518 275" fill="none">
+<defs>
+ <pattern id="floor" width="110" height="34" patternUnits="userSpaceOnUse"><rect width="110" height="34" fill="#dbc5a2"/><path d="M0 33h110M55 0v33" stroke="#c5ac89" stroke-width="1.2" opacity=".55"/></pattern>
+ <pattern id="panels" width="36" height="36" patternUnits="userSpaceOnUse"><rect width="34" height="34" rx="5" fill="#819184"/><path d="M7 7l20 20M27 7L7 27" stroke="#758479" opacity=".5"/></pattern>
+ <linearGradient id="daylight" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff9dc" stop-opacity=".7"/><stop offset="1" stop-color="#fff9dc" stop-opacity="0"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dbe8df"/><stop offset="1" stop-color="#afc6bf"/></linearGradient>
+ <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#a18c6a" flood-opacity=".18"/></filter>
+ <g id="plant"><path d="M-17 0h34l-5 29h-24z" fill="#c48965" stroke="#8f6c54" stroke-width="3"/><path d="M0 0v-55" stroke="#76866b" stroke-width="4"/><path d="M0-19q-35-4-27-30Q1-48 0-19M0-29q27-3 29-33Q1-59 0-29M-1-46q-19-18-5-35Q9-70-1-46" fill="#8fa47a" stroke="#76866b" stroke-width="2"/></g>
+ <g id="light"><path d="M0 0v28" stroke="#8a806c" stroke-width="3"/><path d="M-35 57q5-38 35-33 30-5 35 33z" fill="#e2bc78" stroke="#a8895d" stroke-width="3"/><ellipse cy="57" rx="34" ry="7" fill="#fff1c5"/></g>
+</defs>
+<!-- A single cutaway studio, drawn locally for StarLane. -->
+<ellipse cx="602" cy="698" rx="561" ry="24" fill="#c4b399" opacity=".25"/>
+<g filter="url(#shadow)" stroke-linejoin="round">
+ <path d="M45 63L90 35h1020l45 28v611l-34 27H78l-33-27z" fill="#b59c78" stroke="#85745d" stroke-width="4"/>
+ <rect x="45" y="64" width="1110" height="608" rx="4" fill="#f1e7d4"/>
+ <!-- Upper rooms: practice and recording -->
+ <path d="M60 78h518v225H60z" fill="#ecdbcb"/>
+ <path d="M608 78h532v225H608z" fill="#d9e1d3"/>
+ <path d="M60 270h518v83H60zM608 270h532v83H608z" fill="url(#floor)"/>
+ <path d="M62 270h515M609 270h528" stroke="#b59a78" stroke-width="7"/>
+ <!-- Practice mirrors, barre and stretching mat -->
+ <rect x="89" y="111" width="366" height="142" rx="6" fill="#cba983" stroke="#b08f73" stroke-width="4"/>
+ <rect x="98" y="120" width="348" height="125" rx="2" fill="url(#glass)"/>
+ <path d="M212 120v125M328 120v125" stroke="#eee9d8" stroke-width="5"/>
+ <path d="M110 128l90 102M224 127l90 102M339 127l89 101" stroke="#fff9e6" stroke-width="14" opacity=".23"/>
+ <path d="M82 216h384M109 216v76M434 216v76" stroke="#937759" stroke-width="8" stroke-linecap="round"/>
+ <path d="M85 213h380" stroke="#e5c394" stroke-width="3" stroke-linecap="round"/>
+ <path d="M185 309h236l31 25H155z" fill="#b99282" stroke="#997767" stroke-width="2"/>
+ <rect x="486" y="220" width="53" height="74" rx="5" fill="#69756d" stroke="#4e5c54" stroke-width="3"/>
+ <circle cx="512" cy="266" r="15" fill="#46534d"/><circle cx="512" cy="237" r="6" fill="#b6bba9"/>
+ <rect x="477" y="139" width="68" height="55" rx="3" fill="#faf0d9" stroke="#c7b398" stroke-width="3"/>
+ <path d="M487 154h45M487 163h32M487 172h40" stroke="#ba9b79" stroke-width="2"/>
+ <!-- Sound-treated recording studio -->
+ <rect x="630" y="106" width="156" height="146" rx="7" fill="url(#panels)"/>
+ <rect x="919" y="106" width="193" height="146" rx="7" fill="url(#panels)"/>
+ <rect x="803" y="112" width="97" height="119" rx="5" fill="#afa993" stroke="#6f8171" stroke-width="5"/>
+ <rect x="812" y="121" width="79" height="101" rx="3" fill="#b8cfc5"/><path d="M818 127l65 70" stroke="#e8f2da" stroke-width="12" opacity=".5"/>
+ <path d="M854 226v78m-27 9l27-9 28 9" stroke="#666a5d" stroke-width="5" stroke-linecap="round"/>
+ <rect x="846" y="174" width="15" height="39" rx="7" fill="#c4b69a" stroke="#6e7364" stroke-width="3"/>
+ <circle cx="875" cy="194" r="17" fill="#7b8172" fill-opacity=".7" stroke="#5b6358" stroke-width="3"/>
+ <path d="M875 211l-19 21" stroke="#687060" stroke-width="3"/>
+ <path d="M951 262h161v43H951z" fill="#7a806e" stroke="#5e6656" stroke-width="3"/>
+ <path d="M960 276h142M960 288h142" stroke="#c5ccb5" stroke-width="7" stroke-dasharray="5 7"/>
+ <path d="M960 304v24m141-24v24" stroke="#776e58" stroke-width="5"/>
+ <path d="M683 225v75m-30-47h60l-10-28h-49z" fill="#6e7b68" stroke="#566451" stroke-width="3"/>
+ <!-- Structural middle beam and warm shared ground floor -->
+ <path d="M45 350h1110v23H45z" fill="#b49876" stroke="#8f785c" stroke-width="3"/>
+ <path d="M60 374h1080v178H60z" fill="#f0e4ce"/>
+ <path d="M60 549h1080v120H60z" fill="url(#floor)"/>
+ <path d="M60 548h1080" stroke="#bda37e" stroke-width="7"/>
+ <!-- Front office window and curtains -->
+ <rect x="88" y="398" width="209" height="123" rx="4" fill="#c6b591" stroke="#ad9475" stroke-width="4"/>
+ <rect x="98" y="407" width="189" height="103" fill="#dce8d4"/><path d="M194 408v102M99 459h187" stroke="#f8efdc" stroke-width="7"/>
+ <path d="M102 453q18-43 41-12 26-55 52 3 27-39 47 7 26-48 44-15v76H99z" fill="#c1d0ae"/>
+ <path d="M75 389h43v137l-41-5zM275 389h40v132l-40 5z" fill="#d5ad89" stroke="#bc9473" stroke-width="2"/>
+ <path d="M98 510l120 154h258L284 510z" fill="url(#daylight)"/>
+ <!-- Manager desk, computer, files, coffee -->
+ <rect x="106" y="527" width="255" height="68" rx="6" fill="#bb916c" stroke="#927050" stroke-width="4"/>
+ <path d="M102 526l22-22h220l22 22z" fill="#d7b58a" stroke="#a58261" stroke-width="3"/>
+ <path d="M120 594v51m225-51v51" stroke="#8c6d51" stroke-width="10"/>
+ <rect x="262" y="545" width="82" height="39" rx="4" fill="#c9a77e" stroke="#9b7756" stroke-width="2"/><path d="M290 556h25" stroke="#937451" stroke-width="4" stroke-linecap="round"/>
+ <rect x="165" y="447" width="98" height="65" rx="6" fill="#59685d" stroke="#435449" stroke-width="4"/><rect x="172" y="454" width="84" height="50" rx="2" fill="#bfcebb"/>
+ <path d="M185 474h39M185 486h55" stroke="#839b81" stroke-width="5" stroke-linecap="round"/>
+ <path d="M212 513v11m-23 1h46" stroke="#63705f" stroke-width="6"/>
+ <path d="M125 511h27v-8h-27zM126 499h26v-7h-26z" fill="#e7d9b9" stroke="#b89874" stroke-width="2"/>
+ <rect x="295" y="491" width="24" height="27" rx="5" fill="#f4ead4" stroke="#ac9474" stroke-width="2"/><path d="M320 496q17-2 8 14h-9" stroke="#ad9474" stroke-width="3"/>
+ <path d="M305 485q-7-7 0-13" stroke="#f5f0dc" stroke-width="3" stroke-linecap="round" class="steam"/>
+ <rect x="71" y="562" width="41" height="55" rx="6" fill="#a1aa87" stroke="#7f8d6a" stroke-width="3"/>
+ <!-- Lounge: sofa, rug, round table, magazines -->
+ <path d="M407 603h350l26 40H386z" fill="#bac3a0" stroke="#a2ad86" stroke-width="3"/>
+ <rect x="417" y="481" width="309" height="111" rx="22" fill="#b5bd97" stroke="#8d9a73" stroke-width="4"/>
+ <rect x="425" y="533" width="292" height="60" rx="17" fill="#c5cbab" stroke="#9ea986" stroke-width="3"/>
+ <path d="M432 516v66M710 516v66" stroke="#a4b18b" stroke-width="24" stroke-linecap="round"/>
+ <path d="M443 591v23m256-23v23" stroke="#8a7b61" stroke-width="7"/>
+ <path d="M462 503l54 4-5 37-56-6z" fill="#e2c296" stroke="#c6a47a" stroke-width="2"/>
+ <path d="M638 503l47 1 8 36-49 4z" fill="#d8b5a6" stroke="#be9685" stroke-width="2"/>
+ <ellipse cx="569" cy="614" rx="68" ry="22" fill="#d3ac7f" stroke="#aa8159" stroke-width="3"/><path d="M522 623l-6 30m102-30l6 30" stroke="#aa8159" stroke-width="6"/>
+ <path d="M550 605l32-3 12 13-34 4z" fill="#eee2c6" stroke="#bea886" stroke-width="2"/>
+ <rect x="485" y="401" width="92" height="54" rx="3" fill="#d5ba8f" stroke="#bca17a" stroke-width="3"/><rect x="492" y="408" width="78" height="40" fill="#f9efd6"/>
+ <path d="M506 437l18-17 14 12 17-15" stroke="#9eae82" stroke-width="3"/>
+ <circle cx="667" cy="423" r="23" fill="#faf1d9" stroke="#c7b18b" stroke-width="4"/><path d="M667 408v16l11 6" stroke="#849077" stroke-width="3" stroke-linecap="round"/>
+ <!-- Cork noticeboard / briefcase for on-location artists -->
+ <rect x="807" y="395" width="274" height="136" rx="6" fill="#af855f" stroke="#8e6b4e" stroke-width="5"/>
+ <rect x="816" y="405" width="256" height="116" rx="2" fill="#d6b78b"/>
+ <g transform="rotate(-6 860 450)"><path d="M829 416h65v84h-65z" fill="#f8efd9"/><path d="M840 445h42m-42 9h32m-32 9h38" stroke="#c5b69a" stroke-width="3"/><circle cx="862" cy="423" r="4" fill="#be8065"/></g>
+ <g transform="rotate(5 953 455)"><path d="M915 420h69v72h-69z" fill="#dce5cf"/><path d="M926 443h45m-45 9h33m-33 9h42" stroke="#a2b491" stroke-width="3"/><circle cx="950" cy="425" r="4" fill="#d9a86e"/></g>
+ <path d="M997 445h57v62h-57z" fill="#ead8c3"/><path d="M1006 466h35m-35 9h29" stroke="#b89c7e" stroke-width="3"/><circle cx="1025" cy="452" r="4" fill="#879d79"/>
+ <rect x="846" y="590" width="63" height="47" rx="6" fill="#b78c69" stroke="#91694e" stroke-width="3"/><path d="M861 590v-9h29v9M876 593v44" stroke="#926d50" stroke-width="3"/>
+ <rect x="1031" y="555" width="78" height="77" rx="6" fill="#d0b18a" stroke="#b1916d" stroke-width="3"/><path d="M1039 584h61m-61 25h61" stroke="#b79872" stroke-width="2"/><circle cx="1070" cy="573" r="3" fill="#8c785a"/><circle cx="1070" cy="597" r="3" fill="#8c785a"/>
+ <use href="#plant" transform="translate(376 550) scale(.85)"/><use href="#plant" transform="translate(1098 629) scale(.95)"/><use href="#plant" transform="translate(752 469) scale(.75)"/><use href="#plant" transform="translate(77 319) scale(.65)"/>
+ <path d="M575 65h30v285h-30z" fill="#c5aa86" stroke="#a98c67" stroke-width="3"/>
+ <path d="M46 65h1109M46 670h1109" stroke="#e1c59f" stroke-width="14"/>
+ <use href="#light" transform="translate(313 77)"/><use href="#light" transform="translate(1016 77)"/><use href="#light" transform="translate(404 374) scale(.8)"/>
+ <path d="M400 141l-98 199h188z" fill="url(#daylight)" opacity=".22"/>
+</g>
+<!-- Roof sign -->
+<rect x="449" y="18" width="301" height="61" rx="13" fill="#57705b" stroke="#405746" stroke-width="3"/>
+<text x="599" y="46" text-anchor="middle" fill="#f8edcf" font-size="17" font-family="Georgia,serif" letter-spacing="5">STARLANE STUDIO</text>
+<path d="M551 60h95" stroke="#b9c4a2" stroke-width="1.5"/>
+<path d="M420 43v15m-7-7h14M780 43v15m-7-7h14" stroke="#beaa77" stroke-width="2"/>
+</svg>

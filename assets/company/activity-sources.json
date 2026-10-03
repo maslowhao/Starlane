@@ -1,0 +1,30 @@
+[
+  {
+    "OriginalName": "訓練01_音感發聲B.png",
+    "Layer": "background",
+    "Output": "F:\\明星志願素材\\活動背景\\訓練\\訓練01_音感發聲B.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\訓練01_音感發聲B__480947348.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 480947348,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "cdbd3bfec8cae894607ff74a38b2f300579cb8fe3d13ec9801835775d15cf779",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/recording.png",
+    "Use": "recording singing and voice-expression (speech)"
+  },
+  {
+    "OriginalName": "訓練04_肢體動作B.png",
+    "Layer": "background",
+    "Output": "F:\\明星志願素材\\活動背景\\訓練\\訓練04_肢體動作B.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\訓練04_肢體動作B__481197747.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 481197747,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "39d7b9195ec95a1b14500c16d452bb9ae7629fac905ce25004ac373ba1170fba",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/practice.png",
+    "Use": "practice acting and body/photo-related skills"
+  }
+]

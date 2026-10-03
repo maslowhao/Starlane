@@ -1,0 +1,23 @@
+(()=>{
+ 'use strict';
+ const KEY='starlane-reception-music-v1',base=document.currentScript.src;
+ let enabled=true,volume=.05,unlocked=false,storageFailed=false,pageHidden=false;
+ try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&typeof saved.enabled==='boolean')enabled=saved.enabled;if(Number.isFinite(saved?.volume)&&saved.volume>=0&&saved.volume<=1)volume=saved.volume;}catch{storageFailed=true;}
+ // Persistent players: the four external companies share the very same 024 timeline.
+ const tracks=[['reception-audio','assets/music/reception-music-017.mp3','接待'],['company-audio','assets/music/company-music-024.mp3','公司']].map(([id,path,label])=>{const audio=document.createElement('audio');Object.assign(audio,{id,src:new URL(path,base).href,loop:true,preload:'metadata',volume,hidden:true});document.body.append(audio);return {audio,label,pending:false,blocked:false,failed:false};});
+ const controls=document.createElement('div');controls.className='reception-music';controls.innerHTML='<button type="button" id="reception-music-toggle" aria-controls="reception-audio company-audio">播放場景音樂</button><label for="reception-music-volume">音量 <output id="reception-music-level"></output></label><input id="reception-music-volume" type="range" min="0" max="100" step="1" aria-label="場景音樂音量"><span id="reception-music-status" role="status"></span>';
+ document.querySelector('.studio-toolbar').append(controls);
+ const toggle=controls.querySelector('button'),slider=controls.querySelector('input'),level=controls.querySelector('output'),status=controls.querySelector('[role=status]');slider.value=Math.round(volume*100);
+ function current(){const home=document.getElementById('company-stage'),away=document.getElementById('location-stage');if(home&&!home.hidden&&home.dataset.room==='reception')return tracks[0];if(away&&!away.hidden&&['eami','sosa','creative','global'].includes(away.dataset.place))return tracks[1];return null;}
+ function eligible(t){return enabled&&unlocked&&!pageHidden&&!document.hidden&&current()===t;}
+ function paint(){const t=current();toggle.setAttribute('aria-pressed',String(enabled));toggle.textContent=t?.failed?'重試場景音樂':!enabled?'開啟場景音樂':t?.blocked||!unlocked?'播放場景音樂':'關閉場景音樂';level.value=Math.round(volume*100)+'%';status.textContent=t?.failed?'音樂無法載入，請按重試；若持續失敗，請確認遊戲音檔。':!enabled?'已關閉':t?.blocked?'瀏覽器尚未允許播放，請按「播放場景音樂」。':!unlocked?'首次操作後播放':!t?'此場景無配樂，已暫停':document.hidden||pageHidden?'背景暫停':volume===0?'靜音':t.audio.paused?'準備播放':t.label+'音樂播放中';if(storageFailed)status.textContent+='（設定暫時無法保存）';}
+ function persist(){try{localStorage.setItem(KEY,JSON.stringify({enabled,volume}));storageFailed=false;}catch{storageFailed=true;}}
+ function sync(){for(const t of tracks)if(!eligible(t))t.audio.pause();const t=current();if(!t||!eligible(t)||t.pending||t.blocked||t.failed||!t.audio.paused){paint();return;}t.pending=true;let play;try{play=t.audio.play();}catch(e){play=Promise.reject(e);}Promise.resolve(play).then(()=>{if(!eligible(t))t.audio.pause();t.blocked=false;}).catch(e=>{if(eligible(t)&&e.name!=='AbortError')t.blocked=true;}).finally(()=>{t.pending=false;paint();if(eligible(t)&&!t.blocked&&!t.failed&&t.audio.paused)sync();});paint();}
+ function gesture(e){if(!e.isTrusted)return;unlocked=true;const t=current();if(t)t.blocked=false;sync();}
+ document.addEventListener('pointerdown',e=>{if(!controls.contains(e.target))gesture(e);});document.addEventListener('keydown',e=>{if(!controls.contains(e.target)&&!e.ctrlKey&&!e.metaKey&&!e.altKey)gesture(e);});
+ toggle.addEventListener('click',e=>{const t=current(),needsStart=!unlocked||t?.blocked;if(e.isTrusted)unlocked=true;if(t?.failed){t.failed=false;t.blocked=false;enabled=true;t.audio.load();}else if(needsStart){enabled=true;if(t)t.blocked=false;}else enabled=!enabled;persist();sync();});
+ slider.addEventListener('input',e=>{volume=Math.min(1,Math.max(0,Number(slider.value)/100));for(const t of tracks)t.audio.volume=volume;if(e.isTrusted)unlocked=true;persist();sync();});
+ for(const t of tracks){t.audio.addEventListener('error',()=>{t.failed=true;t.audio.pause();paint();});t.audio.addEventListener('playing',()=>{if(!eligible(t))t.audio.pause();else for(const other of tracks)if(other!==t)other.audio.pause();paint();});t.audio.addEventListener('pause',paint);}
+ for(const id of ['company-stage','location-stage'])new MutationObserver(sync).observe(document.getElementById(id),{attributes:true,attributeFilter:['hidden','data-room','data-place']});
+ document.addEventListener('visibilitychange',sync);addEventListener('pagehide',()=>{pageHidden=true;sync();});addEventListener('pageshow',()=>{pageHidden=false;sync();});paint();
+})();

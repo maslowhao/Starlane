@@ -1,0 +1,49 @@
+.company-scene-column{min-width:0}
+#room-stats{padding:14px 16px;background:#243647;color:#f3efe5;border-top:1px solid #576776;box-sizing:border-box}
+#room-stats[hidden]{display:none!important}
+.room-stats-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:13px;flex-wrap:wrap}
+.room-stats-heading small{font-size:11px;color:#d7c4a0}
+.room-stats-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:10px 0}
+.company-stage .room-stats-tabs button{padding:7px 8px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.room-stats-identity{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;font-size:12px;line-height:1.6}
+.room-stats-identity strong{overflow-wrap:anywhere}.room-stats-identity span{font-size:11px;color:#d3dce1}
+.room-stats-values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 18px;margin:12px 0 0}
+.room-stats-values>div{display:flex;justify-content:space-between;gap:6px;border-bottom:1px solid #ffffff16;padding-bottom:4px;font-size:12px}
+.room-stats-values dt{color:#bfcad2}.room-stats-values dd{margin:0;color:#f0d098;font-variant-numeric:tabular-nums}
+.room-stats-empty{font-size:12px;line-height:1.7;margin-bottom:0}
+@media(max-width:540px){#room-stats{padding:12px}.room-stats-values{gap:8px 12px}.room-stats-heading{font-size:12px}}
+.company-hotspot .door-direction-icon{display:block;width:32px;height:32px;object-fit:contain;margin:0;float:none}
+.company-hotspot:has(.door-direction-icon){display:grid;grid-template-columns:32px minmax(0,1fr);column-gap:8px;row-gap:4px;align-items:center;width:166px;min-height:48px;box-sizing:border-box;font-size:12px!important;padding:9px!important}
+.company-hotspot:has(.door-direction-icon) b{white-space:nowrap;font-size:12px;line-height:1.4}
+.company-hotspot:has(.door-direction-icon) span{grid-column:1/-1;margin:0;font-size:10px;line-height:1.5;white-space:nowrap}
+@media(max-width:700px){.company-hotspot:has(.door-direction-icon){width:146px;max-width:44%}.recording-door{left:auto;right:4%}}
+body.scene-edition #auto-enabled{appearance:none;-webkit-appearance:none;display:inline-block;position:relative;width:64px!important;min-width:64px;height:34px!important;padding:0!important;margin:0;border:2px solid #9aa6b0!important;border-radius:20px!important;background:#5a6672!important;cursor:pointer;vertical-align:middle}
+body.scene-edition #auto-enabled::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0007;transition:transform .15s}
+body.scene-edition #auto-enabled:checked{background:#ffd36b!important;border-color:#ffe7a7!important;box-shadow:0 0 0 3px #ffd36b24}
+body.scene-edition #auto-enabled:checked::after{transform:translateX(30px)}
+body.scene-edition #auto-enabled:focus-visible{outline:3px solid #fff!important;outline-offset:4px}
+body.scene-edition #auto-enabled:disabled{opacity:.5;cursor:not-allowed}
+.assistant-toggle-status{font-size:13px;line-height:1.7;color:#d0d7dc;padding:10px 12px;background:#172633;border-radius:8px;border-left:3px solid #73818d}
+.assistant-toggle-status[data-enabled=true]{color:#ffe29d;border-left-color:#ffd36b}
+@media(prefers-reduced-motion:reduce){body.scene-edition #auto-enabled::after{transition:none}}
+/* Clip rounded edges without introducing a scroll container that disables sticky headers. */
+.studio-world{overflow:clip}
+.company-stage:is([data-room=practice],[data-room=recording]) .company-room-bar{position:static;background:#202d3b}
+.training-action-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding-top:8px;border-top:1px solid #526475}
+.training-action-strip[hidden]{display:none!important}.training-action-person{font-size:12px;color:#f0d098;overflow-wrap:anywhere}
+.training-action-strip .company-action-buttons{gap:8px;flex-shrink:0}.training-action-strip button{min-height:40px}
+@media(max-width:540px){.training-action-strip{flex-wrap:wrap;gap:6px}.training-action-strip .company-action-buttons{width:100%}.training-action-strip .company-action-buttons button{flex:1;padding:9px 7px;font-size:11px}.company-stage:is([data-room=practice],[data-room=recording]) .company-room-bar{padding:10px 12px}}
+.recording-door .door-direction-icon{grid-column:2;grid-row:1}.recording-door b{grid-column:1;grid-row:1}.company-hotspot.recording-door{grid-template-columns:minmax(0,1fr) 32px}
+.company-business-dialog{box-sizing:border-box;width:min(1000px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;background:#20303f;color:#f3efe5;border:1px solid #867455;border-radius:14px;overflow:auto}
+.company-business-dialog::backdrop{background:#101b2555}
+.company-business-dialog header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;height:auto;min-height:90px;gap:14px}.company-business-dialog h2{font-size:22px;margin:6px 0}.company-business-dialog header small{color:#e9c47c}
+.company-business-dialog>p{padding:0 22px;margin:0 0 16px;font-size:13px;line-height:1.7}.company-business-dialog button{background:#344b5d;color:#fff4db;border:1px solid #7a8a94;border-radius:7px;padding:10px 14px;cursor:pointer}.company-business-dialog button:disabled{opacity:.5;cursor:not-allowed}
+#company-business-content{padding:0 22px 22px}.company-business-dialog #board{margin-top:0}.company-business-dialog #board>.section-heading{display:none}.company-business-dialog .offers{grid-template-columns:repeat(2,minmax(0,1fr))}.company-business-dialog .offer{background:#26394a;color:#f3efe5;border-color:#596b79}.company-business-dialog .offer p,.company-business-dialog .offer small{color:#d1dbe2}.company-business-dialog .requirement{color:#d9dfdf}.company-business-dialog .offer-details strong{color:#f1d294}
+@media(max-width:650px){.company-business-dialog header{padding:14px}.company-business-dialog h2{font-size:19px}.company-business-dialog>p{padding:0 14px}#company-business-content{padding:0 14px 14px}.company-business-dialog .offers{grid-template-columns:1fr}}
+body.scene-edition .requirement-missing{color:#ff9b9b!important;font-weight:700}.requirement-met{color:inherit}.requirement-condition,.booking-condition{color:#e2d3b4!important}.requirement-value{display:inline-block;line-height:1.8}.booking-condition:empty{display:none}
+.company-hotspot:has(.door-direction-icon){display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:58px}
+.company-hotspot .door-title-group{display:inline-flex!important;align-items:center;justify-content:center;gap:8px;margin:0;white-space:nowrap}
+.company-hotspot .door-subtitle{display:block;margin:0;text-align:center;line-height:1.5}
+.training-inline-actions{margin:10px 0 18px}.training-inline-actions .training-action-person{display:block;margin-bottom:7px}.training-inline-actions .company-action-buttons{display:flex;gap:8px;flex-wrap:wrap}.training-inline-actions button{min-height:42px;flex:1}
+.company-stage:is([data-room=practice],[data-room=recording]) .dynamic-person{width:25%;max-width:184px}
+@media(max-width:650px){.company-stage:is([data-room=practice],[data-room=recording]) .dynamic-person{width:25%;max-width:145px}}

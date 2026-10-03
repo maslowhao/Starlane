@@ -1,0 +1,27 @@
+{
+  "reception": {
+    "Key": "GUI_1_0_0.imd:71591917",
+    "Source": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "Offset": 71591917,
+    "OriginalName": "00翱翔天際.png",
+    "OriginalNameHex": "30-30-BF-AC-B5-BE-A4-D1-BB-DA-2E-70-6E-67-00",
+    "Format": 5,
+    "Width": 800,
+    "Height": 600,
+    "Status": "exported",
+    "Output": "場景\\公司與接待空間\\GUI_1_0_0\\00翱翔天際__71591917.png",
+    "SHA256": "84864EF7D27277F7825B6C05500A72DE8F4C6EFAD7116B37D77F5D428D82F42E",
+    "Error": "",
+    "usage": "翱翔天際接待空間，作為玩家公司本地場景"
+  },
+  "practice": {
+    "source": "studio.svg",
+    "kind": "星序既有原創向量房間局部",
+    "reason": "尚未確認原作專用練習室背景"
+  },
+  "recording": {
+    "source": "studio.svg",
+    "kind": "星序既有原創向量房間局部",
+    "reason": "尚未確認原作專用錄音室背景"
+  }
+}

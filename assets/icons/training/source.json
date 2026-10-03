@@ -1,0 +1,53 @@
+{
+  "note": "目視後依本遊戲課程配對，非宣稱原作官方功能映射。自信 Icon02_06 為使用者明確指定；全部圖示均保留文字。原素材未改動。",
+  "icons": [
+    {
+      "skill": "sing",
+      "source": "F:\\明星志願素材\\介面\\畫面與組件\\GUI_1_0_0\\排程_Icon02_01__483742524.png",
+      "visual": "麥克風",
+      "target": "assets/icons/training/sing.png"
+    },
+    {
+      "skill": "act",
+      "source": "F:\\明星志願素材\\介面\\畫面與組件\\GUI_1_0_0\\排程_Icon02_03__483753150.png",
+      "visual": "表演面具／笑臉",
+      "target": "assets/icons/training/act.png"
+    },
+    {
+      "skill": "stamina",
+      "source": "F:\\明星志願素材\\介面\\畫面與組件\\GUI_1_0_0\\排程_Icon02_04__483758233.png",
+      "visual": "跑步",
+      "target": "assets/icons/training/stamina.png"
+    },
+    {
+      "skill": "speech",
+      "source": "F:\\明星志願素材\\介面\\畫面與組件\\GUI_1_0_0\\排程_Icon02_05__483763628.png",
+      "visual": "發聲線",
+      "target": "assets/icons/training/speech.png"
+    },
+    {
+      "skill": "movement",
+      "source": "F:\\明星志願素材\\介面\\畫面與組件\\GUI_1_0_0\\排程_Icon02_07__483774418.png",
+      "visual": "杖帽舞姿",
+      "target": "assets/icons/training/movement.png"
+    },
+    {
+      "skill": "intellect",
+      "source": "F:\\明星志願素材\\介面\\畫面與組件\\GUI_1_0_0\\排程_Icon02_09__483784956.png",
+      "visual": "書本與對話",
+      "target": "assets/icons/training/intellect.png"
+    },
+    {
+      "skill": "poise",
+      "source": "F:\\明星志願素材\\介面\\畫面與組件\\GUI_1_0_0\\排程_Icon02_10__483790331.png",
+      "visual": "頂書姿勢",
+      "target": "assets/icons/training/poise.png"
+    },
+    {
+      "skill": "confidence",
+      "source": "F:\\明星志願素材\\介面\\畫面與組件\\GUI_1_0_0\\排程_Icon02_06__483768875.png",
+      "visual": "展臂造型，使用者指定自信",
+      "target": "assets/icons/training/confidence.png"
+    }
+  ]
+}

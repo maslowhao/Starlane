@@ -1,0 +1,91 @@
+
+#dynamic-layer{position:absolute;left:0;right:0;bottom:37px;top:auto;display:flex;justify-content:center;align-items:end;gap:10px;padding:18px 12px 10px;pointer-events:none;z-index:4;background:linear-gradient(transparent,#3d382746)}
+#dynamic-table{display:none}.dynamic-person{position:relative;pointer-events:auto;flex:0 1 145px;min-width:0;padding:5px;background:#fffaf0;border:1px solid #daceb7;border-radius:12px;box-shadow:0 8px 20px #352b2630;overflow:hidden}
+.dynamic-visual{position:relative;display:block;width:100%;aspect-ratio:500/620;overflow:hidden;background:#ebe9dc!important;border:0!important;padding:0!important;border-radius:8px!important;cursor:pointer;touch-action:pan-y}
+.dynamic-visual img{user-select:none;pointer-events:none;display:block}.dynamic-visual img.original-half{width:100%;height:100%;object-fit:contain;object-position:center top}
+.dynamic-label{display:block;width:100%;background:transparent!important;border:0!important;padding:6px 1px 3px!important;cursor:pointer;color:#425d51!important;white-space:normal;line-height:1.35!important}
+.dynamic-label b,.dynamic-label span{display:block;font-size:12px}.dynamic-label span{font-size:10px;color:#7e806e;margin-top:3px}.secretary-npc{border-color:#a58a55}.secretary-npc .dynamic-label b{color:#92723f}
+.portrait-result{position:absolute;top:10px;left:6px;right:6px;background:#325f48;color:white;border-radius:5px;padding:5px;font-size:11px;text-align:center;pointer-events:none}.portrait-result[hidden]{display:none}.dynamic-person[data-result=defeat] .portrait-result{background:#945d47}
+.dynamic-note{font-size:11px;line-height:1.6;color:#746b59;padding:8px 20px;margin:0;border-top:1px solid #dfd7c6}.company-person{display:none!important}.company-hotspot{z-index:5}
+#portrait-feedback{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#355b4c;color:#fff8e9;padding:14px 20px;border-radius:12px;box-shadow:0 5px 25px #0003;z-index:120;max-width:90vw;font-size:14px;pointer-events:none}
+@media(max-width:650px){#dynamic-layer{gap:6px;padding:12px 7px 8px}.dynamic-person{padding:3px;flex-basis:115px}.dynamic-label b{font-size:11px}.dynamic-label span{font-size:9px}.dynamic-note{padding:8px 12px}}
+@media(max-width:400px){#dynamic-layer{flex-wrap:nowrap;gap:4px;padding-left:5px;padding-right:5px}.dynamic-person{flex:1 1 0;max-width:110px}.dynamic-label b{font-size:10px}.dynamic-label span{font-size:8px}}
+.company-stage[data-room=reception] #company-hotspots{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:6px;z-index:5;pointer-events:none}
+.company-stage[data-room=reception] .company-hotspot{position:static!important;pointer-events:auto;padding:8px!important;min-width:0}
+@media(max-width:540px){.company-stage[data-room=reception] .company-hotspot{font-size:10px!important}.company-stage[data-room=reception] .company-hotspot span{font-size:8px}}
+
+.portrait-ongoing{position:absolute;left:5px;right:5px;top:5px;height:70%;pointer-events:none;overflow:hidden}.fx-note{position:absolute;width:29px!important;height:25px!important;filter:drop-shadow(0 1px 3px #5d4b24);animation:note-rise 2.2s ease-in-out infinite}.fx-note-0{left:8%;top:65%}.fx-note-1{right:7%;top:55%;animation-delay:-.8s}.fx-note-2{left:45%;top:72%;animation-delay:-1.5s}.fx-focus{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);font-size:10px;white-space:nowrap;background:#fff9e8e6;border-radius:20px;padding:4px 7px;color:#6b7958}.fx-focus:after{content:' ···';animation:focus-pulse 1.4s ease-in-out infinite}
+#portrait-fx-layer{position:absolute;inset:0 0 37px;pointer-events:none;z-index:8;overflow:hidden}.fx-result{position:absolute;transform:translate(-50%,-50%);text-align:center;pointer-events:none;animation:result-pop 2.5s ease-out both}.fx-word{width:100%;height:auto;filter:drop-shadow(0 2px 4px #51411690)}.fx-result strong{position:relative;z-index:2;display:block;padding:6px 4px;border-radius:7px;background:#fffbeef2;color:#466342;font-size:12px;box-shadow:0 2px 8px #35241933}.fx-failure strong{color:#a24935}.fx-stars{position:absolute;width:50px;height:50px;animation:star-pulse .75s ease-in-out 3}.fx-stars-0{left:-15%;top:2%}.fx-stars-1{right:-15%;top:20%;animation-delay:.15s}.fx-stars-2{left:30%;top:-32%;animation-delay:.3s}
+@keyframes note-rise{0%{opacity:0;transform:translateY(15px) rotate(-8deg)}25%{opacity:1}100%{opacity:0;transform:translateY(-65px) rotate(12deg)}}
+@keyframes focus-pulse{50%{opacity:.3}}
+@keyframes star-pulse{0%,100%{opacity:.2;transform:scale(.6)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes result-pop{0%{opacity:0;transform:translate(-50%,-35%) scale(.85)}15%,80%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-60%)}}
+@media(prefers-reduced-motion:reduce){.fx-note,.fx-focus:after,.fx-stars,.fx-result{animation:none!important}.fx-note{opacity:.8}.fx-stars{opacity:.65}.fx-result{opacity:1}}
+
+.company-stage:not([data-room=reception]) .equipment-spot{top:10px;left:10px}
+
+/* v0.10.5: transparent scene figures; recruitment/detail cards are unchanged. */
+#dynamic-layer{display:block;top:0;bottom:37px;padding:0;background:none;pointer-events:none}
+.dynamic-person{position:absolute;display:block;width:21%;max-width:155px;min-width:0;transform:translateX(-50%);padding:0;flex:none;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.dynamic-visual{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;outline-offset:2px}
+.dynamic-label{width:auto;max-width:100%;margin:0 auto;padding:2px 5px!important;background:#fff9e0d9!important;border:0!important;border-radius:3px!important;box-shadow:none!important;color:#344a40!important}
+.dynamic-label b{font-size:11px;font-weight:500}.dynamic-label span{display:none}.secretary-npc{border:0}.secretary-npc .dynamic-label b{color:#344a40}
+.portrait-ongoing{left:0;right:0;top:0}.portrait-result{display:none!important}
+@media(max-width:650px){.dynamic-person{width:22%;max-width:130px;padding:0}.dynamic-label b{font-size:10px}}
+@media(max-width:400px){#dynamic-layer{display:block;padding:0}.dynamic-person{width:22%;max-width:110px;flex:none}.dynamic-label{padding:2px 3px!important}.dynamic-label b{font-size:10px}}
+
+/* Original E_shining art; gentle course pairing and timing are designed here. */
+.portrait-ongoing[data-fx-ongoing=practice]{overflow:visible;z-index:2}
+.fx-practice-spark{position:absolute;left:-8%;top:70%;width:clamp(46px,42%,62px);height:auto;opacity:1;pointer-events:none;animation:practice-glow 2.4s ease-in-out infinite;filter:drop-shadow(0 1px 1px #68431ed9) drop-shadow(0 0 4px #fff1a6)}
+@keyframes practice-glow{0%,100%{opacity:.82;transform:translateY(2px) scale(.96)}50%{opacity:1;transform:translateY(-5px) scale(1.05)}}
+@media(prefers-reduced-motion:reduce){.fx-practice-spark{animation:none!important;opacity:1}}
+
+/* Reception scene figures only; detail/recruitment portraits keep their own layout. */
+.company-stage[data-room=reception] .dynamic-person{width:28%;max-width:220px}
+.company-stage[data-room=reception] .dynamic-person.secretary-npc{width:23%;max-width:180px}
+@media(max-width:650px){.company-stage[data-room=reception] .dynamic-person{width:28%;max-width:175px}.company-stage[data-room=reception] .dynamic-person.secretary-npc{width:23%;max-width:145px}}
+
+.fx-practice-spark-upper{left:auto;right:-32%;top:10%;animation-delay:-1.2s}
+@media(max-width:650px){.fx-practice-spark{width:36px;top:65%}.fx-practice-spark-upper{top:10%}}
+
+/* Reception only: alpha-normalized larger portraits and compact contract lines. */
+.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc){width:28%;max-width:230px}
+.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) .dynamic-visual{aspect-ratio:1/1.58}
+.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) .dynamic-label{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:100%;max-width:180px;box-sizing:border-box}
+.company-stage[data-room=reception] .dynamic-label span.has-project{display:block;color:inherit;font-size:10px;line-height:1.45;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reception-project-status{font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.reception-profile .half-portrait{width:145px!important;height:200px!important;flex:0 0 145px}
+.reception-profile .original-portrait img{object-fit:contain!important}
+.original-name-field{display:block;margin:12px 0}.original-name-field input{display:block;width:100%;box-sizing:border-box;margin:6px 0}.original-name-field small{display:block}
+@media(max-width:650px){.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc){width:28%;max-width:190px}.reception-profile .half-portrait{width:115px!important;height:175px!important;flex-basis:115px}.company-stage[data-room=reception] .dynamic-label span.has-project{font-size:9px}}
+
+.company-stage[data-room=reception] .dynamic-label span.contract-line{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;line-height:1.2;color:inherit;margin:1px 0}
+@media(max-width:650px){.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) .dynamic-visual{aspect-ratio:1/1.42}.company-stage[data-room=reception] .dynamic-label span.contract-line{font-size:9px}}
+/* Publicity is a centered modal, using the same dimensions as rivals. */
+.workspace-dialog[data-active-panel=publicity]{inset:0;margin:auto;width:min(660px,calc(100vw - 24px));max-width:calc(100vw - 24px);height:min(900px,calc(100dvh - 32px));max-height:calc(100dvh - 32px);border-radius:18px;overflow-y:auto}
+.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) .dynamic-label{width:85%}
+@media(max-width:650px){.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) .dynamic-label{width:76%}}
+
+/* Final approved placement: contract rows below the left scene, never over art. */
+.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) .dynamic-label{position:static;transform:none;width:auto;max-width:100%}
+.company-stage[data-room=reception] .dynamic-label span{display:none!important}
+#reception-contracts{padding:10px 16px;min-width:0}#reception-contracts[hidden]{display:none}
+.reception-contract-row{display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #4b5a69;font-size:12px;line-height:1.7;color:#f3efe5}
+.reception-contract-row:last-child{border:0}.reception-contract-row strong{overflow-wrap:anywhere}.contract-summary{overflow-wrap:anywhere;min-width:0}.reception-contract-row button{font-size:11px;padding:5px 8px}
+@media(max-width:650px){#reception-contracts{padding:8px 12px}.reception-contract-row{grid-template-columns:52px minmax(0,1fr);gap:4px 10px}.reception-contract-row button{grid-column:2;justify-self:start}}
+
+@media(max-width:650px){.company-stage[data-room=reception] .dynamic-person:not(.secretary-npc){bottom:var(--reception-bottom)!important}}
+
+.workspace-dialog[data-active-panel=publicity] #room-hint{font-size:18px!important;line-height:1.7;font-weight:600}.publicity-trigger-rules{margin:14px 0 20px}.publicity-trigger-rules summary{cursor:pointer;font-size:14px;color:#e9c47c}
+
+/* Readable company stage and the two independent reputation/fame figures. */
+body.scene-edition .intro .studio-date{display:grid;flex:0 1 360px;min-width:0;max-width:100%;gap:7px}
+body.scene-edition .studio-date #phase{font-size:23px;line-height:1.45;color:#f4d18e;letter-spacing:1px}
+body.scene-edition .studio-date small{font-size:14px;line-height:1.65;color:#f3efe5!important;overflow-wrap:anywhere}
+@media(max-width:900px){body.scene-edition .intro{flex-direction:column;align-items:stretch}body.scene-edition .intro .studio-date{flex:auto;text-align:left;border-top:1px solid #4b5a69;padding-top:14px}body.scene-edition .studio-date #phase{font-size:22px}}
+
+.training-directions{margin:18px 0;border:1px solid #637588;border-radius:9px;padding:12px}.training-directions legend{padding:0 6px}#train-skills{display:grid;grid-template-columns:1fr 1fr;gap:10px}#train-skills label{display:flex;align-items:center;gap:8px;margin:0}#train-skills input{width:18px;height:18px;flex:none}.training-directions small{display:block;margin-top:12px}.rival-artist-name{font-size:16px!important}
+
+/* v0.15.4: only real pending invitations highlight this existing entry. */
+body.scene-edition #scene-opportunity.has-invitations{background:#e6c47f!important;color:#252d34!important;border:1px solid #f7dc9e!important;box-shadow:0 0 0 2px #e6c47f22;}
+@media(max-width:650px){body.scene-edition .secretary-bubble[data-notice=invitation]{padding:5px 9px;bottom:calc(100% + 2px)}}

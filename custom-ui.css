@@ -1,0 +1,88 @@
+#custom-artist-dialog{box-sizing:border-box;width:min(780px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;margin:auto;background:#20303f;color:#f3efe5;border:1px solid #867455;border-radius:14px;overflow:auto}
+#custom-artist-dialog header{height:auto;min-height:90px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:nowrap}#custom-artist-dialog h2{margin:5px 0}#custom-artist-dialog small{color:#d7c4a0}#custom-body{padding:0 22px 22px;line-height:1.7}#custom-body label{display:block}#custom-body input,#custom-body select{display:block;box-sizing:border-box;width:100%;padding:10px;background:#172633;color:#fff;border:1px solid #71818b;border-radius:7px;margin:7px 0 14px}#custom-body fieldset{border:1px solid #576776;margin:15px 0;padding:12px}
+.custom-portraits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.custom-portraits button{min-width:0;padding:8px!important}.custom-portraits img{display:block;width:100%;height:145px;object-fit:contain}.custom-portraits button[aria-pressed=true]{outline:2px solid #e9c47c}.custom-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.custom-stats small{display:block;font-size:11px}
+#custom-artist-dialog button{background:#344b5d;color:#fff4db;border:1px solid #7a8a94;padding:10px 14px;border-radius:7px;cursor:pointer;margin:3px}#custom-artist-dialog button:disabled{opacity:.45;cursor:default}#custom-artist-dialog button:focus-visible{outline:2px solid #e9c47c;outline-offset:2px}.custom-review{overflow-wrap:anywhere}.custom-review>img{float:right;width:35%;max-height:270px;object-fit:contain}.custom-review dl{display:grid;grid-template-columns:auto auto;max-width:55%;gap:5px 16px}.custom-review dd{margin:0}#custom-live,#custom-error{color:#f0d19a}.dynamic-label b,.reception-profile h3,.artist h3,.teammate strong,#panel-artist-switch button{overflow-wrap:anywhere}.dynamic-label b{max-width:150px;display:block;white-space:normal}
+@media(max-width:540px){.custom-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.custom-portraits img{height:115px}#custom-body{padding:0 14px 14px}.custom-review>img{float:none;display:block;width:100%;height:220px}.custom-review dl{max-width:none}}
+.original-portrait img,.dynamic-visual img.original-half{box-sizing:border-box;padding:8%;object-fit:contain!important;object-position:center!important}.custom-portraits img,.custom-review>img{box-sizing:border-box;padding:8%}
+
+.secretary-npc .dynamic-visual img{position:static!important;width:100%!important;height:100%!important;object-fit:contain!important;box-sizing:border-box;padding:8%;transform:none!important}.location-owner-portrait img{object-fit:contain!important;box-sizing:border-box;padding:8%}
+
+.location-owner-portrait img{position:static!important;width:100%!important;height:100%!important;max-width:100%!important;object-fit:contain!important;object-position:center!important;box-sizing:border-box;padding:8%;transform:none!important}
+
+/* Measured alpha occupancy: secretary ~68% width, EAMI ~89%; modest subject-scale increase. */
+.company-stage[data-room=reception] .dynamic-person.secretary-npc{width:27%;max-width:212px}
+.secretary-npc .dynamic-visual img{padding:5%}
+body.scene-edition .location-owner{width:41%;max-width:432px}
+.location-owner-portrait img{padding:5%}
+@media(max-width:650px){.company-stage[data-room=reception] .dynamic-person.secretary-npc{width:27%;max-width:170px}}
+@media(max-width:700px){body.scene-edition .location-owner{width:48%;max-width:275px}}
+#custom-carousel>label{max-width:200px;margin:0 auto 8px;text-align:center}
+.custom-portrait-stage{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:8px}
+.custom-portrait-stage img{display:block;width:100%;height:360px;object-fit:contain;box-sizing:border-box;padding:12px;min-width:0}
+.custom-portrait-stage button{font-size:34px;line-height:1;padding:12px 0;min-height:52px}
+.custom-portrait-caption{text-align:center;margin:8px 0}
+@media(max-width:540px){.custom-portrait-stage{grid-template-columns:42px minmax(0,1fr) 42px;gap:4px}.custom-portrait-stage img{height:300px;padding:6px}}
+@media(max-width:700px){.location-owner-portrait{aspect-ratio:500/570}}
+
+/* v0.13.6: preserve each whole lobby at its native ratio; no black letterbox. */
+.location-stage .location-image{display:block;width:100%;height:auto;max-height:none;aspect-ratio:auto;object-fit:fill;background:transparent}
+body.scene-edition .location-owner:focus,body.scene-edition .location-owner:focus-visible{outline:none}
+body.scene-edition .location-owner:focus-visible .location-owner-label{outline:2px solid #f1ca7c;outline-offset:3px}
+.board-toolbar .tabs[hidden]{display:none!important}
+.job-company{display:block;color:#d7c4a0;margin-bottom:8px}
+
+.location-owner:not(#eami-owner) .location-owner-portrait img{padding:0}
+@media(max-width:700px){body.scene-edition .location-owner:not(#eami-owner){width:48%;max-width:275px}}
+/* EAMI matches the reception's 1.5 : 1 scene / details layout. */
+.location-stage{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);align-items:start}
+.location-stage .location-caption{display:block;border:0;padding:22px;align-self:stretch}
+.location-stage .location-actions{margin-top:18px}
+@media(min-width:901px){body.scene-edition .location-stage .location-owner{width:60%;max-width:432px}.location-stage .location-owner-portrait{aspect-ratio:1}}
+@media(max-width:900px){.location-stage{grid-template-columns:1fr}.location-stage .location-visual{max-width:640px;width:100%;margin:auto}.location-stage .location-caption{padding:18px}}
+
+.company-action-buttons button.rest-needed{background:#ae2639;color:#fff;border:2px solid #ff9ba8;box-shadow:0 0 0 2px #ae263933;animation:none}.company-action-buttons button.rest-needed:disabled{opacity:1;background:#742635;color:#fff;cursor:not-allowed}
+
+/* v0.13.8: a stable, high-contrast invitation to the existing manual debut action. */
+#artists .debut-box button.debut-ready{background:#ffd36b;color:#211a10;border:2px solid #ffe9b0;font-weight:800;box-shadow:0 2px 8px #0003;animation:none;min-height:48px}
+#artists .debut-box button.debut-ready:hover{background:#ffe39b;color:#211a10}
+#artists .debut-box button.debut-ready:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#artists .debut-ready-label{display:inline-block;border:1px solid currentColor;border-radius:999px;padding:2px 7px;margin-left:6px;font-size:.8em;white-space:nowrap}
+
+/* v0.14.1: group company details beside larger, uncropped portraits. */
+.workspace-dialog[data-active-panel=rivals]{width:min(660px,96vw);max-width:96vw;padding-left:24px;padding-right:24px}
+#pane-rivals .section-heading{display:none}
+#pane-rivals .rivals-intro{display:none}
+#rival-cards{gap:14px}
+#rival-cards .rival-card{padding:18px}
+#rival-cards .rival-identity{display:grid;grid-template-columns:minmax(0,1fr) 48%;gap:16px;align-items:center}
+#rival-cards .rival-identity-text{min-width:0;overflow-wrap:anywhere}
+#rival-cards .rival-banner{margin:0 0 6px}
+#rival-cards .rival-banner h3{font-size:23px;letter-spacing:1px;margin:0;line-height:1.4}
+#rival-cards .rival-principal{margin:0;line-height:1.6;font-size:13px}
+#rival-cards h4{font-size:12px;margin:20px 0 8px;letter-spacing:1px;opacity:.7}
+#rival-cards .rival-source-work{margin:0 0 10px;line-height:1.55;font-size:13px}
+#rival-cards .rival-source-work:last-child{margin-bottom:0}
+#rival-cards .rival-source-work span{font-size:12px;opacity:.7}
+#rival-cards .rival-principal-portrait{position:relative;width:100%;height:350px;margin:0;overflow:visible;background:none;border:0;border-radius:0;box-shadow:none}
+#rival-cards .rival-principal-portrait img{display:block;position:absolute;width:100%;height:100%;max-width:100%;object-fit:contain;object-position:center;left:0;top:0;pointer-events:none}
+@media(max-width:650px){
+ .workspace-dialog[data-active-panel=rivals]{width:100vw;max-width:100vw;padding-left:12px;padding-right:12px}
+ #rival-cards .rival-card{padding:12px}
+ #rival-cards .rival-identity{grid-template-columns:minmax(0,1fr) 52%;gap:10px}
+ #rival-cards .rival-principal-portrait{height:auto;aspect-ratio:2/3}
+ #rival-cards .rival-banner h3{font-size:18px;letter-spacing:0}
+ #rival-cards .rival-principal,#rival-cards .rival-source-work{font-size:12px}
+ #rival-cards h4{margin-top:14px}
+}
+
+/* v0.14.2: recruitment uses the existing expansion quote and command. */
+.recruit-expansion{margin:18px 0;padding:18px;border:1px solid #62747f;border-radius:12px;background:#283849;color:#f3efe5}
+.recruit-expansion-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.recruit-expansion-heading h3{margin:4px 0;font-size:19px}.recruit-expansion-heading>strong{font-size:22px;white-space:nowrap}.recruit-expansion-heading small{display:block;font-size:11px;font-weight:400;opacity:.75}
+.recruit-expansion p{font-size:13px;line-height:1.65;margin:10px 0}.expansion-requirements{list-style:none;margin:12px 0;padding:0;display:grid;gap:8px}.expansion-requirements li{display:flex;justify-content:space-between;gap:12px;font-size:12px;line-height:1.6}.expansion-requirements b{white-space:nowrap}.expansion-requirements .met{color:#b7dac4}.expansion-requirements .missing{color:#ffd08d}.recruit-expansion .expansion-note{display:block;font-size:11px;line-height:1.7;opacity:.8;margin-top:10px}.recruit-expansion button{min-height:44px;width:100%;margin-top:6px}.recruit-expansion button:disabled{opacity:.65}
+@media(max-width:540px){.recruit-expansion{padding:14px}.expansion-requirements li{display:block}.expansion-requirements b{display:block;padding-left:17px}.recruit-expansion-heading>strong{font-size:20px}}
+
+.custom-stat-control{display:flex;align-items:center;gap:3px}.custom-stat-control input{min-width:0;width:100%;text-align:center}#custom-artist-dialog .custom-stat-control button{flex:0 0 28px;padding:8px 0;margin:0}.custom-stat-control input[aria-invalid="true"]{outline:2px solid #b14532}
+
+/* v0.14.5: center only the rivals modal; keep its existing cards. */
+.workspace-dialog[data-active-panel=rivals]{inset:0;margin:auto;width:min(660px,calc(100vw - 24px));max-width:calc(100vw - 24px);height:min(900px,calc(100dvh - 32px));max-height:calc(100dvh - 32px);border:1px solid #ddd5be;border-radius:18px;overflow-y:auto}

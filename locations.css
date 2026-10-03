@@ -1,0 +1,22 @@
+.location-nav{display:flex;gap:8px;padding:12px 18px;flex-wrap:wrap;background:#f7f2e9;border-bottom:1px solid #e4dacb}
+.location-nav button{border:1px solid #d7cbb8;border-radius:30px;background:#fffaf2;padding:10px 16px;color:#514c42;font:inherit;cursor:pointer}
+.location-nav button[aria-pressed="true"]{background:#314d49;color:#fff;border-color:#314d49}
+.location-stage{background:#e5d6bb}.location-stage[hidden],.studio-scene[hidden]{display:none!important}
+.location-image{display:block;width:100%;height:auto;max-height:600px;object-fit:contain;background:#292c29;aspect-ratio:4/3}
+.location-caption{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 24px;background:#fbf7ee}
+.location-caption h2{font-size:22px;margin:5px 0}.location-caption p{font-size:14px;line-height:1.7;margin:6px 0;color:#625f55}.location-caption small{font-size:11px;color:#797267}
+.location-actions{display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0}.location-caption .eyebrow{font-size:10px;letter-spacing:2px}
+@media(max-width:700px){.location-caption{display:block;padding:16px}.location-actions{margin-top:14px}.location-nav{padding:12px;gap:6px}.location-nav button{font-size:12px;padding:9px 11px}.location-image{max-height:none}}
+
+/* v0.12.4 EAMI only: full original background, no letterboxing or scene crop. */
+.location-visual{position:relative}
+#location-jobs[hidden]{display:none!important}
+.location-stage[data-place=eami] .location-image{width:100%;height:auto;max-height:none;aspect-ratio:auto;object-fit:fill;background:transparent}
+body.scene-edition .location-owner{position:absolute;left:6%;bottom:4%;width:37%;max-width:390px;display:block;padding:0;border:0!important;border-radius:0;background:transparent!important;box-shadow:none!important;color:#fff8e7;cursor:pointer}
+body.scene-edition .location-owner[hidden]{display:none!important}
+.location-owner-portrait{position:relative;display:block;aspect-ratio:500/620;overflow:hidden;pointer-events:none}
+.location-owner-portrait img{position:absolute;width:150%;height:auto;max-width:none;pointer-events:none;user-select:none;left:-23%;top:-33.3871%}
+.location-owner-label{display:block;width:max-content;max-width:100%;margin:0 auto;padding:9px 12px;border:1px solid #d9b878;border-radius:7px;background:#1e2b39f5;text-align:left;line-height:1.5;box-shadow:0 3px 12px #0004}
+.location-owner-label b{display:block;font-size:17px;color:#fff4d9}.location-owner-label small{font-size:11px;color:#e2bf7d;margin-left:5px}.location-owner-label>span{font-size:12px;color:#f3efe5}
+.location-owner:hover .location-owner-label{background:#40576b}
+@media(max-width:700px){body.scene-edition .location-owner{left:4%;bottom:3%;width:44%;max-width:250px}.location-owner-label{padding:5px 7px}.location-owner-label b{font-size:14px}.location-owner-label small{font-size:9px;margin-left:2px}.location-owner-label>span{font-size:10px}}

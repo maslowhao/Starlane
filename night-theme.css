@@ -1,0 +1,101 @@
+/* v0.12.1 approved interface palette. Scene and portrait pixels stay original. */
+:root{color-scheme:dark;--paper:#19232f;--card:#253343;--ink:#f3efe5;--muted:#c3cbd2;--line:#4b5a69;--green:#d9b878;--mint:#304456;--peach:#493b38;--lavender:#3d3b50;--gold:#e2bf7d}
+body.scene-edition{background:#19232f;color:#f3efe5}
+body.scene-edition :is(.sidebar,.workspace-dialog,dialog,.company-controls,.company-room-bar,.studio-world,.location-nav,.scene-topline,.scene-bottomline,.next-step,.studio-funds,.office-overview,.heat-page){background:#202d3b!important;color:#f3efe5!important;border-color:#4b5a69!important}
+body.scene-edition :is(.offer,.assistant-panel,.company-course-preview,.growth-note,.project-card,.equipment-store,.equipment-store article,.quality-cap-note,.equipment-quality-preview,.board-service-status,#booking-summary,.payroll-box,.artist,.artist-body,.recruit-person,.company-candidates article,.teammate,.service-banner,.reception-stats>div,.reception-profile,.reception-trait,.publicity-card,.work-card,.works-summary,.original-card,.career-card){background:#283849!important;color:#f3efe5!important;border-color:#4b5a69!important}
+body.scene-edition :is(p,small,label,span,summary,td,th){color:inherit}
+body.scene-edition :is(.hint,.room-hint,.company-footnote,.company-source,.breadcrumbs,.side-label,.local-badge,.board-note,.reward-note,.job-gains,.requirement,.mode-help,.assistant-tip,.growth-note,.company-picker,.company-panel-heading>span,.scene-note,.side-note,.studio-date,.offer-top small,.recruit-intro,.company-result){color:#c3cbd2!important}
+body.scene-edition :is(.company-source,.scene-topline,.scene-bottomline,.company-room-bar){background:#202d3b!important}
+body.scene-edition :is(h1,h2,h3,h4,b,strong){color:#f3efe5}
+body.scene-edition :is(.studio-funds strong,.company-current strong,.offer-details strong,.office-overview strong,.equipment-store h3){color:#e2bf7d!important}
+body.scene-edition :is(button,.quiet,.file-label){background:#304253;color:#f3efe5;border:1px solid #526475}
+body.scene-edition button:not(:disabled):hover{background:#40576b;color:#fff8e7;border-color:#d9b878}
+body.scene-edition :is(button.primary,.primary,.offer>button:not(:disabled),#company-start:not(:disabled)){background:#d9b878!important;color:#18232f!important;border-color:#e2bf7d!important;font-weight:700}
+body.scene-edition :is(.sidebar button.active,.panel-artist-switch button.selected,.tabs button.selected,.course-options button[aria-pressed=true],nav button[aria-pressed=true]){background:#40576b!important;color:#fff4d9!important;border-color:#d9b878!important}
+body.scene-edition :is(button:disabled,input:disabled){opacity:1;background:#25313e!important;color:#a8b2bc!important;border-color:#465563!important;cursor:not-allowed}
+body.scene-edition :is(input,select){background:#182735!important;color:#f3efe5!important;border-color:#637487!important;accent-color:#d9b878}
+body.scene-edition :is(.type-tag,.pill,.unlock-reason,.trait,.task-box,.debut-box,.training-picker,.risk-note,.company-current){background:#304253;color:#f3efe5;border-color:#526475}
+body.scene-edition :is(.risk-note,.locked,.scene-warning,.negative,.cost-warning){background:#493336!important;color:#ffd1cc!important;border-color:#a56564!important}
+body.scene-edition :is(.company-hotspot,.dynamic-label,.actor-label,.actor-bubble,.room-label,.location-caption,.dynamic-status){background:#1e2b39f5!important;color:#f3efe5!important;border:1px solid #6b7a86!important;box-shadow:0 3px 12px #0006}
+body.scene-edition :is(.dynamic-person,.dynamic-visual,.portrait-card,.secretary-npc){background:transparent!important;border:0!important;box-shadow:none!important}
+body.scene-edition .drawer-header{background:#202d3b!important;border-color:#4b5a69}
+body.scene-edition :is(.company-panel-heading h3,.section-heading h2){font-weight:700;letter-spacing:.04em}
+body.scene-edition :is(.eyebrow,.section-number,.brand-icon,.little-star){color:#e2bf7d!important}
+body.scene-edition :is(.company-footnote,.company-source,.room-hint,.board-note,.reward-note,.job-gains,.requirement,.payroll-box small,.mode-help,.assistant-tip,.growth-note){font-size:12px!important;line-height:1.75}
+body.scene-edition .offer>p{font-size:13px;line-height:1.7}
+body.scene-edition .equipment-table :is(th,td){border-color:#526475}
+body.scene-edition a{color:#e2bf7d}
+body.scene-edition :focus-visible{outline:2px solid #f1ca7c;outline-offset:3px}
+body.scene-edition .company-current{padding:10px;border-radius:8px}
+body.scene-edition .studio-world img,body.scene-edition .dynamic-person img{filter:none}
+body.scene-edition :is(.company-layout,.company-stage,.company-room-visual){background:#202d3b!important}
+body.scene-edition .fx-focus{background:#1e2b39f5!important;color:#f3efe5!important;border:1px solid #6b7a86}
+body.scene-edition .offer-details span,body.scene-edition #assistant-roster-note{color:#c3cbd2!important}
+body.scene-edition :is(.report-grid>div,.office-overview>div,.works-summary>div,.current-activity,.expansion-box,.work-rules,.work-stats,.event,.publicity-choice,.publicity-history,.chart-card,.recruit-refresh){background:#283849!important;color:#f3efe5!important;border-color:#526475!important}
+body.scene-edition :is(.works-intro p,.work-rules p,.expansion-box p,.work-meta,.work-stats small){color:#c3cbd2!important}
+/* Preserve existing success/failure result artwork and label colors. */
+body.scene-edition .fx-result strong{color:#466342}
+body.scene-edition .fx-failure strong{color:#a24935}
+body.scene-edition :is(button.primary:disabled,.offer>button:disabled,#company-start:disabled){background:#25313e!important;color:#a8b2bc!important;border-color:#465563!important}
+
+.return-section{border-top:1px solid #526475;padding:14px 0}.return-section h3{font-size:17px;margin:0 0 10px}.return-section p{line-height:1.75;margin:8px 0}.return-section small{color:#c3cbd2!important;line-height:1.7}.return-actions{display:flex;gap:10px;margin-top:12px}.report-grid strong{color:#e2bf7d!important}
+
+/* v0.12.2: pair every legacy surface with its text, including populated subviews. */
+body.scene-edition :is(#opportunities,.recruit-intro,.recruit-card,.recruit-skills,.work-totals,.work-badge,.works-empty,.empty-company,.work-stages li,.experience-controls){background:#283849!important;color:#f3efe5!important;border-color:#526475!important}
+body.scene-edition :is(.daily-chart,.work-stages .settled,.recruit-skills){background:#1c2b39!important;color:#f3efe5!important}
+body.scene-edition .daily-chart :is(figcaption,small){color:#c3cbd2!important}
+body.scene-edition .daily-chart :is(.chart-axis,.chart-empty){fill:#c3cbd2!important}
+body.scene-edition .daily-chart .chart-grid{stroke:#526475}
+body.scene-edition .daily-chart:first-child :is(polyline,.daily-point){stroke:#9dcebb;fill:#9dcebb}
+body.scene-edition .daily-chart:last-child :is(polyline,.daily-point){stroke:#e2bf7d;fill:#e2bf7d}
+body.scene-edition .daily-chart polyline{fill:none!important}
+body.scene-edition :is(.artist .portrait-area,.artist.peach .portrait-area,.artist.lavender .portrait-area){background:#304253!important;color:#f3efe5!important}
+body.scene-edition :is(.portrait-area .artist-type,.portrait-area h3,.portrait-area p,.artist-mini span,.training-picker small,.queue,.recruit-intro p,.recruit-card small,.recruit-skills,.stage-scroll-hint,.work-pagination){color:#c3cbd2!important}
+body.scene-edition .portrait-area h3{color:#f3efe5!important}
+body.scene-edition :is(.half-portrait,.original-portrait.approved-portrait){background:transparent!important;border:0!important;box-shadow:none!important}
+body.scene-edition .secretary-npc .dynamic-label{background:#1e2b39!important;color:#fff4d9!important;padding:4px 6px!important}
+body.scene-edition .secretary-npc .dynamic-label b{color:#fff4d9!important;font-size:13px;font-weight:700}
+body.scene-edition .secretary-npc .dynamic-label:hover{background:#40576b!important;color:#fff4d9!important}
+body.scene-edition .portrait-area .artist-type{background:#243544!important;color:#f3efe5!important;border-color:#637487}
+body.scene-edition #selected-label{color:#c3cbd2!important}
+body.scene-edition #strategy-status{color:#9dcebb!important}
+
+/* Separate secretary destinations: manual bookings and assistant services. */
+#pane-board:not([hidden]){display:block}#pane-board .offers{grid-template-columns:repeat(2,minmax(0,1fr))}#pane-assistant{max-width:680px;margin:auto}#pane-assistant #booking-summary{padding:16px;border-radius:10px;margin:16px 0}#pane-assistant #assistant{max-width:none;margin:16px 0;padding:20px}#pane-assistant .assistant-strategy summary{cursor:pointer;padding:14px 0;font-weight:700}#pane-assistant .assistant-symbol,#pane-assistant .section-number{display:none}#pane-assistant #assistant h2{font-size:20px}#pane-assistant #assistant input,#pane-assistant #assistant select{max-width:100%;min-width:0}#pane-assistant .form-grid{grid-template-columns:1fr 1fr}@media(max-width:650px){#pane-board .offers{grid-template-columns:1fr}#pane-assistant .form-grid{grid-template-columns:1fr}.drawer-header{gap:8px}.drawer-header>div{flex:1;min-width:0}.drawer-header h2{font-size:19px;letter-spacing:0}.drawer-close{padding:8px;font-size:11px}}
+
+/* v0.12.2: original secretary expression, optional publicity notice, and menu icons. */
+.secretary-menu button{display:flex;align-items:center;gap:10px;text-align:left;font-size:14px;min-height:49px}
+.secretary-menu img{height:30px;width:auto;object-fit:contain;flex:none}
+.secretary-menu .secretary-pr.is-pending{background:#574731;color:#fff3d8;border-color:#c49e5e}
+.secretary-menu .secretary-pr span{font-size:12px}
+body.scene-edition .secretary-bubble{position:absolute;bottom:calc(100% + 6px);left:10%;width:165px;padding:9px 11px;border:1px solid #d4b57d;background:#fff3d8;color:#28313c;font-size:12px;line-height:1.5;text-align:left;border-radius:10px;box-shadow:0 4px 14px #0004;z-index:3}
+.secretary-bubble:after{content:'';position:absolute;left:24px;top:100%;border:7px solid transparent;border-top-color:#fff3d8}
+body.scene-edition .secretary-bubble:not(:disabled):hover{background:#ffe6b3;color:#17232e}
+@media(max-width:650px){body.scene-edition .secretary-bubble{width:132px;font-size:11px;padding:7px 9px;left:2%}.secretary-menu button{font-size:14px}.secretary-menu img{height:28px}}
+
+/* A single short greeting, presentation only; never intercepts controls. */
+.artist-greeting{position:absolute;z-index:9;width:180px;max-width:calc(100% - 16px);padding:9px 12px;background:#fff3d8;color:#28313c;border:1px solid #d4b57d;border-radius:10px;box-shadow:0 3px 10px #0003;font-size:12px;line-height:1.5;pointer-events:none}
+@media(max-width:650px){.artist-greeting{width:154px;padding:7px 9px;font-size:11px}}
+.short-fame-note{font-size:12px;line-height:1.6;color:#d5dfd7}
+
+.artist-persona{padding:14px;margin:12px 0;border:1px solid #536574;border-radius:10px;background:#203140;line-height:1.7;overflow-wrap:anywhere}.artist-persona h4{margin:0 0 8px;color:#e3c184}.artist-persona p{margin:0 0 10px}.artist-persona dl{display:grid;grid-template-columns:5em minmax(0,1fr);gap:6px 10px;margin:0}.artist-persona dt{color:#e3c184}.artist-persona dd{margin:0}
+
+.work-tradeoffs{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;margin:12px 0 20px;background:#203140;border:1px solid #536574;border-radius:10px;line-height:1.65}.work-tradeoffs b,.strategy-tradeoffs b{color:#e3c184}.work-tradeoffs p,.strategy-tradeoffs p{margin:6px 0}.work-tradeoffs>small{grid-column:1/-1;color:#c1ced7}.strategy-tradeoffs{padding:12px;margin:10px 0;border-left:3px solid #d7b879;background:#203140;line-height:1.65}.strategy-tradeoffs small{color:#c1ced7}@media(max-width:650px){.work-tradeoffs{grid-template-columns:1fr}}
+
+/* Keyboard focus stays on the compact nameplate, never the full portrait. */
+body.scene-edition #eami-owner:focus,body.scene-edition #eami-owner:focus-visible{outline:none}
+body.scene-edition #eami-owner:focus-visible .location-owner-label{outline:2px solid #f1ca7c;outline-offset:3px}
+
+/* Readable local diagnostics and shared original-character background. */
+#assistant-diagnostics article{margin:12px 0;padding:14px;border:1px solid #67553b;border-radius:12px;background:#25282a;color:#eee2cb}
+#assistant-diagnostics p{margin:7px 0;line-height:1.65}#assistant-diagnostics li{margin:9px 0;line-height:1.6}#assistant-diagnostics small{color:#c2b8a5}
+.growth-background{margin:12px 0;padding:12px 0;border-top:1px solid #7d6b494d;min-width:0;text-align:left;white-space:normal;overflow-wrap:anywhere}
+.growth-background h4{margin:0 0 7px;color:#e9c47c;font-size:14px;letter-spacing:.08em}
+.growth-background p{margin:0!important;line-height:1.85;font-size:14px;color:#d5ccba}
+.reception-profile>div{min-width:0}.reception-profile .growth-background{max-height:none}
+
+.growth-background details{margin-top:10px}.growth-background summary{cursor:pointer;color:#e9c47c}.growth-background details p{margin-top:12px!important}.reception-profile{align-items:start}@media(max-width:540px){.reception-profile .growth-background{margin-top:14px}}
+
+.assistant-minimum{padding:14px;border-left:3px solid #e9c47c;margin:14px 0;background:#20303f;color:#f3efe5}.assistant-minimum p,.assistant-minimum small{line-height:1.7}.assistant-minimum small{display:block;margin-top:10px;color:#c9c2b6}.assistant-minimum button{margin:5px 0}
+
+.assistant-scope{padding:14px;border:1px solid #68788b;border-radius:10px;line-height:1.7}.assistant-scope select{width:100%}.assistant-scope small{display:block;color:#c9c2b6}

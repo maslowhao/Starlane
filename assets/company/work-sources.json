@@ -1,0 +1,93 @@
+[
+  {
+    "OriginalName": "通告05_唱片錄製B.png",
+    "Layer": "background",
+    "Output": "F:\\明星志願素材\\活動背景\\通告\\通告05_唱片錄製B.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\通告05_唱片錄製B__497588253.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 497588253,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "538381abf8ec3a08fc695749ffe739697b08a6196b74844d207fe83d060fcf72",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/work-audio.png"
+  },
+  {
+    "OriginalName": "通告05_唱片錄製F.png",
+    "Layer": "foreground",
+    "Output": "F:\\明星志願素材\\活動背景\\通告\\通告05_唱片錄製F.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\通告05_唱片錄製F__497676076.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 497676076,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "ddcdcc4ec399b17005a3478d3128f62c10f6e5919255ff111e0934da106ea71b",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/work-audio-front.png"
+  },
+  {
+    "OriginalName": "通告01_電視劇拍攝B.png",
+    "Layer": "background",
+    "Output": "F:\\明星志願素材\\活動背景\\通告\\通告01_電視劇拍攝B.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\通告01_電視劇拍攝B__497151259.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 497151259,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "05e0a6d0b54fcedc5ab1b75741ce32a28b0b767d641a8d4847d693b07d64665e",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/work-tv.png"
+  },
+  {
+    "OriginalName": "通告03_電影拍攝B.png",
+    "Layer": "background",
+    "Output": "F:\\明星志願素材\\活動背景\\通告\\通告03_電影拍攝B.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\通告03_電影拍攝B__497451998.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 497451998,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "9c0ae1556f34da0acae4fb36c66eaa72d41ca0da01a071724af7c975660a0061",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/work-film.png"
+  },
+  {
+    "OriginalName": "通告08_廣告拍攝B.png",
+    "Layer": "background",
+    "Output": "F:\\明星志願素材\\活動背景\\通告\\通告08_廣告拍攝B.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\通告08_廣告拍攝B__497877282.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 497877282,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "3ec9b3ff8f9305c8eff6ad8e3f55d567b65e81875c9948039473011758f6d0f6",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/work-ad.png"
+  },
+  {
+    "OriginalName": "打工03_幕後合音B.png",
+    "Layer": "background",
+    "Output": "F:\\明星志願素材\\活動背景\\打工\\打工03_幕後合音B.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\打工03_幕後合音B__432643018.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 432643018,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "829f5e1c41a21767ee731af46a0f7985db35dd933718ac7aff3aabaf053b245b",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/work-live.png"
+  },
+  {
+    "OriginalName": "打工03_幕後合音F.png",
+    "Layer": "foreground",
+    "Output": "F:\\明星志願素材\\活動背景\\打工\\打工03_幕後合音F.png",
+    "ExistingExport": "F:\\明星志願素材\\待辨識\\GUI_1_0_0\\打工03_幕後合音F__432746737.png",
+    "SourceArchive": "F:\\SteamLibrary\\steamapps\\common\\Stardom3\\Texture\\GUI_1_0_0.imd",
+    "SourceOffset": 432746737,
+    "Width": 360,
+    "Height": 200,
+    "FileSHA256": "29b7b4954a08488598e36144d55c31718cc3daec4b9709558d2c3946f646cf9d",
+    "ReferenceVerification": "Library caption only; reference pixels unavailable",
+    "ProjectAsset": "assets/company/work-live-front.png"
+  }
+]

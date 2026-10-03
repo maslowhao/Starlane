@@ -1,0 +1,19 @@
+(function(r,f){const api=f();if(typeof module==='object'&&module.exports)module.exports=api;else r.StarFirstWorkStory=api;})(globalThis,function(){
+ 'use strict';
+ const KINDS=Object.freeze({radio:'music',cover:'ad',series:'drama'}),PERSONALITIES=['warm','quiet','steady'];
+ const CHOICES=Object.freeze({celebrate:'先好好慶祝這一次。',listen:'慢慢說，我想聽你的感受。',next:'把這次學到的記下來，一起走下一步。'});
+ const OPENING={warm:'話才起了頭，就忍不住把製作時的小插曲一件件說給你聽。',quiet:'看了作品名稱好一會兒，才慢慢把心裡的話說出來。',steady:'把這次做過的事整理成幾行筆記，最後在頁角畫了一個小勾。'};
+ const WORDS={warm:'「真的完成了！有些地方還想再做好一點，不過……我現在很想找人一起開心一下。」',quiet:'「原本有很多話想說，真的完成了，反而不知道先說哪一句。謝謝你願意等我。」',steady:'「這次還有能改進的地方，但說好要完成的，我做到了。下一次，也想一步一步做好。」'};
+ const RESPONSES={warm:{celebrate:'「好啊！今天先不挑毛病。我想把這份開心牢牢記住。」',listen:'「那我從最緊張的那一刻開始說。你願意聽，我就比較說得清楚了。」',next:'「好！我來寫，你也幫我補充。下次再遇到，就不會只顧著緊張了。」'},quiet:{celebrate:'「嗯……那就讓我多看它一會兒。今天，我也想對自己說一聲做得好。」',listen:'「謝謝。你不用急著回答，讓我慢慢把這次的感覺說完就好。」',next:'「我會記下來。那些還說不清楚的地方，也先留著，慢慢弄懂。」'},steady:{celebrate:'「你說得對，完成也是值得停下來看看的一件事。今天先好好收下這個成果。」',listen:'「那我想說說有一段一直不太踏實的地方。有人一起想，應該能看得更清楚。」',next:'「好，先挑一件最能改善的事。等下一份工作來，就照這次的筆記試試看。」'}};
+ const MEMORIES={celebrate:'你說過，完成一件事也值得好好慶祝。那天的心情，我還記得。',listen:'你說願意慢慢聽我說。想到這件事，我就沒那麼急著把話說完了。',next:'我們一起說好，要把學到的事留下來。那份筆記，我還記著。'};
+ function formal(w){return !!w&&KINDS[w.jobId]===w.kind&&Number.isSafeInteger(w.id)&&w.id>0&&typeof w.title==='string'&&Number.isFinite(w.releasedAt)&&w.releasedAt>=0;}
+ function get(s,id){return s.firstWorkStories?.events?.[id]||null;}
+ function record(s,work){if(!formal(work)||get(s,work.artistId))return null;const a=(s.customRegistry||[]).find(a=>a.id===work.artistId);if(!a)return null;const first=[...(s.works||[]),...(s.archivedWorks||[])].filter(w=>w.artistId===a.id&&formal(w)).sort((x,y)=>x.releasedAt-y.releasedAt||x.id-y.id)[0]||work;s.firstWorkStories??={version:1,events:{}};const e={id:`first-work:${a.id}:${first.id}`,artistId:a.id,artistName:a.name,personalityId:a.personalityId,work:{id:first.id,title:first.title,kind:first.kind,jobId:first.jobId,releasedAt:first.releasedAt},status:'pending',choice:null,resolvedAt:null};s.firstWorkStories.events[a.id]=e;return e;}
+ function backfill(s){for(const w of [...(s.works||[]),...(s.archivedWorks||[])])record(s,w);return s;}
+ function resolve(s,id,choice){const e=Object.values(s.firstWorkStories?.events||{}).find(e=>e.id===id);if(!e||!Object.hasOwn(CHOICES,choice))return {ok:false,reason:'這段故事或回應不存在。'};if(e.status!=='pending')return {ok:false,reason:'已記住這次回應，可重看故事。'};e.status='resolved';e.choice=choice;e.resolvedAt=s.lastTick;return {ok:true};}
+ function text(e){const type={music:'單曲',ad:'封面作品',drama:'電視作品'}[e.work.kind],detail={music:'那些反覆練過的旋律，現在有了完整的樣子。',ad:'鏡頭前試過的姿態，終於留在完成的畫面裡。',drama:'那些練過的台詞，終於連成了完整的演出。'}[e.work.kind];return [`${e.artistName}的第一件正式${type}《${e.work.title}》完成了。${detail}`,`${e.artistName}${OPENING[e.personalityId]}`,WORDS[e.personalityId]];}
+ function result(e){return e.status==='resolved'?RESPONSES[e.personalityId][e.choice]:null;}
+ function memory(s,id){const e=get(s,id);return e?.status==='resolved'?`《${e.work.title}》完成以後，${MEMORIES[e.choice]}`:null;}
+ function validate(s){const h=s.firstWorkStories;if(h===undefined)return;const fail=()=>{throw Error('首件作品故事紀錄損壞');};if(!h||h.version!==1||!h.events||typeof h.events!=='object'||Array.isArray(h.events))fail();for(const [id,e] of Object.entries(h.events)){if(!e||!(s.customRegistry||[]).some(a=>a.id===id)||e.artistId!==id||!formal(e.work)||e.work.id>s.workSerial||e.id!==`first-work:${id}:${e.work.id}`||typeof e.artistName!=='string'||!e.artistName.trim()||!PERSONALITIES.includes(e.personalityId)||!['pending','resolved'].includes(e.status))fail();if(e.status==='pending'?(e.choice!==null||e.resolvedAt!==null):(!Object.hasOwn(CHOICES,e.choice)||!Number.isFinite(e.resolvedAt)||e.resolvedAt<e.work.releasedAt))fail();}}
+ return {CHOICES,get,record,backfill,resolve,text,result,memory,validate};
+});
