@@ -1,0 +1,39 @@
+/* Original Talk images rendered as whole, proportional assets. */
+#music-chapter-reader{width:min(621px,calc(100vw - 20px));max-height:94dvh;box-sizing:border-box;overflow-y:auto;border:0;border-radius:0;padding:8px;background:transparent!important;box-shadow:none;color:#fff4e6}
+#music-chapter-reader::backdrop{background:#080b1185;backdrop-filter:blur(2px)}
+#music-chapter-reader header{display:flex;justify-content:flex-end;align-items:center;border:0;background:transparent;margin:0;padding:0;box-shadow:none}
+#music-chapter-reader header>small,#music-chapter-reader footer>p{display:none}
+#music-chapter-reader h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0;padding:0}
+#music-chapter-reader figure{margin:8px 0;aspect-ratio:4/3;position:relative;overflow:hidden;border-radius:10px}
+#music-chapter-reader figure img{width:100%;height:100%;object-fit:cover;display:block}
+#music-chapter-reader figure picture{display:block;height:100%}
+#music-chapter-reader .music-chapter-character{position:absolute;bottom:0;left:25%;width:50%;height:94%;object-fit:contain;object-position:bottom}
+#music-chapter-reader .music-speech{position:relative;width:100%;aspect-ratio:605/178;margin:12px 0 16px;border:0;padding:0;background:none;box-sizing:border-box}
+#music-chapter-reader .music-talk-frame{position:absolute;inset:0;display:block;pointer-events:none}
+#music-chapter-reader .music-talk-frame img{display:block;width:100%;height:100%;object-fit:contain}
+#music-chapter-reader .music-dialogue-portrait{position:absolute;left:1%;bottom:9%;width:21.8%;height:79%;object-fit:contain;object-position:center bottom}
+#music-chapter-reader .music-speaker-name{position:absolute;left:23.63%;top:0;width:21%;height:16.85%;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:0 10px;background:none;color:#fff5e4;font-size:13px;line-height:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#music-chapter-reader .music-speech-copy{position:absolute;left:25.8%;right:4.14%;top:21.35%;bottom:11.24%;padding:0;min-width:0}
+#music-chapter-reader .music-speech-copy p{box-sizing:border-box;width:100%;height:100%;margin:0;padding:0;overflow:hidden;overflow-wrap:anywhere;white-space:pre-wrap;color:#fff4e6;font-size:16px;line-height:1.6;text-shadow:0 1px 2px #000}
+#music-chapter-reader .music-chapter-dialogue>small{display:inline-block;margin-top:6px;text-shadow:0 1px 3px #000;font-weight:600}
+#music-chapter-reader .music-chapter-nav,#music-chapter-reader .music-text-pages{display:flex;align-items:center;flex-wrap:wrap;gap:10px;width:100%}
+#music-chapter-reader .music-text-pages:empty{display:none}
+#music-chapter-reader .music-text-pages{margin-bottom:10px}
+#music-chapter-reader .music-text-pages small{padding:5px 8px;background:#292321ed;border-radius:4px}
+#music-chapter-reader .music-chapter-choices{display:grid;gap:10px;width:100%}
+#music-chapter-reader [hidden]{display:none!important}
+#music-chapter-reader button,#music-chapter-reader select{min-height:44px;white-space:normal;max-width:100%;background:#302a25f5;border:1px solid #b4a38a;border-radius:5px;color:#fff4e6;box-shadow:0 2px 5px #0004}
+#music-chapter-reader button:hover,#music-chapter-reader button:focus-visible{background:#544536;outline-color:#fff0d0}
+#music-chapter-reader footer{border:0;background:transparent;margin-top:12px;padding:0;box-shadow:none;display:flex;flex-wrap:wrap;gap:10px}
+#music-chapter-reader footer label{background:#292321ed;padding:8px 12px;border-radius:4px}
+.music-chapter-entry{padding:10px 0}.music-chapter-entry small{white-space:nowrap}
+@media(max-width:540px){
+ #music-chapter-reader{padding:6px;width:calc(100vw - 20px)}
+ #music-chapter-reader .music-speech{aspect-ratio:480/178}
+ #music-chapter-reader .music-speech.has-portrait{margin-top:100px}
+ #music-chapter-reader .music-dialogue-portrait{left:auto;right:4%;bottom:calc(100% + 4px);width:90px;height:90px}
+ #music-chapter-reader .music-speaker-name{left:3.33%;width:26.67%;font-size:clamp(11px,3.2vw,13px);padding:0 7px}
+ #music-chapter-reader .music-speech-copy{left:5.84%;right:5.84%;top:21.35%;bottom:11.24%}
+ #music-chapter-reader .music-chapter-choices button{text-align:left}
+ #music-chapter-reader figure{max-height:260px}
+}

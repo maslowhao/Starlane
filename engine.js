@@ -1,8 +1,8 @@
 (function (root, factory) {
-  const api = factory(typeof module === 'object' && module.exports ? require('./roster.js') : root.StarRoster, typeof module === 'object' && module.exports ? require('./works.js') : root.StarWorks, typeof module === 'object' && module.exports ? require('./publicity.js') : root.StarPublicity, typeof module === 'object' && module.exports ? require('./development.js') : root.StarDevelopment, typeof module === 'object' && module.exports ? require('./career.js') : root.StarCareer, typeof module === 'object' && module.exports ? require('./custom-artists.js') : root.StarCustomArtists, typeof module === 'object' && module.exports ? require('./domain-history.js') : root.StarDomainHistory, typeof module === 'object' && module.exports ? require('./first-work-story.js') : root.StarFirstWorkStory, typeof module === 'object' && module.exports ? require('./rival-growth.js') : root.StarRivalGrowth, typeof module === 'object' && module.exports ? require('./training-rotation.js') : root.StarTrainingRotation);
+  const api = factory(typeof module === 'object' && module.exports ? require('./roster.js') : root.StarRoster, typeof module === 'object' && module.exports ? require('./works.js') : root.StarWorks, typeof module === 'object' && module.exports ? require('./publicity.js') : root.StarPublicity, typeof module === 'object' && module.exports ? require('./development.js') : root.StarDevelopment, typeof module === 'object' && module.exports ? require('./career.js') : root.StarCareer, typeof module === 'object' && module.exports ? require('./custom-artists.js') : root.StarCustomArtists, typeof module === 'object' && module.exports ? require('./domain-history.js') : root.StarDomainHistory, typeof module === 'object' && module.exports ? require('./first-work-story.js') : root.StarFirstWorkStory, typeof module === 'object' && module.exports ? require('./rival-growth.js') : root.StarRivalGrowth, typeof module === 'object' && module.exports ? require('./training-rotation.js') : root.StarTrainingRotation, typeof module==='object'&&module.exports?require('./music-chapter.js'):root.StarMusicChapter);
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.StarGame = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function (ROSTER, WORKS, PUBLICITY, DEVELOPMENT, CAREER, CUSTOM, DOMAIN_HISTORY, FIRST_STORY, RIVALS, ROTATION) {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (ROSTER, WORKS, PUBLICITY, DEVELOPMENT, CAREER, CUSTOM, DOMAIN_HISTORY, FIRST_STORY, RIVALS, ROTATION, CHAPTER) {
   'use strict';
   const VERSION = 31;
   const MUSIC=CAREER.MUSIC,REVENUE=WORKS.REVENUE;
@@ -52,7 +52,7 @@
   function catalog(s){return [...PEOPLE,...CUSTOM.people(s)];}
   function identity(s,id){return PEOPLE.find(p=>p.id===id)||CUSTOM.people(s).find(p=>p.id===id);}
   function customQuote(s,d){if(s.customRecruitCardUsed||s.hasEverSigned||s.artists.length||s.customRegistry.length)return {ok:false,reason:'自創藝人僅限新公司第一位藝人；本局已完成首次簽約。'};const check=CUSTOM.inspect(d);if(!check.ok)return check;const normalized=check.name.normalize('NFKC').toLocaleLowerCase('en');if(s.artists.some(a=>a.name.normalize('NFKC').toLocaleLowerCase('en')===normalized)||PEOPLE.some(a=>a.name.normalize('NFKC').toLocaleLowerCase('en')===normalized))return {ok:false,reason:'這個姓名已由現有藝人使用，請換一個名字。'};const quote=signingQuote({...check.stats,fame:0}),candidate={...check.stats,fame:0,debuted:false};const eligible=JOBS.filter(j=>!j.productionDays&&!jobLocks(candidate,j).length).map(j=>j.name);if(s.artists.length>=s.capacity)return {ok:false,reason:'公司名額已滿，請先完成擴充或辦理解約。',quote,eligible};if(s.cash<quote.fee)return {ok:false,reason:'公司資金不足，簽約需要 $'+quote.fee+'。',quote,eligible};return {ok:true,...check,quote,eligible};}
-  function createCustom(s,d){const q=customQuote(s,d);if(!q.ok)return q;const id='custom_'+(s.customSerial+1),record={id,name:q.name,portraitId:d.portraitId,personalityId:d.personalityId,stats:{...q.stats}},candidate=CUSTOM.definition(record);s.customSerial++;s.customRegistry.push(record);s.customRecruitCardUsed=true;refreshCandidates(s,s.candidates);s.cash-=q.quote.fee;s.artists.push({...candidate,assistantStrategy:strategySnapshot(DEFAULT_STRATEGY),contractFee:q.quote.fee,debuted:false,shortFameUnits:0,longFameUnits:0,fatigue:0,task:null,project:null,queue:[],growthProgress:{}});s.hasEverSigned=true;s.refreshRemaining=0;log(s,`${q.name}以自創素人身分加入公司，實付簽約金 $${q.quote.fee}；名氣0、總能力162。`,s.lastTick);return {ok:true,id,fee:q.quote.fee};}
+  function createCustom(s,d){const q=customQuote(s,d);if(!q.ok)return q;const id='custom_'+(s.customSerial+1),record={id,name:q.name,portraitId:d.portraitId,personalityId:d.personalityId,stats:{...q.stats}},candidate=CUSTOM.definition(record);s.customSerial++;s.customRegistry.push(record);s.customRecruitCardUsed=true;refreshCandidates(s,s.candidates);s.cash-=q.quote.fee;s.artists.push({...candidate,assistantStrategy:strategySnapshot(DEFAULT_STRATEGY),contractFee:q.quote.fee,debuted:false,shortFameUnits:0,longFameUnits:0,fatigue:0,task:null,project:null,queue:[],growthProgress:{}});s.hasEverSigned=true;s.refreshRemaining=0;log(s,`${q.name}以自創素人身分加入公司，實付簽約金 $${q.quote.fee}；名氣0、總能力162。`,s.lastTick);CHAPTER.scan(s);return {ok:true,id,fee:q.quote.fee};}
   function signingFormula() { return `簽約金＝${SIGNING_PRICE.base}＋九項平均×${SIGNING_PRICE.averageWeight}＋最高能力×${SIGNING_PRICE.peakWeight}，四捨五入至 ${SIGNING_PRICE.step} 元。含名氣；採初始能力，疲勞與稀有度不加價。`; }
   function create(now = Date.now()) {
     const s = { version: VERSION, growthRng: 362436069, rng: 123456789, cash: 2500, totalEarned: 0, totalJobs: 0, companyReputation:0, startedAt: now, lastTick: now,
@@ -249,7 +249,7 @@
 
     if(source==='assistant'&&info.kind==='train')ROTATION.started(s,a,action.skill);
     MUSIC.consume(s,action);
-    DOMAIN_HISTORY.accepted(s,id,action);
+    DOMAIN_HISTORY.accepted(s,id,action);CHAPTER.started(s,id,action);
     return { ok: true };
   }
   function serviceActive(s){return !!s.assistant.enabled||s.artists.some(a=>a.project?.assisted);}
@@ -397,6 +397,7 @@
       a.fatigue = clamp(a.fatigue + fatigue, 0, 100);const pr=PUBLICITY.completed(s,a,at,info,summary.offline);if(pr)log(s,`${a.name}遇到公關事件，等待經紀人選擇；行程照常繼續。`,at);
     } else if(info.kind==='compose'){const i=CAREER.prepare(s,a,info.ideaId);a.fatigue=clamp(a.fatigue+fatigueCost(a,info),0,100);const g=DEVELOPMENT.apply(s,a,t.growth);summary.growth.intellect+=g.gain;log(s,`${a.name}完成一次寫詞／作曲準備：${i?.progress||0}/100；才智 +${g.gain}。`,at);
     } else if (info.kind === 'train') {
+      CHAPTER.trained(s,a);
       const preview=t.growth, fatigue = fatigueCost(a, info), failed=preview.failed;
       const development=DEVELOPMENT.apply(s,a,preview,true),gain=development.gain; summary.training++; summary.growth[info.skill] += gain;
       summary.outcomes.push({id:a.id,kind:'train',result:failed?'defeat':'cheer',at});
@@ -438,7 +439,7 @@
     const skipped = elapsed - simulated;
     if (skipped) for (const a of s.artists) if (a.task) { a.task.started += skipped; a.task.ends += skipped;if(a.task.production?.rest){a.task.production.rest.started+=skipped;a.task.production.rest.ends+=skipped;} }
     if(skipped)for(const a of s.artists)if(a.project)a.project.nextAt+=skipped;
-    s.lastTick = Math.max(now, s.lastTick);
+    s.lastTick = Math.max(now, s.lastTick);CHAPTER.scan(s);
     summary.net = s.cash - before;
     summary.cashBefore=before;summary.cashAfter=s.cash;summary.trainingCosts=Math.max(0,summary.earned+(summary.playbackEarned||0)-summary.salary-summary.net);
     summary.completedWorks=[...s.works.slice(existingWorks),...(s.career.completedWorks||[]).slice(priorSpecial)].map(w=>({title:w.title,artistName:w.artistName,kind:w.kind}));
@@ -572,10 +573,10 @@
     if(!s.customRecruitCardUsed&&(signedEvidence||!knownFirstSign)){s.customRecruitCardUsed=true;refreshCandidates(s,s.candidates);if(!knownFirstSign&&!signedEvidence)s.migrationNotice=(s.migrationNotice||'')+' 舊檔缺少首次簽約歷史，為避免開放後續創角，本局不補發自創候選卡；既有角色保留。';}
     if(s.candidates.some(id=>!PEOPLE.some(p=>p.id===id&&recruitEligible(p))))refreshCandidates(s,s.candidates);
     RIVALS.validate(s);ROTATION.validate(s,catalog(s));
-    DOMAIN_HISTORY.validate(s,catalog(s));DOMAIN_HISTORY.backfill(s);FIRST_STORY.validate(s);FIRST_STORY.backfill(s);
+    DOMAIN_HISTORY.validate(s,catalog(s));DOMAIN_HISTORY.backfill(s);FIRST_STORY.validate(s);FIRST_STORY.backfill(s);CHAPTER.validate(s);CHAPTER.scan(s);
     s.report = null;
     return s;
   }
   function resolvePublicity(s,id,choice){const r=PUBLICITY.resolve(s,id,choice);if(r.ok){log(s,`${r.artistName||'公關事件'}：${r.text}${r.expired?'':` 個人名氣 ${r.delta>=0?'+':''}${r.delta}。`}`,s.lastTick);unlock(s,s.lastTick);}return r;}
-  return { RIVALS,ROTATION,trainingSelection:ROTATION.get, FIRST_STORY, DOMAIN_HISTORY, REVENUE, MUSIC, SPECIAL_RECRUIT_IDS,recruitEligible,CUSTOM,catalog,identity,customQuote,createCustom, VERSION, LONG_FAME, longFamePreview, SHORT_FAME, shortFamePreview, CAREER,originalChoice,renameOriginal:CAREER.renameIdea,launchOriginal, DEVELOPMENT, buyEquipment:(s,k,l)=>DEVELOPMENT.buy(s,k,l), OFFLINE_SHORT_FACTOR, PUBLICITY,resolvePublicity, serviceNames,stopServices, receptionProjectStatus,projectPhase,currentActivityLabel, REPUTATION_GAIN, serviceActive, manageProject, workProject, cancelProject, projectLabel, PRODUCTION_DAYS, productionProgress, taskCountdown, restProduction, ACTION_SECONDS, WORKS, EXPANSIONS, expansionQuote, expand, CANDIDATE_COUNT, SPECIAL_CHANCE, activityClip, WORK_SCENES, locationName, rerollCandidates, RELEASE_RATIO, releaseQuote, release, CANDIDATE_WEIGHTS, refreshCandidates, locationOf, MAX_ARTISTS, LEGACY_RECRUIT_COST, SIGNING_PRICE, SIGNING_STATS, signingQuote, recruitQuote, signingFormula, SALARY_RATE, STAT_CAP, OFFLINE_CAP, TYPES, SKILLS, TRAINING, JOBS, PEOPLE, create, recruit, payout, fatigueCost, isSetback, confidenceLoss, fameGain, growthMax, trainingGain, trainingPreview, actionInfo, taskInfo, jobLocks, debutLocks, debut, canStart, start, enqueue, cancel, removeQueue, DEFAULT_STRATEGY, effectiveStrategy, setArtistStrategy, settings, setAssistant, setSalary, nextAction, decide, canDecide, advance, save, restore };
+  return { CHAPTER,RIVALS,ROTATION,trainingSelection:ROTATION.get, FIRST_STORY, DOMAIN_HISTORY, REVENUE, MUSIC, SPECIAL_RECRUIT_IDS,recruitEligible,CUSTOM,catalog,identity,customQuote,createCustom, VERSION, LONG_FAME, longFamePreview, SHORT_FAME, shortFamePreview, CAREER,originalChoice,renameOriginal:CAREER.renameIdea,launchOriginal, DEVELOPMENT, buyEquipment:(s,k,l)=>DEVELOPMENT.buy(s,k,l), OFFLINE_SHORT_FACTOR, PUBLICITY,resolvePublicity, serviceNames,stopServices, receptionProjectStatus,projectPhase,currentActivityLabel, REPUTATION_GAIN, serviceActive, manageProject, workProject, cancelProject, projectLabel, PRODUCTION_DAYS, productionProgress, taskCountdown, restProduction, ACTION_SECONDS, WORKS, EXPANSIONS, expansionQuote, expand, CANDIDATE_COUNT, SPECIAL_CHANCE, activityClip, WORK_SCENES, locationName, rerollCandidates, RELEASE_RATIO, releaseQuote, release, CANDIDATE_WEIGHTS, refreshCandidates, locationOf, MAX_ARTISTS, LEGACY_RECRUIT_COST, SIGNING_PRICE, SIGNING_STATS, signingQuote, recruitQuote, signingFormula, SALARY_RATE, STAT_CAP, OFFLINE_CAP, TYPES, SKILLS, TRAINING, JOBS, PEOPLE, create, recruit, payout, fatigueCost, isSetback, confidenceLoss, fameGain, growthMax, trainingGain, trainingPreview, actionInfo, taskInfo, jobLocks, debutLocks, debut, canStart, start, enqueue, cancel, removeQueue, DEFAULT_STRATEGY, effectiveStrategy, setArtistStrategy, settings, setAssistant, setSalary, nextAction, decide, canDecide, advance, save, restore };
 });

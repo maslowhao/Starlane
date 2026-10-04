@@ -14,7 +14,7 @@
   const trainChoices = Object.fromEntries(G.PEOPLE.map(p=>[p.id,'sing']));
   const Scene = window.StarScene;
   let activePanel = 'artist', activeRoom = null, panelOpener = null, boardCompany = null, opportunityCompany = null;
-  let loadError = '', migrated = false;
+  let loadError = '', migrated = false, loadedExisting = false;
   try {
     const raw = localStorage.getItem(KEY);
     if(raw&&JSON.parse(raw).version<16&&!localStorage.getItem(ARCHIVE_BACKUP))localStorage.setItem(ARCHIVE_BACKUP,raw);
@@ -26,6 +26,7 @@
     if(raw&&JSON.parse(raw).version<27&&!localStorage.getItem(CAREER_BACKUP))localStorage.setItem(CAREER_BACKUP,raw);
     if(raw&&JSON.parse(raw).version<28&&!localStorage.getItem(EQUIPMENT_BACKUP))localStorage.setItem(EQUIPMENT_BACKUP,raw);
     state = raw ? G.restore(raw) : DEMO?newExperience():G.create();
+    loadedExisting = !!raw;
     if (raw && JSON.parse(raw).version !== G.VERSION) {
       if (!localStorage.getItem(BACKUP)) localStorage.setItem(BACKUP, raw);
       migrated = true;
@@ -194,7 +195,7 @@
       const skill = trainChoices[a.id]||'sing', course = G.TRAINING[skill], locks = G.debutLocks(a), debutReady = !a.debuted && !locks.length && !a.task, preview = G.trainingPreview(a, skill);
       return `<article class="artist ${a.color} ${a.id === selected ? 'selected' : ''}" data-artist="${a.id}">
         <div class="portrait-area" data-select="${a.id}"><div class="artist-identity"><span class="artist-type">${a.debuted ? (a.role.replace(/新人$/,'藝人')) : '練習生 · ' + (a.role.replace(/新人$/,'藝人'))}</span>${StarSingingRanksUI.chips(state,a)}<h3>${esc(a.name)}</h3><p>${a.tag}</p></div>${portrait(a.id)}${a.id === selected ? '<span class="selection-dot">●</span>' : ''}</div>
-        <div class="artist-body">${StarFirstWorkUI.card(state,a)}<div class="trait">✦ ${esc(StarDisplayCopy.trait(a.trait))}</div>${personaCard(a)}
+        <div class="artist-body">${StarMusicChapterUI.card(state,a)}${StarFirstWorkUI.card(state,a)}<div class="trait">✦ ${esc(StarDisplayCopy.trait(a.trait))}</div>${personaCard(a)}
         <div class="ability-grid">${Object.entries(G.SKILLS).map(([k, label]) => statsRow(label, a[k])).join('')}</div>
         <div class="artist-mini"><b>名氣 ${a.fame.toLocaleString()}/999 · 粉絲 ${(state.fansByArtist[a.id]||0).toLocaleString()}</b><span>${a.debuted ? '正式出道' : '培育中 · 出道由你決定'}</span></div>
         ${statsRow('疲勞', a.fatigue, 'fatigue ' + (a.fatigue >= 70 ? 'high' : ''))}
@@ -250,6 +251,7 @@
   }
   function renderSignature(){return state.artists.map(a => [a.task?.started, a.task?.action.kind, a.task?.production?.rest?.ends, a.project?.done,a.project?.assisted,a.project?.nextAt,a.fame, a.fatigue, ...Object.keys(G.SKILLS).map(k => a[k])].join(',')).join('|') + ':' + state.assistant.enabled+':'+state.works.length+':'+Object.values(state.fansByArtist).join(',')+':'+state.works.reduce((n,w)=>n+w.settled,0)+':'+state.events.map(e=>e.id).join(',')+':'+(state.publicity.pending?.id||'');}
   function render() {
+    G.CHAPTER.scan(state);
     window.StarDevelopmentUI.render(state);
     $('assistant-projects').innerHTML='<h3>進行中的長案管理</h3>'+(state.artists.filter(a=>a.project).map(a=>window.StarProjectUI.card(a,state)).join('')||'<p>目前沒有進行中的長案。</p>');
     if(!state.artists.some(a=>a.id===selected))selected=state.artists[0]?.id||null;
@@ -309,6 +311,7 @@
     const b = e.target.closest('button,[data-select]'); if (!b || b.disabled || stopped) return;
     if(b.dataset.idea){const r=mutate(()=>G.originalChoice(state,b.dataset.idea,b.dataset.ideaChoice));if(r)toast(r.ok?'企劃決定已記錄。':r.reason);return;}
     if(b.dataset.compose){const r=mutate(()=>G.enqueue(state,b.dataset.composer,{kind:'compose',ideaId:b.dataset.compose}));if(r)toast(r.ok?'創作準備開始。':r.reason);return;}
+    if(b.hasAttribute('data-music-story')){const id=b.dataset.musicStory||G.CHAPTER.pending(state)?.artist.id;if(id)window.StarMusicChapterUI.open(state,id,mutate);return;}
     if(b.dataset.firstStoryChoice){b.disabled=true;const r=mutate(()=>G.FIRST_STORY.resolve(state,b.dataset.firstStoryId,b.dataset.firstStoryChoice));if(r&&!r.ok)toast(r.reason);return;}
     if(b.hasAttribute('data-custom-create')){closeHeat();closeWorkspace();window.StarCustomUI.open({state:()=>state,confirm:d=>{const r=mutate(()=>{const result=G.createCustom(state,d);if(result.ok){selected=result.id;trainChoices[result.id]='sing';}return result;});if(r?.ok)toast('自創藝人已簽約加入，可開始安排培育。');return r;}});return;}
     if(b.hasAttribute('data-secretary-menu')){closeHeat();closeWorkspace();document.querySelector('[data-location=home]').click();window.StarCompany.openAssistant();return;}
@@ -396,8 +399,9 @@
     finally { e.target.value = ''; }
   });
   $('reset').addEventListener('click', () => {
-    if (confirm('確定重新開局？目前進度會被清除；建議先匯出備份。')) { if (!ownTab()) return; state = DEMO?newExperience():G.create(); presence=window.StarPresence.create(G,state,clock,document.hidden); storageOK = true; selected = 'lin'; eventKey = ''; populateSettings(); persist(); render(); toast('新的工作室開張了'); }
+    if (confirm('確定重新開局？目前進度會被清除；建議先匯出備份。')) { if (!ownTab()) return; window.StarUpdateNotice?.newGame(); state = DEMO?newExperience():G.create(); presence=window.StarPresence.create(G,state,clock,document.hidden); storageOK = true; selected = 'lin'; eventKey = ''; populateSettings(); persist(); render(); toast('新的工作室開張了'); }
   });
+  window.addEventListener('pageshow',()=>{if(state.musicChapter?.reader)StarMusicChapterUI.resume(state,mutate);});
   window.addEventListener('pagehide', () => { if(ownTab()){presence.close();persist();} });
   window.addEventListener('pageshow', () => { if(ownTab()&&!document.hidden){const r=presence.show();if(r){persist();render();if(r.elapsed>=10000)showReport(r);}} });
   document.addEventListener('visibilitychange', () => {
@@ -435,4 +439,5 @@
   else if (state.report) showReport(state.report);
   if (migrated && state.migrationNotice) modal('<h2>新版進度保留與規則說明</h2><p>'+esc(StarDisplayCopy.migration(state.migrationNotice))+'</p>');
   window.StarStartup?.ready();
+  window.StarUpdateNotice?.init({existing:loadedExisting,enabled:!DEMO&&!loadError&&storageOK});
 })();

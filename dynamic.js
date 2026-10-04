@@ -65,8 +65,9 @@
   a.el.querySelector('.dynamic-visual').setAttribute('aria-label',firstRecruit&&recruitMobile.matches&&!pending&&!invitations?'小秘書，捲到本頁候選藝人區':'小秘書，開啟助理管理');
   const expression=pending?'panic':'normal';
   if(a.el.dataset.expression!==expression){a.el.dataset.expression=expression;a.ready=false;delete a.el.dataset.ready;StarImages.set(a.visual,base+'assets/artists/secretary'+(pending?'-panic':'')+'.png',true);a.visual.alt='小秘書 · '+(pending?'慌張表情':'一般表情');}
+  const story=G.CHAPTER.pending(state);
   let bubble=a.el.querySelector('.secretary-bubble');
-  if(!pending&&!invitations&&!firstRecruit){bubble?.remove();return;}
+  if(!pending&&!invitations&&!firstRecruit&&!story){bubble?.remove();return;}
   const firstNotice=!pending&&!invitations&&firstRecruit,passive=firstNotice&&!recruitMobile.matches;
     if(bubble&&bubble.tagName!==(passive?'SPAN':'BUTTON')){bubble.remove();bubble=null;}
     if(!bubble){bubble=document.createElement(passive?'span':'button');if(!passive)bubble.type='button';bubble.className='secretary-bubble';a.el.append(bubble);}
@@ -75,6 +76,7 @@
     bubble.onclick=firstNotice&&!passive?()=>window.StarCompany.showRecruitment():null;
     bubble.dataset.notice=pending?'publicity':invitations?'invitation':'first-recruit';
     bubble.textContent=pending?'出事了，快看看！':invitations?`有重要邀約，等你決定（${invitations} 件）`:recruitMobile.matches?'老闆，公司準備好囉！點這裡，來認識第一位藝人吧！':'老闆，公司準備好囉！來認識第一位藝人吧！';
+  delete bubble.dataset.musicStory;if(story&&!pending&&!invitations){delete bubble.dataset.panel;bubble.onclick=null;bubble.dataset.musicStory=story.artist.id;bubble.dataset.notice='music-story';bubble.textContent=story.artist.name+'有一段音樂故事，等你回應';}
   bubble.setAttribute('aria-label',bubble.textContent+(pending?' 開啟公關事件':invitations?' 查看重要邀約':!passive?' 捲到本頁候選藝人區':''));
  }
  recruitMobile.addEventListener('change',()=>{const a=actors.get('secretary');if(a&&state)updateSecretary(a,state.publicity.pending,state.events.length,!state.hasEverSigned&&!state.artists.length);});
