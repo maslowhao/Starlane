@@ -1,5 +1,8 @@
 /* Original Talk images rendered as whole, proportional assets. */
 #music-chapter-reader{width:min(621px,calc(100vw - 20px));max-height:94dvh;box-sizing:border-box;overflow-y:auto;border:0;border-radius:0;padding:8px;background:transparent!important;box-shadow:none;color:#fff4e6}
+/* Dialog autofocus must not outline the transparent layout container.
+   Interactive controls retain their keyboard :focus-visible indicators. */
+#music-chapter-reader:focus,#music-chapter-reader:focus-visible{outline:none}
 #music-chapter-reader::backdrop{background:#080b1185;backdrop-filter:blur(2px)}
 #music-chapter-reader header{display:flex;justify-content:flex-end;align-items:center;border:0;background:transparent;margin:0;padding:0;box-shadow:none}
 #music-chapter-reader header>small,#music-chapter-reader footer>p{display:none}
