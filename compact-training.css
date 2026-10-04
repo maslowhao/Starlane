@@ -1,0 +1,90 @@
+body.scene-edition .mobile-services{display:flex;flex-direction:row;align-items:flex-start;gap:8px;flex:1 1 420px;padding:0;border:0;min-width:0}
+body.scene-edition .mobile-services>.studio-assistant{flex:0 0 auto;align-self:flex-start}
+body.scene-edition .mobile-services>.service-banner{flex:1;min-width:0;margin:0;padding:7px 9px;gap:5px;font-size:11px;line-height:1.5}
+body.scene-edition .mobile-services>.service-banner small{font-size:10px;line-height:1.5;overflow-wrap:anywhere}
+body.scene-edition .mobile-services>.service-banner button{font-size:10px;padding:5px 7px;white-space:normal;min-height:28px}
+@media(max-width:540px){
+ body.scene-edition .mobile-services{padding:9px 10px;gap:6px}
+ body.scene-edition .mobile-services>.studio-assistant{width:100px;font-size:10px;padding:7px;min-width:0}
+ body.scene-edition .mobile-services>.service-banner{font-size:10px;padding:6px 8px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-layout{display:flex;flex-direction:column}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls{order:0;padding:10px 12px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-scene-column{order:1;width:100%}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-panel-heading{margin:0 0 7px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-panel-heading>span{display:none}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-panel-heading h3{font-size:15px;margin:0}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-picker{margin:5px 0;font-size:11px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) #company-artist{margin:4px 0;padding:6px}
+ body.scene-edition .course-picker{margin:7px 0}.course-picker>b{font-size:12px}
+ body.scene-edition .course-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ body.scene-edition .course-options button{font-size:10px;padding:6px 3px;min-width:0;min-height:38px;gap:3px}
+ body.scene-edition .course-options .course-icon{width:19px;height:19px;object-fit:contain}
+ body.scene-edition .company-current{margin:7px 0;padding:7px 9px}
+ body.scene-edition .training-inline-actions{margin:5px 0 9px;padding:0}
+ body.scene-edition .training-action-person{font-size:11px}.company-action-buttons{gap:5px}
+ body.scene-edition .company-action-buttons button{font-size:11px;padding:8px;min-height:34px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) #company-room-image{height:220px;object-fit:cover}
+}
+
+.mobile-course-summary,.mobile-training-rules{display:none}
+@media(max-width:540px){
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-layout{align-items:stretch}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls{display:contents}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>*{order:8;margin-left:12px;margin-right:12px;min-width:0}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>.company-panel-heading{order:0;margin-top:10px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>.company-picker{order:1}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>.course-picker{order:2}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>.company-current{order:3}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>.training-inline-actions{order:4}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>.mobile-course-summary{display:flex;flex-direction:column;gap:4px;order:5;background:#293b4b;border-radius:7px;padding:9px 11px;margin-top:0;margin-bottom:10px;font-size:12px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-scene-column{order:6}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>.mobile-training-rules{display:block;order:8;padding:8px 0;font-size:12px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-controls>:is(.growth-note,.company-course-preview,.company-reason){display:none}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .company-layout>.mobile-services{order:100;flex:none;margin-top:8px}
+}
+
+@media(max-width:540px){
+ body.scene-edition .company-stage[data-room=reception] #company-controls{padding:10px 12px}
+ body.scene-edition .reception-team-info{display:flex;flex-direction:column}
+ body.scene-edition .reception-team-info>.company-panel-heading{display:none}
+ body.scene-edition .reception-team-info>.company-picker{order:0;margin:0 0 5px;font-size:11px}
+ body.scene-edition .reception-team-info #company-artist{padding:6px;margin-top:4px}
+ body.scene-edition .reception-profile{order:1;grid-template-columns:60px minmax(0,1fr);gap:9px;padding:3px 0}
+ body.scene-edition .reception-profile .half-portrait{width:60px!important;height:82px!important}
+ body.scene-edition .reception-profile h3{font-size:18px;margin:3px 0}
+ body.scene-edition .reception-profile p{font-size:11px;margin:3px 0;line-height:1.4}
+ body.scene-edition .reception-profile small{font-size:10px}
+ body.scene-edition .reception-stats{order:2;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:7px 0}
+ body.scene-edition .reception-stats>div{padding:6px;background:#293b4b;border-radius:6px;font-size:11px;gap:3px}
+ body.scene-edition .reception-stats b{font-size:16px;color:#e2bf7d}
+ body.scene-edition .reception-fatigue{order:3;margin:7px 0}
+ body.scene-edition .reception-team-info>:not(.company-panel-heading,.company-picker,.reception-profile,.reception-stats,.reception-fatigue){order:4}
+ body.scene-edition .reception-mobile-story{padding:8px 0;font-size:12px}
+}
+/* Reception keyboard focus belongs on the name, never around the cutout portrait. */
+body.scene-edition .company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) :is(.dynamic-visual,.dynamic-label):focus-visible{outline:none}
+body.scene-edition .company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) .dynamic-visual:focus-visible~.dynamic-label b,
+body.scene-edition .company-stage[data-room=reception] .dynamic-person:not(.secretary-npc) .dynamic-label:focus-visible b{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+
+/* Pure course guidance, anchored inside the scene; hidden while artists use the room. */
+.training-secretary-guide{position:absolute;left:12px;bottom:40px;display:flex;align-items:center;gap:2px;z-index:6;pointer-events:none;max-width:calc(100% - 24px)}
+.training-secretary-guide[hidden]{display:none!important}
+.training-secretary-guide>img{width:90px;height:130px;object-fit:contain;flex:none}
+body.scene-edition .training-secretary-guide>p{max-width:188px;background:#fff6df;color:#334a44;border:1px solid #e2c68d;border-radius:12px 12px 12px 2px;padding:10px 12px;font-size:13px;line-height:1.6;margin:0;box-shadow:0 3px 12px #17273330}
+@media(max-width:540px){
+ body.scene-edition #location-stage>.mobile-services{flex:none;border-top:1px solid #53616d;margin-top:4px}
+ body.scene-edition .company-business-dialog header{min-height:0;padding:9px 12px;gap:8px}
+ body.scene-edition .company-business-dialog header small{font-size:10px}
+ body.scene-edition .company-business-dialog h2{font-size:16px;margin:3px 0;line-height:1.4}
+ body.scene-edition .company-business-dialog header button{padding:7px 9px;font-size:11px;white-space:nowrap}
+ body.scene-edition .company-business-dialog>p{padding:0 12px;margin:0 0 7px;font-size:11px;line-height:1.45}
+ body.scene-edition #company-business-content{padding:0 12px 12px}
+ body.scene-edition .company-business-dialog #panel-artist-switch{padding:7px 9px;margin:0 0 7px;font-size:11px}
+ body.scene-edition .company-business-dialog .board-toolbar{margin:5px 0;gap:5px}
+ body.scene-edition .company-business-dialog .mobile-business-rules{margin:6px 0 9px;padding:7px 9px;background:#293e4f;border-radius:6px;font-size:11px;line-height:1.5}
+ body.scene-edition .mobile-business-rules summary{cursor:pointer;color:#ecd5a8}
+ body.scene-edition .company-business-dialog .work-tradeoffs{padding:8px 0 0;margin:0;gap:6px}
+ .training-secretary-guide{left:7px;bottom:34px;gap:0}
+ .training-secretary-guide>img{width:67px;height:94px}
+ body.scene-edition .training-secretary-guide>p{max-width:156px;padding:7px 9px;font-size:11px;line-height:1.55}
+}

@@ -2,9 +2,10 @@
  'use strict';
  const G=window.StarGame,base=new URL('.',document.currentScript.src).href;
  const crops={"s3_1": {"top": 208, "center": 418.0}, "s3_2": {"top": 141, "center": 386.5}, "s3_3": {"top": 201, "center": 391.0}, "s3_4": {"top": 188, "center": 374.0}, "s3_5": {"top": 89, "center": 376.5}, "s3_6": {"top": 137, "center": 401.5}, "s3_7": {"top": 155, "center": 377.0}, "s3_8": {"top": 179, "center": 500.0}, "s3_9": {"top": 112, "center": 413.5}, "s3_10": {"top": 83, "center": 404.0}, "s3_11": {"top": 92, "center": 389.5}, "s3_12": {"top": 126, "center": 410.5}, "s3_65": {"top": 221, "center": 385.5}, "s3_72": {"top": 87, "center": 382.5}, "s3_74": {"top": 196, "center": 445.5}, "s3_75": {"top": 132, "center": 394.5}, "s3_76": {"top": 135, "center": 373.5}, "s3_77": {"top": 96, "center": 400.0}, "secretary": {"top": 200, "center": 385}};
+ const recruitMobile=matchMedia('(max-width:540px)');
  const actors=new Map(),seenResults=new Set();let state=null,room='reception',select=()=>{};
  const fxBase=base+'assets/effects/';
- let greeting=null,greetingTimer=null;
+ let greeting=null,greetingTimer=null,lastSecretaryGreeting=-Infinity,secretaryGreetingIndex=0;
  function clearGreeting(){clearTimeout(greetingTimer);document.getElementById('artist-greeting')?.remove();greeting=null;}
  function placeGreeting(){
   const b=document.getElementById('artist-greeting'),actor=actors.get(greeting?.id);if(!b||!actor)return;
@@ -22,6 +23,14 @@
   const b=document.createElement('div');b.id='artist-greeting';b.className='artist-greeting';b.setAttribute('role','status');b.textContent=a.name+'：'+window.StarGreetings.nextLine(a,state);
   document.querySelector('.company-room-visual').append(b);greeting={id,state:window.StarGreetings.stateKey(a,state)};placeGreeting();greetingTimer=setTimeout(clearGreeting,3800);
  }
+ function secretaryGreeting(){
+  if(!state?.hasEverSigned||!state.artists.length||room!=='reception'||document.getElementById('company-stage').hidden||state.publicity.pending||state.events.length||performance.now()-lastSecretaryGreeting<45000)return;
+  clearGreeting();lastSecretaryGreeting=performance.now();
+  const lines=['今天，也一起向前一點。','窗邊的咖啡還溫著。','下一個舞台正在等你們。'],b=document.createElement('div');
+  b.id='artist-greeting';b.className='artist-greeting';b.dataset.speaker='secretary';b.setAttribute('role','status');b.textContent=lines[secretaryGreetingIndex++%lines.length];b.setAttribute('aria-label','小秘書：'+b.textContent);
+  document.querySelector('.company-room-visual').append(b);greeting={id:'secretary',state:'daily'};placeGreeting();greetingTimer=setTimeout(clearGreeting,3800);
+ }
+ document.addEventListener('click',e=>{if(e.target.closest('[data-location=home],[data-company-room=reception]'))setTimeout(secretaryGreeting,0);});
  document.addEventListener('click',e=>{if(e.target.closest('[data-location],[data-panel],[data-home],[data-secretary-menu],[data-company-room]'))clearGreeting();});
  document.addEventListener('change',e=>{if(e.target.id==='company-artist')clearGreeting();});
  addEventListener('resize',placeGreeting);
@@ -40,28 +49,35 @@
   frame.append(image);el.append(frame,ongoing,label,result);document.getElementById('dynamic-layer').append(el);
   const actor={id,el,visual:image,status,ready:false,error:null,clip:'idle',reaction:null,pos:null};actors.set(id,actor);
   image.onload=()=>{actor.ready=true;el.dataset.ready='true';requestAnimationFrame(()=>{fitReception(actor);placePracticeFx(actor);});};image.onerror=()=>{actor.error='肖像載入失敗';status.textContent=actor.error;};image.src=base+p.portrait;
-  const choose=()=>{clearGreeting();if(id==='secretary')window.StarCompany.openAssistant();else{select(id);if(room==='reception')speak(id);}};frame.onclick=choose;label.onclick=choose;
+  const choose=()=>{clearGreeting();if(id==='secretary'){if(!window.StarCompany.showRecruitment())window.StarCompany.openAssistant();}else{select(id);if(room==='reception')speak(id);}};frame.onclick=choose;label.onclick=choose;
   return actor;
  }
  function fitReception(actor){const img=actor.visual,frame=img.parentElement;if(actor.id==='secretary')return;if(!img.complete||!img.naturalWidth)return;if(room!=='reception'){if(actor.fitted){img.style.cssText=actor.originalStyle;actor.fitted=false;}return;}const b=window.StarPortraitBounds[img.src.slice(base.length)]||[0,0,1,1],w=img.naturalWidth,h=img.naturalHeight,scale=Math.min(frame.clientWidth/((b[2]-b[0])*w),frame.clientHeight/((b[3]-b[1])*h));actor.originalStyle??=img.style.cssText;actor.fitted=true;img.style.cssText=`position:absolute;width:${w*scale}px;height:${h*scale}px;max-width:none;left:${(frame.clientWidth-(b[2]-b[0])*w*scale)/2-b[0]*w*scale}px;top:${frame.clientHeight-b[3]*h*scale}px;object-fit:fill`;
  }
  addEventListener('resize',()=>{for(const a of actors.values())fitReception(a);});
- function update(next,newRoom,onSelect,visibleIds=null){if(room!==newRoom){clearReactions();clearGreeting();}state=next;room=newRoom;select=onSelect;const ids=next.artists.filter(a=>G.locationOf(a)===room&&(!visibleIds||visibleIds.includes(a.id))).map(a=>a.id);if(room==='reception')ids.unshift('secretary');if(greeting){const talking=next.artists.find(a=>a.id===greeting.id);if(!talking||window.StarGreetings.stateKey(talking,next)!==greeting.state)clearGreeting();}
+ function update(next,newRoom,onSelect,visibleIds=null){const greetOnArrival=newRoom==='reception'&&(!state||room!==newRoom||(!state.hasEverSigned&&next.hasEverSigned));if(room!==newRoom){clearReactions();clearGreeting();}state=next;room=newRoom;select=onSelect;const ids=next.artists.filter(a=>G.locationOf(a)===room&&(!visibleIds||visibleIds.includes(a.id))).map(a=>a.id);if(room==='reception')ids.unshift('secretary');if(greeting){const talking=next.artists.find(a=>a.id===greeting.id);if(greeting.id==='secretary'){if(next.publicity.pending||next.events.length||!next.artists.length)clearGreeting();}else if(!talking||window.StarGreetings.stateKey(talking,next)!==greeting.state)clearGreeting();}
   for(const [id,a] of actors)if(!ids.includes(id)){if(greeting?.id===id)clearGreeting();a.el.remove();actors.delete(id);}
-  for(const id of ids){const a=actors.get(id)||make(id),p=next.artists.find(p=>p.id===id);if(p)a.el.querySelector('.dynamic-visual').setAttribute('aria-label',p.name+(room==='reception'?'，打招呼並切換右側近況':'，切換目前藝人'));a.clip=p?G.activityClip(p):'idle';a.el.dataset.clip=a.clip;a.el.dataset.activity=p?.task?.action.kind||'idle';const people=ids.filter(x=>x!=='secretary'),slot=people.indexOf(id),xs=room==='reception'?(people.length===1?[64]:people.length===2?[47,78]:[39,63,85]):people.length===1?[50]:people.length===2?[34,70]:[22,50,79];a.el.style.left=(id==='secretary'?12:xs[slot])+'%';a.el.style.bottom=(id==='secretary'?3:room==='reception'?(people.length===3?[14,28,12][slot]:people.length===2?[14,24][slot]:15):people.length===3?[8,20,4][slot]:people.length===2?[7,17][slot]:9)+'%';a.el.style.setProperty('--reception-bottom',(people.length===3?[12,18,10][slot]:people.length===2?[12,15][slot]:12)+'%');updateOngoing(a,p);requestAnimationFrame(()=>{fitReception(a);placePracticeFx(a);});if(id==='secretary')updateSecretary(a,next.publicity.pending,next.events.length);a.status.textContent=p?G.currentActivityLabel(p):'公司櫃台 · 招募／代排';document.getElementById('dynamic-layer').append(a.el);}
+  for(const id of ids){const a=actors.get(id)||make(id),p=next.artists.find(p=>p.id===id);if(p)a.el.querySelector('.dynamic-visual').setAttribute('aria-label',p.name+(room==='reception'?(recruitMobile.matches?'，打招呼並查看場景下方近況':'，打招呼並查看右側近況'):'，切換目前藝人'));a.clip=p?G.activityClip(p):'idle';a.el.dataset.clip=a.clip;a.el.dataset.activity=p?.task?.action.kind||'idle';const people=ids.filter(x=>x!=='secretary'),slot=people.indexOf(id),xs=room==='reception'?(people.length===1?[64]:people.length===2?[47,78]:[39,63,85]):people.length===1?[50]:people.length===2?[34,70]:[22,50,79];a.el.style.left=(id==='secretary'?12:xs[slot])+'%';a.el.style.bottom=(id==='secretary'?3:room==='reception'?(people.length===3?[14,28,12][slot]:people.length===2?[14,24][slot]:15):people.length===3?[8,20,4][slot]:people.length===2?[7,17][slot]:9)+'%';a.el.style.setProperty('--reception-bottom',(people.length===3?[12,18,10][slot]:people.length===2?[12,15][slot]:12)+'%');updateOngoing(a,p);requestAnimationFrame(()=>{fitReception(a);placePracticeFx(a);});if(id==='secretary')updateSecretary(a,next.publicity.pending,next.events.length,!next.hasEverSigned&&!next.artists.length);a.status.textContent=p?G.currentActivityLabel(p):'公司櫃台 · 招募／代排';document.getElementById('dynamic-layer').append(a.el);}
   document.getElementById('dynamic-note').textContent=`本房間 ${ids.filter(id=>id!=='secretary').length} 位藝人`;
+  if(greetOnArrival)requestAnimationFrame(secretaryGreeting);
  }
- function updateSecretary(a,pending,invitations){
+ function updateSecretary(a,pending,invitations,firstRecruit){
+  a.el.querySelector('.dynamic-visual').setAttribute('aria-label',firstRecruit&&recruitMobile.matches&&!pending&&!invitations?'小秘書，捲到本頁候選藝人區':'小秘書，開啟助理管理');
   const expression=pending?'panic':'normal';
   if(a.el.dataset.expression!==expression){a.el.dataset.expression=expression;a.ready=false;delete a.el.dataset.ready;a.visual.src=base+'assets/artists/secretary'+(pending?'-panic':'')+'.png';a.visual.alt='小秘書 · '+(pending?'慌張表情':'一般表情');}
   let bubble=a.el.querySelector('.secretary-bubble');
-  if(!pending&&!invitations){bubble?.remove();return;}
-  if(!bubble){bubble=document.createElement('button');bubble.type='button';bubble.className='secretary-bubble';bubble.dataset.panel='publicity';a.el.append(bubble);}
-  bubble.dataset.panel=pending?'publicity':'opportunities';
-    bubble.dataset.notice=pending?'publicity':'invitation';
-    bubble.textContent=pending?'出事了，快看看！':`有重要邀約，等你決定（${invitations} 件）`;
-  bubble.setAttribute('aria-label',bubble.textContent+(pending?' 開啟公關事件':' 查看重要邀約'));
+  if(!pending&&!invitations&&!firstRecruit){bubble?.remove();return;}
+  const firstNotice=!pending&&!invitations&&firstRecruit,passive=firstNotice&&!recruitMobile.matches;
+    if(bubble&&bubble.tagName!==(passive?'SPAN':'BUTTON')){bubble.remove();bubble=null;}
+    if(!bubble){bubble=document.createElement(passive?'span':'button');if(!passive)bubble.type='button';bubble.className='secretary-bubble';a.el.append(bubble);}
+    if(passive)bubble.setAttribute('role','status');
+  if(firstNotice)delete bubble.dataset.panel;else bubble.dataset.panel=pending?'publicity':'opportunities';
+    bubble.onclick=firstNotice&&!passive?()=>window.StarCompany.showRecruitment():null;
+    bubble.dataset.notice=pending?'publicity':invitations?'invitation':'first-recruit';
+    bubble.textContent=pending?'出事了，快看看！':invitations?`有重要邀約，等你決定（${invitations} 件）`:recruitMobile.matches?'老闆，公司準備好囉！點這裡，來認識第一位藝人吧！':'老闆，公司準備好囉！來認識第一位藝人吧！';
+  bubble.setAttribute('aria-label',bubble.textContent+(pending?' 開啟公關事件':invitations?' 查看重要邀約':!passive?' 捲到本頁候選藝人區':''));
  }
+ recruitMobile.addEventListener('change',()=>{const a=actors.get('secretary');if(a&&state)updateSecretary(a,state.publicity.pending,state.events.length,!state.hasEverSigned&&!state.artists.length);});
  function placePracticeFx(actor){
   const img=actor.visual,host=actor.el.querySelector('[data-fx-ongoing=practice]');if(!host||!img.complete||!img.naturalWidth)return;
   const ir=img.getBoundingClientRect(),fr=actor.el.querySelector('.dynamic-visual').getBoundingClientRect(),hr=host.getBoundingClientRect(),css=getComputedStyle(img),padL=parseFloat(css.paddingLeft)||0,padR=parseFloat(css.paddingRight)||0,padT=parseFloat(css.paddingTop)||0,padB=parseFloat(css.paddingBottom)||0;

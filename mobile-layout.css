@@ -1,0 +1,32 @@
+body.scene-edition .secretary-bubble[data-notice=first-recruit]{pointer-events:none;cursor:default;display:block;}
+/* Narrow-screen local trial. Existing controls move; state and players stay intact. */
+@media(max-width:540px){
+ body.scene-edition .intro.intro-company-only{margin:10px 0 9px;padding:0;gap:5px}
+ body.scene-edition .intro-company-only .studio-date{width:100%;min-width:0;gap:3px!important;padding:0;text-align:left}
+ body.scene-edition .intro-company-only .studio-date>span{font-size:10px!important;line-height:1.3}
+ body.scene-edition .intro-company-only .studio-date>strong{font-size:17px!important;line-height:1.4;letter-spacing:1px}
+ body.scene-edition .intro-company-only .studio-date>small{font-size:11px!important;line-height:1.5;margin:0}
+ body.scene-edition .studio-toolbar{gap:6px;margin-bottom:10px;align-items:stretch}
+ body.scene-edition .studio-toolbar .recruit-entry{padding:6px 9px;font-size:10px}
+ body.scene-edition .studio-toolbar .recruit-entry small{margin-top:2px;font-size:9px}
+ body.scene-edition .studio-toolbar .studio-funds{padding:6px 9px;gap:6px;flex:1;min-width:0;justify-content:flex-end;flex-wrap:wrap}
+ body.scene-edition .studio-toolbar .studio-funds span{font-size:10px}
+ body.scene-edition .studio-toolbar .studio-funds strong{font-size:16px!important;letter-spacing:0;overflow-wrap:anywhere}
+ body.scene-edition main>header{align-items:center;row-gap:6px}
+ body.scene-edition main>header .header-actions{width:100%;justify-content:flex-end;gap:7px}
+ body.scene-edition main>header>.reception-music{width:100%;justify-content:flex-end;gap:5px;padding:2px 0;font-size:10px;margin:0}
+ body.scene-edition main>header>.reception-music button{padding:5px 7px;font-size:10px;min-height:28px}
+ body.scene-edition main>header>.reception-music input{width:72px;min-width:0;height:24px}
+ body.scene-edition main>header>.reception-music output{min-width:22px}
+ body.scene-edition main>header>.reception-music [role=status]{flex-basis:auto;font-size:9px}
+ body.scene-edition .mobile-services{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-top:1px solid #495967}
+ body.scene-edition .mobile-services>.studio-assistant{align-self:flex-start;max-width:100%;font-size:11px}
+ body.scene-edition .mobile-services>.service-banner{margin:0;font-size:11px;gap:7px;padding:10px 12px}
+ body.scene-edition .mobile-services>.service-banner small{line-height:1.6}
+ body.scene-edition .mobile-services>.service-banner button{white-space:normal;min-height:30px}
+}
+
+@media(max-width:540px){body.scene-edition .secretary-bubble[data-notice=first-recruit]{pointer-events:auto;cursor:pointer}#company-controls .company-candidates{scroll-margin-top:16px}}
+
+@media(max-width:540px){body.scene-edition .secretary-bubble[data-notice=first-recruit]{width:min(280px,74vw);font-size:11px;line-height:1.45;padding:5px 8px;bottom:calc(100% + 2px)}}
+@media(max-width:420px){body.scene-edition .artist-greeting[data-speaker=secretary]{width:82px;padding:3px 6px;font-size:11px;line-height:1.3}}

@@ -99,3 +99,10 @@ body.scene-edition #eami-owner:focus-visible .location-owner-label{outline:2px s
 .assistant-minimum{padding:14px;border-left:3px solid #e9c47c;margin:14px 0;background:#20303f;color:#f3efe5}.assistant-minimum p,.assistant-minimum small{line-height:1.7}.assistant-minimum small{display:block;margin-top:10px;color:#c9c2b6}.assistant-minimum button{margin:5px 0}
 
 .assistant-scope{padding:14px;border:1px solid #68788b;border-radius:10px;line-height:1.7}.assistant-scope select{width:100%}.assistant-scope small{display:block;color:#c9c2b6}
+
+/* Local slogan trial: company figures stay; greetings appear inside the secretary menu. */
+body.scene-edition .intro.intro-company-only{justify-content:flex-end}
+body.scene-edition .secretary-daily-greeting{position:relative;margin:0 0 16px;padding:12px 15px;border:1px solid #d4b57d;border-radius:12px;background:#fff3d8;color:#28313c;max-width:100%;overflow-wrap:anywhere}
+body.scene-edition .secretary-daily-greeting:after{content:'';position:absolute;left:24px;top:100%;border:7px solid transparent;border-top-color:#fff3d8}
+body.scene-edition .secretary-daily-greeting small{display:block;color:#695735;font-size:11px;margin-bottom:4px}
+body.scene-edition .secretary-daily-greeting p{color:#28313c!important;margin:0;font-size:14px;line-height:1.6}
