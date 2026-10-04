@@ -434,4 +434,5 @@
   else if (!storageOK) modal('<h2>目前是暫存遊玩模式</h2><p>這個瀏覽器無法自動存檔。請使用「匯出存檔」保留進度，或改用一般 Chrome／Edge 視窗開啟。</p>');
   else if (state.report) showReport(state.report);
   if (migrated && state.migrationNotice) modal('<h2>新版進度保留與規則說明</h2><p>'+esc(StarDisplayCopy.migration(state.migrationNotice))+'</p>');
+  window.StarStartup?.ready();
 })();
