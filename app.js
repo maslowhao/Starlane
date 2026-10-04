@@ -9,6 +9,7 @@
   const money = StarMoney.format;
   const confirm = text => window.confirm(StarMoney.legacy(text));
   const uid = Date.now() + '-' + Math.random();
+  let lastSignature = '';
   let state, selected = null, filter = 'all', lastSave = 0, stopped = false, toastTimer, storageOK = true, channel;
   const trainChoices = Object.fromEntries(G.PEOPLE.map(p=>[p.id,'sing']));
   const Scene = window.StarScene;
@@ -93,9 +94,9 @@
   function mutate(fn) { if (!sync()) return; const result = fn(); persist(); render(); return result; }
   const portraitBase = new URL('.', document.currentScript.src).href;
   const portraitCrops={"s3_1": {"top": 208, "center": 418.0}, "s3_2": {"top": 141, "center": 386.5}, "s3_3": {"top": 201, "center": 391.0}, "s3_4": {"top": 188, "center": 374.0}, "s3_5": {"top": 89, "center": 376.5}, "s3_6": {"top": 137, "center": 401.5}, "s3_7": {"top": 155, "center": 377.0}, "s3_8": {"top": 179, "center": 500.0}, "s3_9": {"top": 112, "center": 413.5}, "s3_10": {"top": 83, "center": 404.0}, "s3_11": {"top": 92, "center": 389.5}, "s3_12": {"top": 126, "center": 410.5}, "s3_65": {"top": 221, "center": 385.5}, "s3_72": {"top": 87, "center": 382.5}, "s3_74": {"top": 196, "center": 445.5}, "s3_75": {"top": 132, "center": 394.5}, "s3_76": {"top": 135, "center": 373.5}, "s3_77": {"top": 96, "center": 400.0}};
-  function portrait(id) { const p=typeof id==='number'?G.PEOPLE[id]:G.identity(state,id);return p?`<img class="artist-portrait" src="${portraitBase+p.portrait}" alt="${esc(p.name)}肖像">`:''; }
+  function portrait(id) { const p=typeof id==='number'?G.PEOPLE[id]:G.identity(state,id);return p?`<img class="artist-portrait" ${StarImages.attrs(portraitBase+p.portrait)} alt="${esc(p.name)}肖像">`:''; }
   const emptyCompany = message => `<div class="empty-company"><span>✦</span><h3>公司還在等待第一位夥伴。</h3><p>${message}</p><button class="primary" data-panel="recruit">尋找／招募藝人 →</button></div>`;
-  function recruitmentPortrait(id) {const p=G.identity(state,id),c=['s3_1','s3_6','s3_12','s3_7'].includes(id)?null:portraitCrops[id];if(!c)return `<div class="half-portrait original-portrait ${p.portraitStatus==='已批准原創2D立繪'?'approved-portrait':''}"><img src="${portraitBase+p.portrait}" alt="${esc(p.name)}半身肖像"></div>`;return `<div class="half-portrait"><img src="${portraitBase+p.portrait}" alt="${esc(p.name)}半身肖像" style="left:${50-c.center/5}%;top:${-c.top/6.2}%;width:150%;height:auto"></div>`;}
+  function recruitmentPortrait(id) {const p=G.identity(state,id),c=['s3_1','s3_6','s3_12','s3_7'].includes(id)?null:portraitCrops[id];if(!c)return `<div class="half-portrait original-portrait ${p.portraitStatus==='已批准原創2D立繪'?'approved-portrait':''}"><img ${StarImages.attrs(portraitBase+p.portrait)} alt="${esc(p.name)}半身肖像"></div>`;return `<div class="half-portrait"><img ${StarImages.attrs(portraitBase+p.portrait)} alt="${esc(p.name)}半身肖像" style="left:${50-c.center/5}%;top:${-c.top/6.2}%;width:150%;height:auto"></div>`;}
   let presence=window.StarPresence.create(G,state,clock,document.hidden);
   function liveAdvance(){const r=presence.tick();window.StarDynamic?.react(r.outcomes,state);return r;}
   let expansionCooldownUntil=0;
@@ -247,6 +248,7 @@
     for(const el of $('assistant-form').querySelectorAll('input,select,button'))el.disabled=!a;
     const next=a?G.ROTATION.next(state,a):null;$('training-rotation-status').textContent=a?(next?'下一堂：'+(next==='speech'?'聲音表現（口才）':G.SKILLS[next]+'訓練'):'所選課程皆已滿級，需訓練時改為休息。'):'請先招募藝人。';
   }
+  function renderSignature(){return state.artists.map(a => [a.task?.started, a.task?.action.kind, a.task?.production?.rest?.ends, a.project?.done,a.project?.assisted,a.project?.nextAt,a.fame, a.fatigue, ...Object.keys(G.SKILLS).map(k => a[k])].join(',')).join('|') + ':' + state.assistant.enabled+':'+state.works.length+':'+Object.values(state.fansByArtist).join(',')+':'+state.works.reduce((n,w)=>n+w.settled,0)+':'+state.events.map(e=>e.id).join(',')+':'+(state.publicity.pending?.id||'');}
   function render() {
     window.StarDevelopmentUI.render(state);
     $('assistant-projects').innerHTML='<h3>進行中的長案管理</h3>'+(state.artists.filter(a=>a.project).map(a=>window.StarProjectUI.card(a,state)).join('')||'<p>目前沒有進行中的長案。</p>');
@@ -279,6 +281,7 @@
       replacement?.focus({ preventScroll: true });
     }
     $('logs').innerHTML = state.log.length ? state.log.slice(0, 12).map(l => `<div class="log-row"><time>${new Date(l.at).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false })}</time><span>${esc(StarDisplayCopy.migration(l.text))}</span></div>`).join('') : '<div class="empty-log">工作室剛亮起燈。先選一位藝人，接下第一場通告吧。</div>';
+    lastSignature=renderSignature();
   }
   function populateSettings() {
     renderStrategyTarget();const c = targetStrategy();
@@ -289,6 +292,8 @@
     $('max-fatigue').value = String(c.maxFatigue); $('fallback').value = c.fallback; for(const el of document.querySelectorAll('[data-train-skill]'))el.checked=G.trainingSelection(state,targetArtist()).skills.includes(el.value);
   }
   function showReport(r) {
+    // An auto-saved, never-staffed company has no work to report. Keep settlement intact.
+    if(!state.hasEverSigned&&!state.artists.length&&!state.works.length&&!state.totalJobs&&!state.totalEarned&&!state.payroll.paid&&!state.events.length&&!state.publicity.pending&&!state.career.ideas.length&&!state.career.completedWorks?.length)return;
     const pending=r.pending||{publicity:state.publicity.pending?1:0,invitations:state.events.length,originals:state.career.ideas.filter(i=>['pending','revision','ready'].includes(i.status)).length},cost=r.trainingCosts??Math.max(0,r.earned+(r.playbackEarned||0)-(r.salary||0)-r.net);
     modal(`<div class="eyebrow">WELCOME BACK, MANAGER</div><h2>這段時間，公司做了什麼？</h2><p>結算 ${Math.floor(r.simulated/60000)} 分 ${Math.floor(r.simulated/1000)%60} 秒${r.capped?'；超過4小時未計入':''}。日常依原有安排與服務設定推進，待決事項沒有代選。</p>
     <section class="return-section"><h3>等你決定</h3><p data-report-pending>公關 ${pending.publicity} 件 · 重要邀約 ${pending.invitations} 件 · 原創企劃 ${pending.originals} 件</p><small>待決事項不阻擋無關日常。原創修改中的企劃仍依原時程等待。</small><div class="return-actions">${pending.publicity?'<button data-report-panel="publicity">查看公關</button>':''}${pending.invitations||pending.originals?'<button data-report-panel="opportunities">查看邀約／原創企劃</button>':''}</div></section>
@@ -365,7 +370,7 @@
   $('workspace-dialog').addEventListener('cancel', e => { e.preventDefault(); closeWorkspace(); });
   $('auto-enabled').addEventListener('change', () => { const enabled = $('auto-enabled').checked; mutate(() => G.setAssistant(state, enabled)); toast(enabled ? state.assistant.enabled ? `助理已上班，薪資 ${money(state.payroll.rate)}/分鐘，從公司資金支付` : '公司資金不足，無法啟用助理' : G.serviceActive(state)?'一般代排已關閉；長案管理仍計薪，可於藝人卡暫停':'助理服務已停止，不再計薪；現有短行程會完成'); });
   $('close-modal').addEventListener('click', () => { $('modal').close(); state.report = null; persist(); });
-  $('help').addEventListener('click', () => modal('<div class="eyebrow">THE FIRST DAY AT STARLANE</div><h2>從練習生，走向第一個舞台。</h2><p>新公司從 0 人開始。先按「尋找／招募藝人」，從本次出現的兩位候選人選一位（依卡片確定報價簽約、公司初始 1 人名額，可擴至 3 人），再接「街角品牌企劃」或「巷口短篇劇」，5 秒後拿到收入與名氣。再選培育課程，補足出道與通告門檻。</p><ul><li>簽約金採初始九項能力平均與最高值計算，卡片顯示確定報價；已簽藝人保留實付金額，解約支付原實付的 50%。這是初版平衡設計。</li><li>九項能力為演技、歌藝、口才、儀態、動感、體能、才智、自信、名氣。前八項可訓練；名氣由工作累積。疲勞是獨立狀態。</li><li>每則通告所有門檻都必須達標。畫面列出目前值與差距；手動、待辦與助理共用同一檢查。</li><li>出道需名氣 30、儀態 34、自信 34，以及演技／歌藝／口才／動感任一 45。空閒時由你宣布，助理不代做。</li><li>單曲製作4日、單元劇7日、封面2日（初版）；1日約43秒，每5秒更新進度，整件完成才付一次報酬並啟動7日熱度。製作中可休息5秒自動續作；取消不保留進度。普通小通告維持5秒。訓練 5 秒，每次 $80–100、疲勞 +8–12。每次僅指定能力隨機 +1–3；才智提高抽到高點的機率，不額外疊加，才智課也適用。短通告名氣另以2／2.5／1.5為基礎，名氣0–149／150–399／400–699／700–899／900–998時依序按100%／40%／12%／4%／1%累積；不足整點存檔保留。普通通告僅主能力 +1–2；三項需出道的進階通告與主演／長約為重要通告，僅主能力 +1–5。名氣依各類通告的獨立規則計算。疲勞60起成長50%、80起25%，向下取整、成功至少1；訓練基礎失敗率3%，疲勞80以上改為50%（單次判定、不疊加）；失敗當次零成長，原有能力與小數進度保留，學費與疲勞照常、不額外罰款。能力上限999。成長與失敗在開始時固定，重載不重抽。休息 5 秒，疲勞 −45。</li><li>體能0–999 點降低 0–40% 工作疲勞（向上取整）；名氣0–999 點增加 0–20% 報酬；普通長作以15／18／12為基礎，名氣0–149／150–399／400–699／700–899／900–998依100%／50%／15%／5%／2%累積，接案時鎖定，完工才入帳，小數另存。重要邀約及原創企劃維持原規則；三種短案另用短案曲線。</li><li>大型通告完成後疲勞達 85 會失誤：報酬 80%、名氣 50%；自信越高，自信損失越少。自信不是全局成功率。</li><li>可排 3 項不同待辦。無資格、體力或資金不足時略過並記錄。取消不獲得成長或報酬，訓練費退回。</li><li>助理可選開啟：培養優先會依指定能力訓練，通告優先則依已儲存的類型、最低報酬及完成後疲勞上限代排；不符合時訓練或休息。手排優先，出道／主演／長約留你決定。</li><li>每 5 秒及操作後存檔。離線最多結算 4 小時；只有助理開啟才自動接新工作。請固定使用相同瀏覽器與位置，並定期匯出 JSON 備份。</li><li>旗下藝人合計名氣 600 為這版小目標；創作曲目／劇本系統尚未實作。</li></ul>'));
+  $('help')?.addEventListener('click', () => modal('<div class="eyebrow">THE FIRST DAY AT STARLANE</div><h2>從練習生，走向第一個舞台。</h2><p>新公司從 0 人開始。先按「尋找／招募藝人」，從本次出現的兩位候選人選一位（依卡片確定報價簽約、公司初始 1 人名額，可擴至 3 人），再接「街角品牌企劃」或「巷口短篇劇」，5 秒後拿到收入與名氣。再選培育課程，補足出道與通告門檻。</p><ul><li>簽約金採初始九項能力平均與最高值計算，卡片顯示確定報價；已簽藝人保留實付金額，解約支付原實付的 50%。這是初版平衡設計。</li><li>九項能力為演技、歌藝、口才、儀態、動感、體能、才智、自信、名氣。前八項可訓練；名氣由工作累積。疲勞是獨立狀態。</li><li>每則通告所有門檻都必須達標。畫面列出目前值與差距；手動、待辦與助理共用同一檢查。</li><li>出道需名氣 30、儀態 34、自信 34，以及演技／歌藝／口才／動感任一 45。空閒時由你宣布，助理不代做。</li><li>單曲製作4日、單元劇7日、封面2日（初版）；1日約43秒，每5秒更新進度，整件完成才付一次報酬並啟動7日熱度。製作中可休息5秒自動續作；取消不保留進度。普通小通告維持5秒。訓練 5 秒，每次 $80–100、疲勞 +8–12。每次僅指定能力隨機 +1–3；才智提高抽到高點的機率，不額外疊加，才智課也適用。短通告名氣另以2／2.5／1.5為基礎，名氣0–149／150–399／400–699／700–899／900–998時依序按100%／40%／12%／4%／1%累積；不足整點存檔保留。普通通告僅主能力 +1–2；三項需出道的進階通告與主演／長約為重要通告，僅主能力 +1–5。名氣依各類通告的獨立規則計算。疲勞60起成長50%、80起25%，向下取整、成功至少1；訓練基礎失敗率3%，疲勞80以上改為50%（單次判定、不疊加）；失敗當次零成長，原有能力與小數進度保留，學費與疲勞照常、不額外罰款。能力上限999。成長與失敗在開始時固定，重載不重抽。休息 5 秒，疲勞 −45。</li><li>體能0–999 點降低 0–40% 工作疲勞（向上取整）；名氣0–999 點增加 0–20% 報酬；普通長作以15／18／12為基礎，名氣0–149／150–399／400–699／700–899／900–998依100%／50%／15%／5%／2%累積，接案時鎖定，完工才入帳，小數另存。重要邀約及原創企劃維持原規則；三種短案另用短案曲線。</li><li>大型通告完成後疲勞達 85 會失誤：報酬 80%、名氣 50%；自信越高，自信損失越少。自信不是全局成功率。</li><li>可排 3 項不同待辦。無資格、體力或資金不足時略過並記錄。取消不獲得成長或報酬，訓練費退回。</li><li>助理可選開啟：培養優先會依指定能力訓練，通告優先則依已儲存的類型、最低報酬及完成後疲勞上限代排；不符合時訓練或休息。手排優先，出道／主演／長約留你決定。</li><li>每 5 秒及操作後存檔。離線最多結算 4 小時；只有助理開啟才自動接新工作。請固定使用相同瀏覽器與位置，並定期匯出 JSON 備份。</li><li>旗下藝人合計名氣 600 為這版小目標；創作曲目／劇本系統尚未實作。</li></ul>'));
   function downloadSave(raw, prefix) { const blob = new Blob([raw], { type: 'application/json' }); const url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = prefix + '-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
   $('export').addEventListener('click', () => { if (!sync()) return; persist(); downloadSave(G.save(state), '星序經紀-存檔'); toast('已匯出存檔，請保留下載的 JSON 檔'); });
   $('speed-backup').addEventListener('click',()=>{const raw=localStorage.getItem(SPEED_BACKUP);if(raw)downloadSave(raw,'星序經紀-十分鐘改版前原檔');});
@@ -407,7 +412,7 @@
     $('cash').textContent = money(state.cash);
     renderSceneStatus();
     $('payroll-status').textContent = `目前 ${money(state.payroll.rate)}/分鐘 · 累計支出 ${money(state.payroll.paid)} · 值班 ${Math.floor(state.payroll.activeMs / 1000)} 秒${state.payroll.stoppedAt !== null ? ' · 資金不足，已停止代排' : ''}`;
-    const signature = state.artists.map(a => [a.task?.started, a.task?.action.kind, a.task?.production?.rest?.ends, a.project?.done,a.project?.assisted,a.project?.nextAt,a.fame, a.fatigue, ...Object.keys(G.SKILLS).map(k => a[k])].join(',')).join('|') + ':' + state.assistant.enabled+':'+state.works.length+':'+Object.values(state.fansByArtist).join(',')+':'+state.works.reduce((n,w)=>n+w.settled,0)+':'+state.events.map(e=>e.id).join(',')+':'+(state.publicity.pending?.id||'');
+    const signature = renderSignature();
     if (signature !== lastSignature || liveReport.rests > 0) { render(); lastSignature = signature; }
     else for (const a of state.artists) if (a.task) {
       const time = document.querySelector('[data-countdown="' + a.id + '"]'), bar = document.querySelector('[data-progress="' + a.id + '"]');
@@ -420,8 +425,7 @@
     if (Date.now() - lastSave >= 5000) persist();
   }, 500);
   // Clicking controls re-renders the relevant area immediately; blur resumes live updates.
-  let lastSignature = '';
-  $('rival-cards').innerHTML=window.StarRivals.map(company=>`<article class="rival-card" data-rival="${company.id}"><div class="rival-identity"><div class="rival-identity-text"><div class="rival-banner"><h3>${esc(company.name)}</h3></div><p class="rival-principal">負責人：<strong>${esc(company.principal)}</strong></p><h4>旗下藝人</h4>${G.RIVALS.PEOPLE.filter(p=>p.company===company.id).map(p=>`<p class="rival-artist-name">${esc(p.name)}</p>`).join('')}</div><figure class="rival-principal-portrait"><img src="${company.portrait}" alt="${esc(company.principal)}的半身立繪"></figure></div></article>`).join('');
+  $('rival-cards').innerHTML=window.StarRivals.map(company=>`<article class="rival-card" data-rival="${company.id}"><div class="rival-identity"><div class="rival-identity-text"><div class="rival-banner"><h3>${esc(company.name)}</h3></div><p class="rival-principal">負責人：<strong>${esc(company.principal)}</strong></p><h4>旗下藝人</h4>${G.RIVALS.PEOPLE.filter(p=>p.company===company.id).map(p=>`<p class="rival-artist-name">${esc(p.name)}</p>`).join('')}</div><figure class="rival-principal-portrait"><img ${StarImages.attrs(company.portrait)} alt="${esc(company.principal)}的半身立繪"></figure></div></article>`).join('');
   $('train-skills').innerHTML=Object.entries(G.SKILLS).map(([k,label])=>`<label><input type="checkbox" data-train-skill value="${k}">${k==='speech'?'聲音表現（口才）':label+'訓練'}</label>`).join('');
   try { $('equipment-backup').hidden=!localStorage.getItem(EQUIPMENT_BACKUP);$('career-backup').hidden=!localStorage.getItem(CAREER_BACKUP);$('five-backup').hidden=!localStorage.getItem(FIVE_BACKUP);$('salary-backup').hidden=!localStorage.getItem(SALARY_BACKUP);$('daily-backup').hidden=!localStorage.getItem(DAILY_BACKUP);$('speed-backup').hidden=!localStorage.getItem(SPEED_BACKUP);$('production-backup').hidden=!localStorage.getItem(PRODUCTION_BACKUP);$('archive-backup').hidden=!localStorage.getItem(ARCHIVE_BACKUP); $('backup').hidden = !localStorage.getItem(BACKUP); } catch { /* storage may be unavailable */ }
   populateSettings(); render(); persist();

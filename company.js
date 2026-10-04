@@ -9,7 +9,7 @@
   let lastWorkScene=null,room='reception', desk='recruit', skill='act', artist=null, api=null, current=null;
   const secretaryLines=['今天，也一起向前一點。','窗邊的咖啡還溫著，下一個舞台正在等你們。'];
   let secretaryLine=-1;
-  const roomNames={reception:'翱翔天際・公司接待',practice:'表演訓練室・肢體與表演',recording:'聲音訓練室・歌藝與聲音表情'};
+  const roomNames={reception:'',practice:'表演訓練室・肢體與表演',recording:'聲音訓練室・歌藝與聲音表情'};
   function render(ctx) {
     api=ctx;current=ctx.state;
     const host=$('company-stage');if(!host)return;
@@ -19,10 +19,11 @@
     const renderRoom=room==='work'?(work?(Object.entries(G.WORK_SCENES).find(([k,v])=>v===work)[0]):'work-empty'):room;if(work)lastWorkScene=renderRoom;
     $('company-room-title').textContent=room==='work'?(a?.project?`${work?.label||'通告現場'} · ${G.projectPhase(a,current.lastTick)}`:work?.label||'通告現場・目前無拍攝行程'):roomNames[room];
     const image=$('company-room-image'), src=speechScene?base+'training-speech.png':base+(room==='work'?(work?.background||'reception.png'):room==='reception'?'reception.png':room+'.png');
-    if(image.src!==src)image.src=src;
+    StarImages.set(image,src,true);
+    $('company-room-title').hidden=room==='reception';
     image.alt=room==='reception'?'翱翔天際接待空間；點藝人打招呼，辦事請找小秘書':roomNames[room]+'，點選設備安排培育';
     host.dataset.room=room;host.dataset.workScene=work?renderRoom:'';
-    const front=$('work-foreground');front.hidden=!work?.foreground&&!speechScene;if(speechScene)front.src=base+'training-speech-front.png';else if(work?.foreground)front.src=base+work.foreground;
+    const front=$('work-foreground');front.hidden=!work?.foreground&&!speechScene;if(speechScene)StarImages.set(front,base+'training-speech-front.png',true);else if(work?.foreground)StarImages.set(front,base+work.foreground,true);
     $('company-source').textContent=room==='reception'?'點藝人打招呼，辦事情找小秘書':(room==='recording'?'歌藝與聲音表情（口才）共用此室。':'演技、儀態、動感等課程使用此室。');
     if(speechScene){$('company-room-title').textContent='聲音訓練室・聲音表現教室';image.alt='口才培育，聲音表情教室';$('company-source').textContent='練習聲音表情，提升口才。';}
     if(room==='work'){$('company-source').textContent=work?`${work.label} · 工作結束後可查看成果。`:'目前無對應通告；未支援的活動維持外出狀態。';image.alt=work?.label||'目前無通告現場';}
@@ -38,7 +39,7 @@
     window.StarDynamic?.update(current,renderRoom,id=>{artist=id;if(room==='reception')desk='team';render(api);},sceneIds);
     window.StarRoomStats.render(current,speechScene?'speech':room,artist,id=>{artist=id;render(api);});
     let guide=$('training-secretary-guide');
-    if(!guide){guide=document.createElement('div');guide.id='training-secretary-guide';guide.className='training-secretary-guide';guide.innerHTML='<img src="assets/artists/secretary.png" alt="小秘書" draggable="false"><p>今天想練哪一項？選好課程，我們就開始吧！</p>';document.querySelector('.company-room-visual').append(guide);}
+    if(!guide){guide=document.createElement('div');guide.id='training-secretary-guide';guide.className='training-secretary-guide';guide.innerHTML=`<img ${StarImages.attrs("assets/artists/secretary.png")} alt="小秘書" draggable="false"><p>今天想練哪一項？選好課程，我們就開始吧！</p>`;document.querySelector('.company-room-visual').append(guide);}
     guide.hidden=!['practice','recording'].includes(room)||current.artists.some(x=>G.locationOf(x)===room);
 
     if(matchMedia('(max-width:540px)').matches&&room==='reception'){

@@ -48,11 +48,11 @@
   const ongoing=document.createElement('div');ongoing.className='portrait-ongoing';ongoing.setAttribute('aria-hidden','true');
   frame.append(image);el.append(frame,ongoing,label,result);document.getElementById('dynamic-layer').append(el);
   const actor={id,el,visual:image,status,ready:false,error:null,clip:'idle',reaction:null,pos:null};actors.set(id,actor);
-  image.onload=()=>{actor.ready=true;el.dataset.ready='true';requestAnimationFrame(()=>{fitReception(actor);placePracticeFx(actor);});};image.onerror=()=>{actor.error='肖像載入失敗';status.textContent=actor.error;};image.src=base+p.portrait;
+  image.onload=()=>{actor.ready=true;el.dataset.ready='true';requestAnimationFrame(()=>{fitReception(actor);placePracticeFx(actor);});};image.onerror=()=>{actor.error='肖像載入失敗';status.textContent=actor.error;};StarImages.set(image,base+p.portrait,true);
   const choose=()=>{clearGreeting();if(id==='secretary'){if(!window.StarCompany.showRecruitment())window.StarCompany.openAssistant();}else{select(id);if(room==='reception')speak(id);}};frame.onclick=choose;label.onclick=choose;
   return actor;
  }
- function fitReception(actor){const img=actor.visual,frame=img.parentElement;if(actor.id==='secretary')return;if(!img.complete||!img.naturalWidth)return;if(room!=='reception'){if(actor.fitted){img.style.cssText=actor.originalStyle;actor.fitted=false;}return;}const b=window.StarPortraitBounds[img.src.slice(base.length)]||[0,0,1,1],w=img.naturalWidth,h=img.naturalHeight,scale=Math.min(frame.clientWidth/((b[2]-b[0])*w),frame.clientHeight/((b[3]-b[1])*h));actor.originalStyle??=img.style.cssText;actor.fitted=true;img.style.cssText=`position:absolute;width:${w*scale}px;height:${h*scale}px;max-width:none;left:${(frame.clientWidth-(b[2]-b[0])*w*scale)/2-b[0]*w*scale}px;top:${frame.clientHeight-b[3]*h*scale}px;object-fit:fill`;
+ function fitReception(actor){const img=actor.visual,frame=img.parentElement;if(actor.id==='secretary')return;if(!img.complete||!img.naturalWidth)return;if(room!=='reception'){if(actor.fitted){img.style.cssText=actor.originalStyle;actor.fitted=false;}return;}const b=window.StarPortraitBounds[img.dataset.originalSrc||img.src.slice(base.length)]||[0,0,1,1],w=img.naturalWidth,h=img.naturalHeight,scale=Math.min(frame.clientWidth/((b[2]-b[0])*w),frame.clientHeight/((b[3]-b[1])*h));actor.originalStyle??=img.style.cssText;actor.fitted=true;img.style.cssText=`position:absolute;width:${w*scale}px;height:${h*scale}px;max-width:none;left:${(frame.clientWidth-(b[2]-b[0])*w*scale)/2-b[0]*w*scale}px;top:${frame.clientHeight-b[3]*h*scale}px;object-fit:fill`;
  }
  addEventListener('resize',()=>{for(const a of actors.values())fitReception(a);});
  function update(next,newRoom,onSelect,visibleIds=null){const greetOnArrival=newRoom==='reception'&&(!state||room!==newRoom||(!state.hasEverSigned&&next.hasEverSigned));if(room!==newRoom){clearReactions();clearGreeting();}state=next;room=newRoom;select=onSelect;const ids=next.artists.filter(a=>G.locationOf(a)===room&&(!visibleIds||visibleIds.includes(a.id))).map(a=>a.id);if(room==='reception')ids.unshift('secretary');if(greeting){const talking=next.artists.find(a=>a.id===greeting.id);if(greeting.id==='secretary'){if(next.publicity.pending||next.events.length||!next.artists.length)clearGreeting();}else if(!talking||window.StarGreetings.stateKey(talking,next)!==greeting.state)clearGreeting();}
@@ -64,7 +64,7 @@
  function updateSecretary(a,pending,invitations,firstRecruit){
   a.el.querySelector('.dynamic-visual').setAttribute('aria-label',firstRecruit&&recruitMobile.matches&&!pending&&!invitations?'小秘書，捲到本頁候選藝人區':'小秘書，開啟助理管理');
   const expression=pending?'panic':'normal';
-  if(a.el.dataset.expression!==expression){a.el.dataset.expression=expression;a.ready=false;delete a.el.dataset.ready;a.visual.src=base+'assets/artists/secretary'+(pending?'-panic':'')+'.png';a.visual.alt='小秘書 · '+(pending?'慌張表情':'一般表情');}
+  if(a.el.dataset.expression!==expression){a.el.dataset.expression=expression;a.ready=false;delete a.el.dataset.ready;StarImages.set(a.visual,base+'assets/artists/secretary'+(pending?'-panic':'')+'.png',true);a.visual.alt='小秘書 · '+(pending?'慌張表情':'一般表情');}
   let bubble=a.el.querySelector('.secretary-bubble');
   if(!pending&&!invitations&&!firstRecruit){bubble?.remove();return;}
   const firstNotice=!pending&&!invitations&&firstRecruit,passive=firstNotice&&!recruitMobile.matches;
