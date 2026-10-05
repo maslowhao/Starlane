@@ -9,9 +9,10 @@ body.scene-edition .secretary-bubble[data-notice=first-recruit]{pointer-events:n
  body.scene-edition .studio-toolbar{gap:6px;margin-bottom:10px;align-items:stretch}
  body.scene-edition .studio-toolbar .recruit-entry{padding:6px 9px;font-size:10px}
  body.scene-edition .studio-toolbar .recruit-entry small{margin-top:2px;font-size:9px}
- body.scene-edition .studio-toolbar .studio-funds{padding:6px 9px;gap:6px;flex:1;min-width:0;justify-content:flex-end;flex-wrap:wrap}
+ /* Give the full amount its own mobile row instead of squeezing it beside recruitment. */
+ body.scene-edition .studio-toolbar .studio-funds{padding:6px 9px;gap:6px;flex:1 1 100%;min-width:0;max-width:100%;box-sizing:border-box;justify-content:space-between;flex-wrap:wrap}
  body.scene-edition .studio-toolbar .studio-funds span{font-size:10px}
- body.scene-edition .studio-toolbar .studio-funds strong{font-size:16px!important;letter-spacing:0;overflow-wrap:anywhere}
+ body.scene-edition .studio-toolbar .studio-funds strong{font-size:16px!important;letter-spacing:0;white-space:nowrap;overflow-wrap:normal;max-width:100%;overflow-x:auto}
  body.scene-edition main>header{align-items:center;row-gap:6px}
  body.scene-edition main>header .header-actions{width:100%;justify-content:flex-end;gap:7px}
  body.scene-edition main>header>.reception-music{width:100%;justify-content:flex-end;gap:5px;padding:2px 0;font-size:10px;margin:0}
