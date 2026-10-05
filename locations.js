@@ -8,7 +8,7 @@
   $('location-stage').dataset.place=id;
   document.querySelectorAll('.location-owner').forEach(b=>b.hidden=b.dataset.company!==id);
   if(home)return;
-  StarImages.set($('location-image'),base+'locations/'+place.image,true);
+  StarImages.set($('location-image'),new URL('../'+place.image,base).href,true);
   $('location-image').alt=place.name+'接待大廳';
   $('location-name').textContent=place.name;
   $('location-description').textContent='點'+place.owner+'洽談'+place.business+'。'+place.note;

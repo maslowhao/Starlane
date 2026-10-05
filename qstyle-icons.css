@@ -1,0 +1,138 @@
+/* Three states in one small lossless sprite: no hover request or preload. */
+body.scene-edition .qicon{display:inline-block!important;vertical-align:middle;width:18px!important;height:18px!important;flex:0 0 auto;background-repeat:no-repeat;background-size:100% 300%;background-position:0 0;pointer-events:none;margin:0 5px 0 0;padding:0!important;border:0!important;box-shadow:none!important}
+body.scene-edition .qicon-host:focus-visible{outline:2px solid #70cbe8;outline-offset:2px}
+body.scene-edition .qicon-host:focus-visible .qicon{background-position:0 50%}
+@media(hover:hover){body.scene-edition .qicon-host:hover .qicon{background-position:0 50%}}
+body.scene-edition .qicon-host:is([aria-pressed=true],[aria-expanded=true],:active):not(:disabled) .qicon,body.scene-edition details[open]>summary.qicon-host .qicon,body.scene-edition label.qicon-host:has(input:checked) .qicon{background-position:0 100%}
+body.scene-edition:has(.secretary-open) .secretary-npc .dynamic-label .qicon{background-position:0 100%}
+body.scene-edition .qicon[data-slot=menu]{width:40px!important;height:40px!important;margin:0}
+body.scene-edition .qicon[data-slot=secretary],body.scene-edition .qicon[data-slot=travel]{width:34px!important;height:34px!important;margin:0}
+body.scene-edition .qicon[data-slot=door]{width:32px!important;height:32px!important;margin:0}
+body.scene-edition .qicon[data-slot=destination]{width:30px!important;height:30px!important}
+body.scene-edition .qicon[data-slot=course]{width:28px!important;height:28px!important;margin:0}
+body.scene-edition .qicon[data-slot=stat]{width:22px!important;height:22px!important;margin:0}
+body.scene-edition .secretary-npc .dynamic-label span.qicon{display:inline-block!important}
+@media(max-width:700px){body.scene-edition .qicon[data-slot=travel]{width:24px!important;height:24px!important}}
+@media(max-width:540px){body.scene-edition .qicon[data-slot=course]{width:19px!important;height:19px!important}}
+@media(max-width:350px){body.scene-edition .qicon[data-slot=menu]{width:30px!important;height:30px!important}}
+body.scene-edition .qicon[data-icon="secretary"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/secretary-small.webp") 1x,url("assets/icons/qstyle/secretary-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="secretary"][data-slot="secretary"]{background-image:image-set(url("assets/icons/qstyle/secretary-secretary.webp") 1x,url("assets/icons/qstyle/secretary-secretary@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="recruit"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/recruit-small.webp") 1x,url("assets/icons/qstyle/recruit-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="recruit"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/recruit-menu.webp") 1x,url("assets/icons/qstyle/recruit-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="recruit"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/recruit-menu-mobile.webp") 1x,url("assets/icons/qstyle/recruit-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="roster"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/roster-menu.webp") 1x,url("assets/icons/qstyle/roster-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="roster"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/roster-menu-mobile.webp") 1x,url("assets/icons/qstyle/roster-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="assistant"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/assistant-small.webp") 1x,url("assets/icons/qstyle/assistant-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="assistant"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/assistant-menu.webp") 1x,url("assets/icons/qstyle/assistant-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="assistant"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/assistant-menu-mobile.webp") 1x,url("assets/icons/qstyle/assistant-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="publicity"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/publicity-small.webp") 1x,url("assets/icons/qstyle/publicity-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="publicity"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/publicity-menu.webp") 1x,url("assets/icons/qstyle/publicity-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="publicity"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/publicity-menu-mobile.webp") 1x,url("assets/icons/qstyle/publicity-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="office"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/office-small.webp") 1x,url("assets/icons/qstyle/office-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="office"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/office-menu.webp") 1x,url("assets/icons/qstyle/office-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="office"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/office-menu-mobile.webp") 1x,url("assets/icons/qstyle/office-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="opportunities"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/opportunities-small.webp") 1x,url("assets/icons/qstyle/opportunities-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="opportunities"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/opportunities-menu.webp") 1x,url("assets/icons/qstyle/opportunities-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="opportunities"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/opportunities-menu-mobile.webp") 1x,url("assets/icons/qstyle/opportunities-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="progress"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/progress-small.webp") 1x,url("assets/icons/qstyle/progress-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="progress"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/progress-menu.webp") 1x,url("assets/icons/qstyle/progress-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="progress"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/progress-menu-mobile.webp") 1x,url("assets/icons/qstyle/progress-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="works"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/works-small.webp") 1x,url("assets/icons/qstyle/works-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="works"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/works-menu.webp") 1x,url("assets/icons/qstyle/works-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="works"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/works-menu-mobile.webp") 1x,url("assets/icons/qstyle/works-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="heat"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/heat-small.webp") 1x,url("assets/icons/qstyle/heat-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="heat"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/heat-menu.webp") 1x,url("assets/icons/qstyle/heat-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="heat"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/heat-menu-mobile.webp") 1x,url("assets/icons/qstyle/heat-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="rivals"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/rivals-small.webp") 1x,url("assets/icons/qstyle/rivals-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="rivals"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/rivals-menu.webp") 1x,url("assets/icons/qstyle/rivals-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="rivals"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/rivals-menu-mobile.webp") 1x,url("assets/icons/qstyle/rivals-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="journal"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/journal-small.webp") 1x,url("assets/icons/qstyle/journal-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="journal"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/journal-menu.webp") 1x,url("assets/icons/qstyle/journal-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="journal"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/journal-menu-mobile.webp") 1x,url("assets/icons/qstyle/journal-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="handbook"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/handbook-menu.webp") 1x,url("assets/icons/qstyle/handbook-menu@2x.webp") 2x)}
+@media(max-width:350px){body.scene-edition .qicon[data-icon="handbook"][data-slot="menu"]{background-image:image-set(url("assets/icons/qstyle/handbook-menu-mobile.webp") 1x,url("assets/icons/qstyle/handbook-menu-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="music-story"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/music-story-small.webp") 1x,url("assets/icons/qstyle/music-story-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="first-story"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/first-story-small.webp") 1x,url("assets/icons/qstyle/first-story-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="practice"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/practice-small.webp") 1x,url("assets/icons/qstyle/practice-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="practice"][data-slot="door"]{background-image:image-set(url("assets/icons/qstyle/practice-door.webp") 1x,url("assets/icons/qstyle/practice-door@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="recording"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/recording-small.webp") 1x,url("assets/icons/qstyle/recording-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="recording"][data-slot="door"]{background-image:image-set(url("assets/icons/qstyle/recording-door.webp") 1x,url("assets/icons/qstyle/recording-door@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="outbound"][data-slot="travel"]{background-image:image-set(url("assets/icons/qstyle/outbound-travel.webp") 1x,url("assets/icons/qstyle/outbound-travel@2x.webp") 2x)}
+@media(max-width:700px){body.scene-edition .qicon[data-icon="outbound"][data-slot="travel"]{background-image:image-set(url("assets/icons/qstyle/outbound-travel-mobile.webp") 1x,url("assets/icons/qstyle/outbound-travel-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="home"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/home-small.webp") 1x,url("assets/icons/qstyle/home-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="home"][data-slot="travel"]{background-image:image-set(url("assets/icons/qstyle/home-travel.webp") 1x,url("assets/icons/qstyle/home-travel@2x.webp") 2x)}
+@media(max-width:700px){body.scene-edition .qicon[data-icon="home"][data-slot="travel"]{background-image:image-set(url("assets/icons/qstyle/home-travel-mobile.webp") 1x,url("assets/icons/qstyle/home-travel-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="act"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/act-small.webp") 1x,url("assets/icons/qstyle/act-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="act"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/act-course.webp") 1x,url("assets/icons/qstyle/act-course@2x.webp") 2x)}
+@media(max-width:540px){body.scene-edition .qicon[data-icon="act"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/act-course-mobile.webp") 1x,url("assets/icons/qstyle/act-course-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="act"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/act-stat.webp") 1x,url("assets/icons/qstyle/act-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="sing"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/sing-small.webp") 1x,url("assets/icons/qstyle/sing-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="sing"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/sing-course.webp") 1x,url("assets/icons/qstyle/sing-course@2x.webp") 2x)}
+@media(max-width:540px){body.scene-edition .qicon[data-icon="sing"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/sing-course-mobile.webp") 1x,url("assets/icons/qstyle/sing-course-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="sing"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/sing-stat.webp") 1x,url("assets/icons/qstyle/sing-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="speech"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/speech-small.webp") 1x,url("assets/icons/qstyle/speech-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="speech"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/speech-course.webp") 1x,url("assets/icons/qstyle/speech-course@2x.webp") 2x)}
+@media(max-width:540px){body.scene-edition .qicon[data-icon="speech"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/speech-course-mobile.webp") 1x,url("assets/icons/qstyle/speech-course-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="speech"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/speech-stat.webp") 1x,url("assets/icons/qstyle/speech-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="poise"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/poise-small.webp") 1x,url("assets/icons/qstyle/poise-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="poise"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/poise-course.webp") 1x,url("assets/icons/qstyle/poise-course@2x.webp") 2x)}
+@media(max-width:540px){body.scene-edition .qicon[data-icon="poise"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/poise-course-mobile.webp") 1x,url("assets/icons/qstyle/poise-course-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="poise"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/poise-stat.webp") 1x,url("assets/icons/qstyle/poise-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="movement"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/movement-small.webp") 1x,url("assets/icons/qstyle/movement-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="movement"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/movement-course.webp") 1x,url("assets/icons/qstyle/movement-course@2x.webp") 2x)}
+@media(max-width:540px){body.scene-edition .qicon[data-icon="movement"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/movement-course-mobile.webp") 1x,url("assets/icons/qstyle/movement-course-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="movement"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/movement-stat.webp") 1x,url("assets/icons/qstyle/movement-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="stamina"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/stamina-small.webp") 1x,url("assets/icons/qstyle/stamina-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="stamina"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/stamina-course.webp") 1x,url("assets/icons/qstyle/stamina-course@2x.webp") 2x)}
+@media(max-width:540px){body.scene-edition .qicon[data-icon="stamina"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/stamina-course-mobile.webp") 1x,url("assets/icons/qstyle/stamina-course-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="stamina"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/stamina-stat.webp") 1x,url("assets/icons/qstyle/stamina-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="intellect"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/intellect-small.webp") 1x,url("assets/icons/qstyle/intellect-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="intellect"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/intellect-course.webp") 1x,url("assets/icons/qstyle/intellect-course@2x.webp") 2x)}
+@media(max-width:540px){body.scene-edition .qicon[data-icon="intellect"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/intellect-course-mobile.webp") 1x,url("assets/icons/qstyle/intellect-course-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="intellect"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/intellect-stat.webp") 1x,url("assets/icons/qstyle/intellect-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="confidence"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/confidence-small.webp") 1x,url("assets/icons/qstyle/confidence-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="confidence"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/confidence-course.webp") 1x,url("assets/icons/qstyle/confidence-course@2x.webp") 2x)}
+@media(max-width:540px){body.scene-edition .qicon[data-icon="confidence"][data-slot="course"]{background-image:image-set(url("assets/icons/qstyle/confidence-course-mobile.webp") 1x,url("assets/icons/qstyle/confidence-course-mobile@2x.webp") 2x)}}
+body.scene-edition .qicon[data-icon="confidence"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/confidence-stat.webp") 1x,url("assets/icons/qstyle/confidence-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="fame"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/fame-small.webp") 1x,url("assets/icons/qstyle/fame-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="fame"][data-slot="stat"]{background-image:image-set(url("assets/icons/qstyle/fame-stat.webp") 1x,url("assets/icons/qstyle/fame-stat@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="eami"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/eami-small.webp") 1x,url("assets/icons/qstyle/eami-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="eami"][data-slot="destination"]{background-image:image-set(url("assets/icons/qstyle/eami-destination.webp") 1x,url("assets/icons/qstyle/eami-destination@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="sosa"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/sosa-small.webp") 1x,url("assets/icons/qstyle/sosa-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="sosa"][data-slot="destination"]{background-image:image-set(url("assets/icons/qstyle/sosa-destination.webp") 1x,url("assets/icons/qstyle/sosa-destination@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="creative"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/creative-small.webp") 1x,url("assets/icons/qstyle/creative-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="creative"][data-slot="destination"]{background-image:image-set(url("assets/icons/qstyle/creative-destination.webp") 1x,url("assets/icons/qstyle/creative-destination@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="global"][data-slot="small"]{background-image:image-set(url("assets/icons/qstyle/global-small.webp") 1x,url("assets/icons/qstyle/global-small@2x.webp") 2x)}
+body.scene-edition .qicon[data-icon="global"][data-slot="destination"]{background-image:image-set(url("assets/icons/qstyle/global-destination.webp") 1x,url("assets/icons/qstyle/global-destination@2x.webp") 2x)}
+
+/* Requested local refinements: preserve the existing overall layout. */
+body.scene-edition .reception-stats .qstat-name{display:block!important;font-size:12px;line-height:18px;color:#e5edf3;white-space:nowrap;margin-top:2px}
+@media(min-width:701px){
+ body.scene-edition .reception-stats .qicon[data-slot=stat]{width:32px!important;height:32px!important}
+ body.scene-edition .reception-stats .qstat-name{display:block!important;font-size:12px;line-height:18px;color:#e5edf3;white-space:nowrap;margin-top:2px}
+}
+body.scene-edition .qicon[data-slot=door]{width:44px!important;height:44px!important}
+body.scene-edition .company-hotspot .door-title-group{gap:4px;justify-content:flex-start}
+body.scene-edition .recording-door .door-title-group>.qicon{order:2}
+body.scene-edition .recording-door .door-title-group>b{order:1}
+body.scene-edition #integrated-roster div button{display:flex;align-items:center;gap:10px;text-align:left}
+#integrated-roster .roster-happy{display:block;width:48px;height:48px;object-fit:contain;flex:0 0 48px}
+#integrated-roster div button>span{min-width:0;overflow-wrap:anywhere}
+.heat-return{display:flex;align-items:center;gap:5px;margin-bottom:12px;min-height:44px}
+@media(max-width:700px){body.scene-edition .qicon[data-slot=door]{width:36px!important;height:36px!important}}
+@media(max-width:350px){body.scene-edition .company-hotspot:has(.door-title-group){padding:6px!important}body.scene-edition .company-hotspot .door-title-group{gap:3px}}
+
+/* Approved artist information integration, desktop and mobile. */
+body.scene-edition #company-controls .reception-team-info{display:flex;flex-direction:column}
+body.scene-edition .reception-team-info>.company-panel-heading{order:0}
+body.scene-edition .reception-team-info>.company-picker{order:0}
+body.scene-edition .reception-team-info>.reception-profile{order:1}
+body.scene-edition .reception-team-info>.reception-debut{order:2}
+body.scene-edition .reception-team-info>.journal-tabs{order:3}
+body.scene-edition .reception-team-info>:is(.reception-status-panel,.reception-ability-panel){order:4;min-width:0}
+body.scene-edition .reception-team-info>.company-footnote{order:5}
+body.scene-edition .reception-team-info[data-tab=ability]>.reception-status-panel,body.scene-edition .reception-team-info[data-tab=status]>.reception-ability-panel{display:none}
+.reception-debut{margin:8px 0;font-size:12px;line-height:1.6}.reception-debut button{min-height:40px}.reception-debut small{display:block;margin-top:5px;color:#d8e1e9}
+.reception-queue{margin:12px 0;padding:10px 0;border-top:1px solid #526475}.reception-queue h4{margin:0 0 8px}.reception-queue>div{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0}.reception-queue>div>span{min-width:0;overflow-wrap:anywhere}.reception-queue button{flex:none;min-height:40px}
+.reception-status-panel{font-size:12px;line-height:1.6}.reception-status-panel .company-task{min-height:35px}.reception-task-actions,.reception-status-panel .project-buttons{display:flex;flex-wrap:wrap;gap:6px}.reception-status-panel button{max-width:100%;white-space:normal;overflow-wrap:anywhere}.reception-status-panel .project-card{padding:10px;margin:12px 0}.reception-persona{margin:14px 0}.reception-persona summary{cursor:pointer;min-height:32px}.reception-persona dd{margin:0 0 8px}.reception-status-panel .growth-background{display:block!important}.reception-status-panel progress{max-width:100%}
+#reception-contracts[hidden]{display:none!important}

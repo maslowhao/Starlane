@@ -34,7 +34,7 @@
     if (raw && !DEMO) G.advance(state, clock(), true);
   } catch (e) {
     state = G.create();
-    loadError = '無法讀取原存檔。為保護資料，本次不會覆寫原存檔。可匯入備份，或按「重新開局」建立新存檔。';
+    loadError = (e.code==='REMOVED_ARTIST_SAVE'?'此存檔包含已移除的明星志願藝人或其作品紀錄，與目前純原創版本不相容。請先匯出原存檔備份，再按「重新開局」。原資料不會自動刪除。':null) || '無法讀取原存檔。為保護資料，本次不會覆寫原存檔。可匯入備份，或按「重新開局」建立新存檔。';
     storageOK = false;
   }
   // Newest tab takes control; a background tab must never overwrite a newer save.
@@ -94,10 +94,9 @@
   function sync() { if (!ownTab()) return false; liveAdvance(); return true; }
   function mutate(fn) { if (!sync()) return; const result = fn(); persist(); render(); return result; }
   const portraitBase = new URL('.', document.currentScript.src).href;
-  const portraitCrops={"s3_1": {"top": 208, "center": 418.0}, "s3_2": {"top": 141, "center": 386.5}, "s3_3": {"top": 201, "center": 391.0}, "s3_4": {"top": 188, "center": 374.0}, "s3_5": {"top": 89, "center": 376.5}, "s3_6": {"top": 137, "center": 401.5}, "s3_7": {"top": 155, "center": 377.0}, "s3_8": {"top": 179, "center": 500.0}, "s3_9": {"top": 112, "center": 413.5}, "s3_10": {"top": 83, "center": 404.0}, "s3_11": {"top": 92, "center": 389.5}, "s3_12": {"top": 126, "center": 410.5}, "s3_65": {"top": 221, "center": 385.5}, "s3_72": {"top": 87, "center": 382.5}, "s3_74": {"top": 196, "center": 445.5}, "s3_75": {"top": 132, "center": 394.5}, "s3_76": {"top": 135, "center": 373.5}, "s3_77": {"top": 96, "center": 400.0}};
   function portrait(id) { const p=typeof id==='number'?G.PEOPLE[id]:G.identity(state,id);return p?`<img class="artist-portrait" ${StarImages.attrs(portraitBase+p.portrait)} alt="${esc(p.name)}肖像">`:''; }
   const emptyCompany = message => `<div class="empty-company"><span>✦</span><h3>公司還在等待第一位夥伴。</h3><p>${message}</p><button class="primary" data-panel="recruit">尋找／招募藝人 →</button></div>`;
-  function recruitmentPortrait(id) {const p=G.identity(state,id),c=['s3_1','s3_6','s3_12','s3_7'].includes(id)?null:portraitCrops[id];if(!c)return `<div class="half-portrait original-portrait ${p.portraitStatus==='已批准原創2D立繪'?'approved-portrait':''}"><img ${StarImages.attrs(portraitBase+p.portrait)} alt="${esc(p.name)}半身肖像"></div>`;return `<div class="half-portrait"><img ${StarImages.attrs(portraitBase+p.portrait)} alt="${esc(p.name)}半身肖像" style="left:${50-c.center/5}%;top:${-c.top/6.2}%;width:150%;height:auto"></div>`;}
+  function recruitmentPortrait(id) {const p=G.identity(state,id);return `<div class="half-portrait original-portrait ${p.portraitStatus==='已批准原創2D立繪'?'approved-portrait':''}"><img ${StarImages.attrs(portraitBase+p.portrait)} alt="${esc(p.name)}半身肖像"></div>`;}
   let presence=window.StarPresence.create(G,state,clock,document.hidden);
   function liveAdvance(){const r=presence.tick();window.StarDynamic?.react(r.outcomes,state);return r;}
   let expansionCooldownUntil=0;
@@ -136,7 +135,7 @@
     if (opener) panelOpener = opener;
     for (const name of Object.keys(Scene.PANELS)) $('pane-' + name).hidden = name !== panel;
     $('workspace-title').textContent = Scene.PANELS[panel];
-    $('room-hint').textContent = hint || ({publicity:'抽到事件後，由你決定回應方式。結果與選擇會保留。',artist:'每個人都有自己的步調。看看近況，再決定下一步。',board:'先選夥伴，再親自安排工作。助理策略與服務請回小秘書開啟「助理設定／代排」。',assistant:'設定策略、訓練方向與服務。只開此頁或套用未啟用策略，不會啟用代排。',office:'公司營運與設備升級。通告及助理設定可從小秘書選單分別開啟。',rivals:'這座城市還有其他正在努力的人。認識四家經紀公司與負責人。',journal:'把每一次努力，留在公司的日誌裡。',opportunities:'有些機會，值得親自做決定。',recruit:'一般池與低機率特殊池，每批兩位；首次簽約前可免費刷新三次。公司從一人名額擴至三人。'})[panel];
+    $('room-hint').textContent = hint || ({publicity:'抽到事件後，由你決定回應方式。結果與選擇會保留。',artist:'每個人都有自己的步調。看看近況，再決定下一步。',board:'先選夥伴，再親自安排工作。助理策略與服務請回小秘書開啟「助理設定／代排」。',assistant:'設定策略、訓練方向與服務。只開此頁或套用未啟用策略，不會啟用代排。',office:'公司營運與設備升級。通告及助理設定可從小秘書選單分別開啟。',rivals:'這座城市還有其他正在努力的人。認識四家經紀公司與負責人。',journal:'把每一次努力，留在公司的日誌裡。',opportunities:'有些機會，值得親自做決定。',recruit:'六位原創藝人；首次簽約前保留自創入口，可免費刷新三次。公司從一人名額擴至三人。'})[panel];
     const company=StarCompanyRoutes.companies[opener?.dataset.company];
     if(company){$('workspace-title').textContent=company.name+' · '+company.business;$('room-hint').textContent=company.note;}
     $('panel-artist-switch').hidden = !['artist','board'].includes(panel);
@@ -225,7 +224,7 @@
   let eventKey = '';
   function renderEvents(){window.StarCareerUI.render(state,opportunityCompany);}
   function renderCompany() {
-    window.StarCompany?.render({state,portrait,recruitmentPortrait,backgroundCard,refresh:()=>{const r=mutate(()=>G.rerollCandidates(state));if(r)toast(r.ok?'候選名單已更新，剩 '+state.refreshRemaining+' 次免費刷新。':r.reason);},
+    window.StarCompany?.render({state,portrait,recruitmentPortrait,backgroundCard,selectArtist:id=>{selected=id;},refresh:()=>{const r=mutate(()=>G.rerollCandidates(state));if(r)toast(r.ok?'候選名單已更新，剩 '+state.refreshRemaining+' 次免費刷新。':r.reason);},
       release:id=>{if(!sync())return;const q=G.releaseQuote(state,id);if(!q)return;if(q.busy){toast('請等目前活動與長案完成，或先取消長案合約再辦理解約。');return;}if(state.cash<q.fee){toast('資金不足以支付解約金。');return;}if(confirm(`${q.name}：確定解約？\n簽約費 $${q.base} × ${q.ratio*100}% = 解約金 $${q.fee}（初版預設比例）。\n解約會清除培養能力、名氣、出道與待辦；公司知名度永久保留；旗下藝人合計名氣會移除這位藝人的數值。再次成為候選並簽約時，從初始能力開始。`)){const r=mutate(()=>G.release(state,id));if(r?.ok){window.StarDynamic?.forget(id);toast('已辦理解約，名額已釋出。');}else if(r)toast(r.reason);}},
       recruit:(id,done)=>{const r=mutate(()=>{const v=G.recruit(state,id);if(v.ok){selected=id;done(id);}return v;});if(r)toast(r.ok?'新夥伴加入了！點圖中入口去練習或錄音。':r.reason);},
       action:(id,action)=>{window.StarDynamic?.clearReactions();const r=mutate(()=>G.enqueue(state,id,action));if(r)toast(r.ok?'行程開始，留在房間看進度吧。':r.reason);},
@@ -375,7 +374,7 @@
   $('close-modal').addEventListener('click', () => { $('modal').close(); state.report = null; persist(); });
   $('help')?.addEventListener('click', () => modal('<div class="eyebrow">THE FIRST DAY AT STARLANE</div><h2>從練習生，走向第一個舞台。</h2><p>新公司從 0 人開始。先按「尋找／招募藝人」，從本次出現的兩位候選人選一位（依卡片確定報價簽約、公司初始 1 人名額，可擴至 3 人），再接「街角品牌企劃」或「巷口短篇劇」，5 秒後拿到收入與名氣。再選培育課程，補足出道與通告門檻。</p><ul><li>簽約金採初始九項能力平均與最高值計算，卡片顯示確定報價；已簽藝人保留實付金額，解約支付原實付的 50%。這是初版平衡設計。</li><li>九項能力為演技、歌藝、口才、儀態、動感、體能、才智、自信、名氣。前八項可訓練；名氣由工作累積。疲勞是獨立狀態。</li><li>每則通告所有門檻都必須達標。畫面列出目前值與差距；手動、待辦與助理共用同一檢查。</li><li>出道需名氣 30、儀態 34、自信 34，以及演技／歌藝／口才／動感任一 45。空閒時由你宣布，助理不代做。</li><li>單曲製作4日、單元劇7日、封面2日（初版）；1日約43秒，每5秒更新進度，整件完成才付一次報酬並啟動7日熱度。製作中可休息5秒自動續作；取消不保留進度。普通小通告維持5秒。訓練 5 秒，每次 $80–100、疲勞 +8–12。每次僅指定能力隨機 +1–3；才智提高抽到高點的機率，不額外疊加，才智課也適用。短通告名氣另以2／2.5／1.5為基礎，名氣0–149／150–399／400–699／700–899／900–998時依序按100%／40%／12%／4%／1%累積；不足整點存檔保留。普通通告僅主能力 +1–2；三項需出道的進階通告與主演／長約為重要通告，僅主能力 +1–5。名氣依各類通告的獨立規則計算。疲勞60起成長50%、80起25%，向下取整、成功至少1；訓練基礎失敗率3%，疲勞80以上改為50%（單次判定、不疊加）；失敗當次零成長，原有能力與小數進度保留，學費與疲勞照常、不額外罰款。能力上限999。成長與失敗在開始時固定，重載不重抽。休息 5 秒，疲勞 −45。</li><li>體能0–999 點降低 0–40% 工作疲勞（向上取整）；名氣0–999 點增加 0–20% 報酬；普通長作以15／18／12為基礎，名氣0–149／150–399／400–699／700–899／900–998依100%／50%／15%／5%／2%累積，接案時鎖定，完工才入帳，小數另存。重要邀約及原創企劃維持原規則；三種短案另用短案曲線。</li><li>大型通告完成後疲勞達 85 會失誤：報酬 80%、名氣 50%；自信越高，自信損失越少。自信不是全局成功率。</li><li>可排 3 項不同待辦。無資格、體力或資金不足時略過並記錄。取消不獲得成長或報酬，訓練費退回。</li><li>助理可選開啟：培養優先會依指定能力訓練，通告優先則依已儲存的類型、最低報酬及完成後疲勞上限代排；不符合時訓練或休息。手排優先，出道／主演／長約留你決定。</li><li>每 5 秒及操作後存檔。離線最多結算 4 小時；只有助理開啟才自動接新工作。請固定使用相同瀏覽器與位置，並定期匯出 JSON 備份。</li><li>旗下藝人合計名氣 600 為這版小目標；創作曲目／劇本系統尚未實作。</li></ul>'));
   function downloadSave(raw, prefix) { const blob = new Blob([raw], { type: 'application/json' }); const url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = prefix + '-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
-  $('export').addEventListener('click', () => { if (!sync()) return; persist(); downloadSave(G.save(state), '星序經紀-存檔'); toast('已匯出存檔，請保留下載的 JSON 檔'); });
+  $('export').addEventListener('click', () => { if(loadError){const raw=localStorage.getItem(KEY);if(raw){downloadSave(raw,'星序經紀-原始存檔備份');toast('已匯出未變更的原存檔');}return;} if (!sync()) return; persist(); downloadSave(G.save(state), '星序經紀-存檔'); toast('已匯出存檔，請保留下載的 JSON 檔'); });
   $('speed-backup').addEventListener('click',()=>{const raw=localStorage.getItem(SPEED_BACKUP);if(raw)downloadSave(raw,'星序經紀-十分鐘改版前原檔');});
   $('production-backup').addEventListener('click',()=>{const raw=localStorage.getItem(PRODUCTION_BACKUP);if(raw)downloadSave(raw,'星序經紀-製作期前原檔');});
   $('archive-backup').addEventListener('click',()=>{const raw=localStorage.getItem(ARCHIVE_BACKUP);if(raw)downloadSave(raw,'星序經紀-作品白名單前原檔');});

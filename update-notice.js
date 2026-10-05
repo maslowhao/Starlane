@@ -1,7 +1,7 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(!root.StarUpdateNotice)root.StarUpdateNotice=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
   // Public release version is independent of the engine's save schema number.
-  const RELEASE={version:'0.15.5',items:['劇情：新增自創藝人音樂第一章','演出：新增Q版表情頭像與劇情對話框','調整：優化對話操作與文字']};
+  const RELEASE={version:'0.16.1',items:['公司煥新：小秘書、四位負責人與七個場景換上原創美術','介面更清楚：Q版人物與圖示、場景下方行程、跟隨藝人的問候，以及手機能力名稱','招募保留六位原創與自創藝人；含已移除角色的舊檔，請先匯出備份再重新開局']};
   const KEY='starlane-seen-release';
   function create({existing,enabled=true,storage,session,release=RELEASE}){
     let pending=false,seen=null,writable=false;

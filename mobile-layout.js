@@ -6,7 +6,7 @@
  const services=document.createElement('div');services.className='mobile-services';services.setAttribute('aria-label','助理服務狀態與控制');
  function arrange(){
   const home=document.getElementById('company-stage'),inline=small.matches&&home.dataset.room==='reception';
-  if(inline){const visual=home.querySelector('.company-room-visual');if(visual.nextElementSibling!==controls)visual.after(controls);}else if(controls.previousSibling!==controlsHome)controlsHome.after(controls);
+  if(inline){const anchor=document.getElementById('reception-activity')||home.querySelector('.company-room-visual');if(anchor.nextElementSibling!==controls)anchor.after(controls);}else if(controls.previousSibling!==controlsHome)controlsHome.after(controls);
   if(assistant.parentElement!==services)services.append(assistant);if(banner.parentElement!==services)services.append(banner);
   if(!small.matches){const m=originals[0];if(m.node.previousSibling!==m.mark)m.mark.after(m.node);const anchor=originals[1].mark;if(services.previousSibling!==anchor)anchor.after(services);return;}
   const header=document.querySelector('main>header');if(music.parentElement!==header)header.append(music);

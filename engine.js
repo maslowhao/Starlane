@@ -14,7 +14,7 @@
   const PRODUCTION_DAYS=Object.freeze({radio:4,series:7,cover:2});
   const ACTION_SECONDS = 5;
   const CANDIDATE_COUNT = 2;
-  const SPECIAL_CHANCE = .08;
+  const SPECIAL_CHANCE = 0;
   const EXPANSIONS = Object.freeze({2:{fee:300,reputation:10},3:{fee:800,important:1,works:3,fans:100}});
   const MAX_ARTISTS = 3;
   const LEGACY_RECRUIT_COST = 300;
@@ -28,8 +28,8 @@
   const SKILLS = { act: '演技', sing: '歌藝', speech: '口才', poise: '儀態', movement: '動感', stamina: '體能', intellect: '才智', confidence: '自信' };
   const TRAINING = { act: { cost: 80, fatigue: 10 }, sing: { cost: 80, fatigue: 10 }, speech: { cost: 80, fatigue: 8 }, poise: { cost: 80, fatigue: 8 }, movement: { cost: 100, fatigue: 12 }, stamina: { cost: 100, fatigue: 12 }, intellect: { cost: 100, fatigue: 8 }, confidence: { cost: 100, fatigue: 8 } };
   const JOBS = [
-    { id: 'cafe', type: 'music', name: 'EAMI 音樂短通告', desc: '練習生也能登上的小舞台。用一首歌讓人記住你。', duration: ACTION_SECONDS, pay: 250, fame: SHORT_FAME.base.cafe, fatigue: 15, skill: 'sing', min: 20, requirements: { sing: 20, confidence: 20 }, gain: 1, gains: { sing: 1, confidence: 1 } },
-    { id: 'radio', type: 'music', name: 'EAMI 單曲錄製', desc: '正式錄製並推出一首單曲。完成後可在作品熱度查看七天播放與新粉；歌藝課及現場演出不產生唱片。', duration: WORKS.CONFIG.stageMs*4/1000, productionDays: 4, pay: 760, fame: 15, fatigue: 23, skill: 'sing', min: 42, fameMin: 40, debuted: true, requirements: { sing: 42, speech: 35, stamina: 40, confidence: 35 }, gains: { sing: 2, speech: 1, confidence: 1 } },
+    { id: 'cafe', type: 'music', name: '穗光唱片 音樂短通告', desc: '練習生也能登上的小舞台。用一首歌讓人記住你。', duration: ACTION_SECONDS, pay: 250, fame: SHORT_FAME.base.cafe, fatigue: 15, skill: 'sing', min: 20, requirements: { sing: 20, confidence: 20 }, gain: 1, gains: { sing: 1, confidence: 1 } },
+    { id: 'radio', type: 'music', name: '穗光唱片 單曲錄製', desc: '正式錄製並推出一首單曲。完成後可在作品熱度查看七天播放與新粉；歌藝課及現場演出不產生唱片。', duration: WORKS.CONFIG.stageMs*4/1000, productionDays: 4, pay: 760, fame: 15, fatigue: 23, skill: 'sing', min: 42, fameMin: 40, debuted: true, requirements: { sing: 42, speech: 35, stamina: 40, confidence: 35 }, gains: { sing: 2, speech: 1, confidence: 1 } },
     { id: 'short', type: 'drama', name: '巷口短篇劇', desc: '從簡單臨演開始，練習台詞與真實的表情。', duration: ACTION_SECONDS, pay: 300, fame: SHORT_FAME.base.short, fatigue: 16, skill: 'act', min: 20, requirements: { act: 20, speech: 20 }, gain: 1, gains: { act: 1, speech: 1 } },
     { id: 'series', type: 'drama', name: '週末單元劇', desc: '讀懂劇本，完成長時間拍攝，讓角色留在心裡。', duration: WORKS.CONFIG.stageMs*7/1000, productionDays: 7, pay: 900, fame: 18, fatigue: 25, skill: 'act', min: 44, fameMin: 50, debuted: true, requirements: { act: 44, intellect: 40, stamina: 45 }, gains: { act: 2, intellect: 1 } },
     { id: 'local', type: 'ad', name: '街角品牌企劃', desc: '初階小廣告，低門檻練習儀態與介紹商品。', duration: ACTION_SECONDS, pay: 230, fame: SHORT_FAME.base.local, fatigue: 13, skill: 'poise', min: 20, requirements: { speech: 20, poise: 20 }, gains: { poise: 1, speech: 1 } },
@@ -62,10 +62,10 @@
       events: [], resolvedEvents: [], log: [], report: null };
     RIVALS.init(s);WORKS.init(s);PUBLICITY.init(s);DEVELOPMENT.init(s);CAREER.init(s);MUSIC.init(s);s.candidateRng=(Math.floor(now)>>>0)||1; refreshCandidates(s); return s;
   }
-  const SPECIAL_RECRUIT_IDS=Object.freeze(['s3_1','s3_6','s3_12','s3_7']);
-  const recruitEligible=p=>p.origin==='original'||SPECIAL_RECRUIT_IDS.includes(p.id);
-  const RARE_IDS = ['s3_65','s3_74','s3_75','s3_76','s3_77','s3_72'];
-  const CANDIDATE_WEIGHTS = Object.fromEntries(PEOPLE.map(p=>[p.id,RARE_IDS.includes(p.id)?1:4]));
+  // Recruitment contains the six original artists only.
+  const SPECIAL_RECRUIT_IDS=Object.freeze([]);
+  const recruitEligible=p=>p.origin==='original'&&!p.id.startsWith('s3_');
+  const CANDIDATE_WEIGHTS = Object.fromEntries(PEOPLE.map(p=>[p.id,4]));
   function refreshCandidates(s,keep=[]) {
     const count=s.customRecruitCardUsed===false?1:CANDIDATE_COUNT;
     s.candidates=[...new Set(keep)].filter(id=>PEOPLE.some(p=>p.id===id&&recruitEligible(p))&&!s.artists.some(a=>a.id===id)).slice(0,count);const pool=PEOPLE.filter(p=>recruitEligible(p)&&(s.customRecruitCardUsed!==false||p.origin==='original')&&!s.artists.some(a=>a.id===p.id)&&!s.candidates.includes(p.id));
@@ -453,6 +453,14 @@
   function save(s) { return JSON.stringify(WORKS.encode(s)); }
   function restore(raw) {
     const s = WORKS.decode(JSON.parse(raw));
+    // Reject retired identities before any migration can discard a linked artist or work.
+    // Candidate-only references can safely refresh; they have no signed career data.
+    const removedId=value=>typeof value==='string'&&/^s3_\d+$/.test(value);
+    const removedReferences=(value)=>value&&typeof value==='object'&&Object.entries(value).some(([key,item])=>
+      key!=='candidates'&&( /^s3_\d+(?::|$)/.test(key) || ((key==='id'||key==='artistId')&&removedId(item)) || removedReferences(item)));
+    if(removedReferences(s)){const error=new Error('此存檔包含已移除的明星志願藝人或作品紀錄，請保留備份並重新開局。');error.code='REMOVED_ARTIST_SAVE';throw error;}
+    const retiredCandidates=Array.isArray(s?.candidates)&&s.candidates.some(removedId);
+    if(retiredCandidates)s.candidates=s.candidates.filter(id=>!removedId(id));
     const finite = (x, lo = 0, hi = Number.MAX_SAFE_INTEGER) => typeof x === 'number' && Number.isFinite(x) && x >= lo && x <= hi;
     // v1 was an already-working roster. Preserve careers, all stats and active jobs.
     const oldVersion = s?.version, oldRate=s?.payroll?.rate, knownFirstSign=typeof s?.hasEverSigned==='boolean';
@@ -558,11 +566,11 @@
     if (!Array.isArray(s.candidates)||s.candidates.length>CANDIDATE_COUNT||new Set(s.candidates).size!==s.candidates.length||s.candidates.some(id=>!PEOPLE.some(p=>p.id===id)||s.artists.some(a=>a.id===id))||!Number.isInteger(s.candidateRng)||!finite(s.candidateRng,0,4294967295)) throw new Error('候選名單資料損壞');
     if(oldVersion<=11){for(const e of s.events)e.duration=ACTION_SECONDS;s.migrationNotice=(s.migrationNotice||'')+' 訓練、休息與所有通告統一5秒；舊行程按已完成比例換算，原付款保留。作品宣傳與助理薪資分別計時。';}
     if(oldVersion<=12)s.migrationNotice=(s.migrationNotice||'')+' 成長改為訓練1–3、普通通告1–2、重要通告1–5，只增加主能力。舊進行中活動按新規則固定結果，保留原時間與付款；不重算已完成活動。';
-    if(oldVersion<=13){for(const w of s.works)if(w.kind===undefined)w.kind='ad';s.migrationNotice=(s.migrationNotice||'')+' EAMI 單曲錄製完成後開始記錄音樂作品；舊版未保存歌曲推出時間與品質，不補造歷史曲線，不重發獎勵。歌藝訓練與現場演出不產生唱片。';}
+    if(oldVersion<=13){for(const w of s.works)if(w.kind===undefined)w.kind='ad';s.migrationNotice=(s.migrationNotice||'')+' 穗光唱片 單曲錄製完成後開始記錄音樂作品；舊版未保存歌曲推出時間與品質，不補造歷史曲線，不重發獎勵。歌藝訓練與現場演出不產生唱片。';}
     if(oldVersion<=15)s.archivedWorks=[];
     WORKS.validate(s,catalog(s),oldVersion<=15);
     if(oldVersion<=21){for(const w of s.works){if(w.jobId==='local')continue;const days=w.ageMs/w.stageMs;w.stageMs=WORKS.CONFIG.stageMs;w.ageMs=Math.min(WORKS.CONFIG.totalMs,days*w.stageMs);}s.migrationNotice=(s.migrationNotice||'')+' 製作與熱度共用七遊戲日5分鐘；舊作品按已完成作品日含小數比例換算，已結算收益與曲線保留，不重領。';WORKS.validate(s,catalog(s),oldVersion<=15);}
-    if(oldVersion<=15){const removed=s.works.filter(w=>w.jobId==='local');s.archivedWorks.push(...removed);s.works=s.works.filter(w=>w.jobId!=='local');s.migrationNotice=(s.migrationNotice||'')+` 作品熱度只收錄EAMI 單曲錄製、週末單元劇、日常選物封面。舊街角品牌企劃 ${removed.length} 件已完整封存並停止後續結算，已獲粉絲、名氣、資金及既有擴充資格保留；匯出存檔含封存資料。舊單元劇未記錄逐筆作品，不補造歷史。`;WORKS.validate(s,catalog(s));}
+    if(oldVersion<=15){const removed=s.works.filter(w=>w.jobId==='local');s.archivedWorks.push(...removed);s.works=s.works.filter(w=>w.jobId!=='local');s.migrationNotice=(s.migrationNotice||'')+` 作品熱度只收錄穗光唱片 單曲錄製、週末單元劇、日常選物封面。舊街角品牌企劃 ${removed.length} 件已完整封存並停止後續結算，已獲粉絲、名氣、資金及既有擴充資格保留；匯出存檔含封存資料。舊單元劇未記錄逐筆作品，不補造歷史。`;WORKS.validate(s,catalog(s));}
     if(oldVersion<=16)s.migrationNotice=(s.migrationNotice||'')+' 新接單曲製作4日、單元劇7日、封面2日（初版可調）；1日約43秒。舊版進行中通告保留原完成時間，待辦開始時採新製作期。整件完成才結算一次，再開始七日熱度。';
     if(oldVersion<=18)s.migrationNotice=(s.migrationNotice||'')+' 長案改為每日5秒製作段，日末自動安排，短案先做完，疲勞先休息。既有長案按比例換為完成日與當日工作量，約定成果不重算。長案管理也是助理服務，與一般代排共用公司30/分鐘薪時計；可暫停管理保留進度，資金不足停止服務。';
     if(oldVersion<=22)PUBLICITY.init(s);if(oldVersion<=24)PUBLICITY.migrate(s);PUBLICITY.validate(s);
@@ -571,7 +579,7 @@
     // A saved first-sign flag is authoritative; absent early history is conservatively closed.
     const signedEvidence=s.hasEverSigned||s.artists.length>0||s.customRegistry.length>0||s.totalJobs>0||s.totalEarned>0||s.works.length>0||s.archivedWorks.length>0||s.log.some(l=>/以練習生身分加入|以自創素人身分加入|解約|加入公司/.test(l.text));
     if(!s.customRecruitCardUsed&&(signedEvidence||!knownFirstSign)){s.customRecruitCardUsed=true;refreshCandidates(s,s.candidates);if(!knownFirstSign&&!signedEvidence)s.migrationNotice=(s.migrationNotice||'')+' 舊檔缺少首次簽約歷史，為避免開放後續創角，本局不補發自創候選卡；既有角色保留。';}
-    if(s.candidates.some(id=>!PEOPLE.some(p=>p.id===id&&recruitEligible(p))))refreshCandidates(s,s.candidates);
+    if(retiredCandidates||s.candidates.some(id=>!PEOPLE.some(p=>p.id===id&&recruitEligible(p))))refreshCandidates(s,s.candidates);
     RIVALS.validate(s);ROTATION.validate(s,catalog(s));
     DOMAIN_HISTORY.validate(s,catalog(s));DOMAIN_HISTORY.backfill(s);FIRST_STORY.validate(s);FIRST_STORY.backfill(s);CHAPTER.validate(s);CHAPTER.scan(s);
     s.report = null;

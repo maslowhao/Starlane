@@ -8,7 +8,7 @@
     if(q.kind==='special')return{room:'board',short:'重要通告外出中',mood:'今天，是新的挑戰。'};
     return{room:'board',short:({cafe:'外出演唱中',radio:'電台錄製中',short:'臨演拍攝中',series:'戲劇拍攝中',local:'拍小廣告中',cover:'封面拍攝中'})[q.id]||'外出工作中',mood:'把握每一次被看見。'};
   }
-  function activity(a){const v=basicActivity(a),p=a.project;if(!p)return v;const name=p.template.action.projectName||{radio:'EAMI 單曲錄製',series:'週末單元劇',cover:'日常選物封面'}[p.jobId];return {...v,short:`${a.task?v.short:'無短行程'} · ${name} ${p.done}/${p.days}日 · ${a.task?.projectSegment?'製作中':a.task?.action.kind==='rest'?'休息續作':'待製作'}`};}
+  function activity(a){const v=basicActivity(a),p=a.project;if(!p)return v;const name=p.template.action.projectName||{radio:'穗光唱片 單曲錄製',series:'週末單元劇',cover:'日常選物封面'}[p.jobId];return {...v,short:`${a.task?v.short:'無短行程'} · ${name} ${p.done}/${p.days}日 · ${a.task?.projectSegment?'製作中':a.task?.action.kind==='rest'?'休息續作':'待製作'}`};}
   function positions(artists){const groups={};return artists.map(a=>{const status=activity(a);const slot=groups[status.room]||0;groups[status.room]=slot+1;const base={lounge:[40,70],practice:[15,28],recording:[67,28],board:[78,71]}[status.room];return{id:a.id,...status,x:base[0]+slot*8.5,y:base[1]};});}
   return{PANELS,ROOMS,activity,positions};
 });
