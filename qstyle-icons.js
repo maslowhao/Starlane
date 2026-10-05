@@ -3,16 +3,20 @@
  'use strict';
  const skills=['act','sing','speech','poise','movement','stamina','intellect','confidence'];
  const panels={recruit:'recruit',assistant:'assistant',publicity:'publicity',office:'office',opportunities:'opportunities',artist:'progress',works:'works',rivals:'rivals',journal:'journal'};
+ const mobile=matchMedia('(max-width:540px)'),deferred=new Set();
+ const lazyIcons=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){entry.target.removeAttribute('data-qicon-pending');lazyIcons.unobserve(entry.target);deferred.delete(entry.target);}},{rootMargin:'80px 0px'}):null;
+ mobile.addEventListener('change',()=>{if(!mobile.matches)for(const icon of deferred){icon.removeAttribute('data-qicon-pending');lazyIcons?.unobserve(icon);}if(!mobile.matches)deferred.clear();});
  const markup=(key,slot='small')=>`<span class="qicon" data-icon="${key}" data-slot="${slot}" aria-hidden="true"></span>`;
  function decorate(host,key,slot='small',target=host){
   if(!host||!target)return;
   host.classList.add('qicon-host');
   let icon=target.querySelector(':scope > .qicon');
-  if(!icon){icon=document.createElement('span');icon.className='qicon';icon.setAttribute('aria-hidden','true');target.prepend(icon);}
+  if(!icon){icon=document.createElement('span');icon.className='qicon';icon.setAttribute('aria-hidden','true');if(slot==='stat'&&mobile.matches&&lazyIcons){icon.dataset.qiconPending='';deferred.add(icon);lazyIcons.observe(icon);}target.prepend(icon);}
   if(icon.dataset.icon!==key)icon.dataset.icon=key;
   if(icon.dataset.slot!==slot)icon.dataset.slot=slot;
  }
  function refresh(){
+  for(const icon of deferred)if(!icon.isConnected){lazyIcons.unobserve(icon);deferred.delete(icon);}
   for(const b of document.querySelectorAll('button[data-panel]'))if(panels[b.dataset.panel])decorate(b,panels[b.dataset.panel],b.closest('.secretary-menu')?'menu':'small');
   for(const [selector,key] of [['[data-ui-roster]','roster'],['[data-heat]','heat'],['[data-company-desk="team"]','handbook'],['[data-music-story]','music-story'],['details[data-first-story] > summary','first-story']])for(const b of document.querySelectorAll(selector))decorate(b,key,b.closest('.secretary-menu')?'menu':'small');
   for(const b of document.querySelectorAll('[data-secretary-menu],.secretary-npc .dynamic-label'))decorate(b,'secretary',b.matches('.dynamic-label')?'secretary':'small');

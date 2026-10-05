@@ -38,3 +38,14 @@ body.scene-edition .artist-greeting::after{content:'';position:absolute;left:var
 }
 
 @media(max-width:700px){body.scene-edition .artist-greeting:not([data-speaker=secretary]){max-width:min(190px,calc(100% - 16px))}}
+
+/* Mobile travel controls stay in flow so the menu never covers the scene. */
+@media(max-width:700px){
+ body.scene-edition .travel-tools{position:relative;top:auto;right:auto;flex-wrap:wrap;margin:0 0 8px;background:transparent}
+ body.scene-edition #travel-menu{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));flex:0 0 100%;width:100%;min-width:0;gap:6px;padding:8px;margin:0;overflow:visible}
+ body.scene-edition #travel-menu button{display:flex;align-items:center;gap:4px;width:auto;min-width:0;min-height:44px;margin:0;padding:8px;white-space:normal;text-align:left}
+ body.scene-edition .company-room-bar{padding-top:4px!important}
+ body.scene-edition .location-stage{padding-top:0;background:transparent}
+}
+/* Keep names and icon space visible; fetch mobile stat art near the viewport. */
+@media(max-width:540px){body.scene-edition .qicon[data-qicon-pending]{background-image:none!important}}
