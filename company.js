@@ -6,7 +6,7 @@
   const courseIcon=k=>courseIcons.has(k)?StarQIcons.markup(k,'course'):'';
   const $ = id => document.getElementById(id);
   const esc = x => String(x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  let lastWorkScene=null,room='reception', desk='recruit', skill='act', artist=null, api=null, current=null;
+  let projectView=false,lastWorkScene=null,room='reception', desk='recruit', skill='act', artist=null, api=null, current=null;
   const secretaryLines=['今天，也一起向前一點。','窗邊的咖啡還溫著，下一個舞台正在等你們。'];
   let secretaryLine=-1;
   const roomNames={reception:'',practice:'表演訓練室・肢體與表演',recording:'聲音訓練室・歌藝與聲音表情'};
@@ -15,9 +15,9 @@
     const host=$('company-stage');if(!host)return;
     if(!current.artists.some(a=>a.id===artist))artist=current.artists[0]?.id||null;
     if(room==='work'&&!current.artists.some(x=>x.id===artist&&(x.project||G.WORK_SCENES[G.locationOf(x)])))artist=current.artists.find(x=>G.WORK_SCENES[G.locationOf(x)])?.id||artist;
-    const a=current.artists.find(x=>x.id===artist);const speechScene=room==='recording'&&(a?.task?.action.kind==='train'?a.task.action.skill==='speech':skill==='speech');if(room==='recording'&&a?.task?.action.kind==='train'&&['sing','speech'].includes(a.task.action.skill))skill=a.task.action.skill;let work=room==='work'?(G.WORK_SCENES[a&&G.locationOf(a)]||G.WORK_SCENES[{radio:'work-audio',series:'work-tv',cover:'work-ad'}[a?.project?.jobId]]):null;if(room==='work'&&!a?.task?.projectSegment&&!a?.project&&lastWorkScene&&window.StarDynamic?.inspect().some(x=>x.reaction))work=G.WORK_SCENES[lastWorkScene];
-    const renderRoom=room==='work'?(work?(Object.entries(G.WORK_SCENES).find(([k,v])=>v===work)[0]):'work-empty'):room;if(work)lastWorkScene=renderRoom;
-    $('company-room-title').textContent=room==='work'?(a?.project?`${work?.label||'通告現場'} · ${G.projectPhase(a,current.lastTick)}`:work?.label||'通告現場・目前無拍攝行程'):roomNames[room];
+    const a=current.artists.find(x=>x.id===artist);const speechScene=room==='recording'&&(a?.task?.action.kind==='train'?a.task.action.skill==='speech':skill==='speech');if(room==='recording'&&a?.task?.action.kind==='train'&&['sing','speech'].includes(a.task.action.skill))skill=a.task.action.skill;let work=room==='work'?(G.workScene(a,projectView)||G.workScene(a)||G.workScene(a,true)):null;if(room==='work'&&!a?.task?.projectSegment&&!a?.project&&lastWorkScene&&window.StarDynamic?.inspect().some(x=>x.reaction))work=G.WORK_SCENES[lastWorkScene];
+    const renderRoom=room==='work'?(work?(work.key||lastWorkScene):'work-empty'):room;if(work)lastWorkScene=renderRoom;
+    $('company-room-title').textContent=room==='work'?(work?.long&&a?.project&&!a.task?.projectSegment?'長案場景預覽 · '+(work?.label||'通告現場'):a?.project?`${work?.label||'通告現場'} · ${G.projectPhase(a,current.lastTick)}`:work?.label||'通告現場・目前無拍攝行程'):roomNames[room];
     const image=$('company-room-image'), src=room==='work'&&work?.background?base+work.background:StarArt.assets[room==='practice'?'acting-training':room==='recording'?'voice-training':'reception'].desktop;
     StarImages.set(image,src,true);
     $('company-room-title').hidden=room==='reception';
@@ -26,7 +26,7 @@
     const front=$('work-foreground');front.hidden=!work?.foreground;if(work?.foreground)StarImages.set(front,base+work.foreground,true);else{front.removeAttribute('src');delete front.dataset.originalSrc;}
     $('company-source').textContent=room==='reception'?'點藝人打招呼，辦事情找小秘書':(room==='recording'?'歌藝與聲音表情（口才）共用此室。':'演技、儀態、動感等課程使用此室。');
     if(speechScene){$('company-room-title').textContent='聲音訓練室・聲音表現教室';image.alt='口才培育，聲音表情教室';$('company-source').textContent='練習聲音表情，提升口才。';}
-    if(room==='work'){$('company-source').textContent=work?`${work.label} · 工作結束後可查看成果。`:'目前無對應通告；未支援的活動維持外出狀態。';image.alt=work?.label||'目前無通告現場';}
+    if(room==='work'){$('company-source').textContent=work?`${work.label} · ${previewLabel(a,work)}`:'目前無對應通告；未支援的活動維持外出狀態。';image.alt=work?.label||'目前無通告現場';}
     document.querySelectorAll('[data-company-room]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.companyRoom===room)));
     $('company-hotspots').innerHTML=room==='reception'
       ? '<button class="company-hotspot practice-door" data-company-room="practice"><span class="door-title-group"><b>前往表演訓練室</b></span></button><button class="company-hotspot recording-door" data-company-room="recording"><span class="door-title-group"><b>前往聲音訓練室</b></span></button>'
@@ -34,13 +34,14 @@
     if(room==='work')$('company-hotspots').innerHTML='';
     $('company-controls').innerHTML=room==='work'?workPanel(a,work):room==='reception'?(desk==='recruit'?(current.artists.length?teamInfo(a):recruitment()):desk==='team'?teamInfo(a):desk==='secretary'?secretaryMenu():desk==='closed'?'<p>點小秘書，可招募夥伴或設定助理。</p>':management()):training(a);
     const activity=$('reception-activity');
-    activity.hidden=room!=='reception'||!a;
-    activity.innerHTML=activity.hidden?'':receptionActivity(a);
+    activity.hidden=room!=='reception'||!current.artists.length;
+    activity.innerHTML=activity.hidden?'':current.artists.map(receptionActivity).join('');
     const rows=$('reception-contracts');rows.hidden=true;rows.replaceChildren();
     $('training-actions').hidden=true;$('training-actions').innerHTML='';
     host.dataset.selectedArtist=artist||'';
-    const sceneIds=room==='recording'?current.artists.filter(x=>G.locationOf(x)==='recording'&&(x.task?.action.skill==='speech')===speechScene).map(x=>x.id):null;
-    window.StarDynamic?.update(current,renderRoom,id=>{artist=id;api.selectArtist?.(id);if(room==='reception')desk='team';render(api);},sceneIds);
+    const preview=room==='work'&&work?.long&&a?.project&&!a.task?.projectSegment;host.dataset.projectPreview=String(preview);
+    const sceneIds=room==='recording'?current.artists.filter(x=>G.locationOf(x)==='recording'&&(x.task?.action.skill==='speech')===speechScene).map(x=>x.id):room==='work'&&work?current.artists.filter(x=>{const w=G.workScene(x);return w?.key===work.key&&w.long===work.long;}).map(x=>x.id):null;
+    window.StarDynamic?.update(current,renderRoom,id=>{artist=id;api.selectArtist?.(id);if(room==='reception')desk='team';render(api);},sceneIds,preview?a.id:null);
     window.StarRoomStats.render(current,speechScene?'speech':room,artist,id=>{artist=id;render(api);});
     let guide=$('training-secretary-guide');
     if(!guide){guide=document.createElement('div');guide.id='training-secretary-guide';guide.className='training-secretary-guide';guide.innerHTML=`<span class="art-cutline-frame"><img data-art-id="secretary" ${StarImages.attrs(StarArt.assets.secretary.desktop)} alt="小秘書" draggable="false"></span><p>今天想練哪一項？選好課程，我們就開始吧！</p>`;document.querySelector('.company-room-visual').append(guide);}
@@ -55,9 +56,11 @@
   }
   function receptionActivity(a){
     const t=a.task,pct=t?(t.production?G.productionProgress(t,current.lastTick).percent:Math.min(100,(current.lastTick-t.started)/(t.ends-t.started)*100)):0;
-    return `<small class="reception-activity-artist">${esc(a.name)} · 目前行程</small>
+    return `<article class="reception-schedule" data-schedule-artist="${esc(a.id)}"><small class="reception-activity-artist">${esc(a.name)} · 目前行程</small>
         <p class="current-activity">${esc(t?G.taskInfo(t).label:a.project?'無短行程 · 長案待製作':'空閒')}</p>
-        ${t?`<div class="company-task"><span id="company-countdown">${G.taskCountdown(t,current.lastTick)}</span><progress id="company-progress" max="100" value="${pct}" aria-label="目前行程進度"></progress></div><div class="reception-task-actions"><button data-cancel="${esc(a.id)}">取消目前行程</button>${t.production?`<button data-production-rest="${esc(a.id)}" ${t.production.rest?'disabled':''}>休息5秒後續作</button>`:''}</div>`:''}
+        ${t?`<div class="company-task"><span data-schedule-countdown="${esc(a.id)}">${G.taskCountdown(t,current.lastTick)}</span><progress data-schedule-progress="${esc(a.id)}" max="100" value="${pct}" aria-label="目前行程進度"></progress></div><div class="reception-task-actions"><button data-cancel="${esc(a.id)}">取消目前行程</button>${t.production?`<button data-production-rest="${esc(a.id)}" ${t.production.rest?'disabled':''}>休息5秒後續作</button>`:''}</div>`:''}
+        ${a.project?`<small class="schedule-long">${esc(G.receptionProjectStatus(a,current.lastTick))}</small><button data-company-contract="${esc(a.id)}">查看長案現場</button>`:''}
+        ${t&&!t.projectSegment&&G.workScene(a)?`<button data-company-current-work="${esc(a.id)}">查看目前通告</button>`:''}</article>
     `;
   }
   function teamInfo(a){
@@ -78,7 +81,8 @@
       <p class="company-footnote">招募請點小秘書，再選「招募藝人」；招募頁最上方可擴充名額，也保留「作品與公司擴充」入口。</p>
     </section>`;
   }
-  function workPanel(a,work){const t=a?.task;return `<div class="company-panel-heading"><span>ON LOCATION · WORK IN PROGRESS</span><h3>${a?.project?esc(G.projectPhase(a,current.lastTick)):work?work.label:'目前沒有對應活動'}</h3><p>目前活動與長案合約分開顯示；只有每日製作段會留在片場，等待期間可穿插工作。</p></div>${picker()}${a?`<p class="current-activity">目前：${esc(G.currentActivityLabel(a))}</p>`:''}${a?window.StarProjectUI.card(a,current):''}${t?`<h3>${esc(G.taskInfo(t).label)}</h3><div class="company-task"><span id="company-countdown">${G.taskCountdown(t,current.lastTick)}</span><progress id="company-progress" max="100" value="0"></progress></div><p>${t.source?.includes('assistant')?'助理安排':'玩家安排'} · ${esc(a.name)}${t.projectSegment?' · 本段完成只增加製作日，整案完成才交付報酬。':t.action.kind==='job'?` · 預估報酬 $${t.contract?.earned??G.payout(a,G.taskInfo(t))}`:''}</p>`:a?.project?'<p>合約仍在進行，下一製作段前不占用藝人。</p>':'<p>目前沒有製作中合約；已交付作品請到「作品熱度」查看。</p>'}<button data-company-room="reception">回公司接待</button><p class="company-result">${a?esc(current.log.find(l=>l.text.includes(a.name))?.text||''):''}</p>`;}
+  function previewLabel(a,work){return work?.long&&a?.project&&!a.task?.projectSegment?'長案場景預覽；目前'+G.currentActivityLabel(a)+'，未增加工時或占用藝人。':'工作進行中，結束後可查看成果。';}
+  function workPanel(a,work){const t=a?.task;return `<div class="company-panel-heading"><span>ON LOCATION · WORK IN PROGRESS</span><h3>${work?.long&&a?.project&&!a.task?.projectSegment?'長案場景預覽 · '+esc(G.projectPhase(a,current.lastTick)):a?.project?esc(G.projectPhase(a,current.lastTick)):work?work.label:'目前沒有對應活動'}</h3><p>目前活動與長案合約分開顯示；只有每日製作段會留在片場，等待期間可穿插工作。</p></div>${picker()}${a?`<p class="current-activity">目前：${esc(G.currentActivityLabel(a))}</p>`:''}${a?window.StarProjectUI.card(a,current):''}${t?`<h3>${esc(G.taskInfo(t).label)}</h3><div class="company-task"><span id="company-countdown">${G.taskCountdown(t,current.lastTick)}</span><progress id="company-progress" max="100" value="0"></progress></div><p>${t.source?.includes('assistant')?'助理安排':'玩家安排'} · ${esc(a.name)}${t.projectSegment?' · 本段完成只增加製作日，整案完成才交付報酬。':t.action.kind==='job'?` · 預估報酬 $${t.contract?.earned??G.payout(a,G.taskInfo(t))}`:''}</p>`:a?.project?'<p>合約仍在進行，下一製作段前不占用藝人。</p>':'<p>目前沒有製作中合約；已交付作品請到「作品熱度」查看。</p>'}<button data-company-room="reception">回公司接待</button><p class="company-result">${a?esc(current.log.find(l=>l.text.includes(a.name))?.text||''):''}</p>`;}
   function secretaryMenu(){return `<div class="company-panel-heading"><span>SECRETARY · WELCOME</span><h3>今天有什麼需要幫忙？</h3><p>查看招募或助理設定不會啟用代排，也不會扣薪。</p></div><div class="company-management secretary-menu"><button data-panel="recruit">招募藝人</button><button data-ui-roster>旗下藝人</button><button data-panel="assistant" data-assistant-focus>助理設定／代排</button><button data-panel="publicity" class="secretary-pr ${current.publicity.pending?'is-pending':''}">公關事件<span data-publicity-count>${current.publicity.pending?' · 1 待處理':''}</span></button><button data-panel="office">公司經營／設備</button><button data-panel="opportunities">重要邀約／原創企劃</button><button data-panel="works">作品與公司擴充</button><button data-heat>作品熱度／收益歷史</button><button data-panel="rivals">競爭公司</button><button data-panel="journal">工作日誌</button><button data-company-desk="team">回到手帳</button></div>`;}
   function recruitment(){return `<div class="company-panel-heading"><span>RECEPTION · MEET YOUR TEAM</span><h3>讓小秘書介紹下一位夥伴。</h3></div><button data-panel="works">查看作品／擴充 ${current.capacity} → ${Math.min(3,current.capacity+1)} 人名額</button><div class="company-candidates">${G.PEOPLE.filter(p=>current.candidates.slice(0,current.customRecruitCardUsed?2:1).includes(p.id)).map(p=>{
     const quote=G.recruitQuote(p.id),owned=current.artists.some(a=>a.id===p.id),full=current.artists.length>=current.capacity,lack=current.cash<quote.fee;
@@ -105,15 +109,15 @@
       <details class="mobile-training-rules"><summary>訓練規則與疲勞提醒</summary><p>才智提高高點機率，單項基礎1–3點。效率 ${p.efficiency*100}%；${p.failureChance*100}% 訓練失敗率，失敗零成長，學費與疲勞照常。</p><p>${esc(full?'此能力已滿':reason||'開始後顯示活動狀態；完成時更新能力、疲勞及結果提示。')}</p></details>
       ${room==='recording'?'<p>這裡是培育課程，不會推出歌曲。要發行作品，請接唱片錄製通告。</p><button data-panel="board" data-filter="music">前往單曲錄製通告 →</button>':''}<div class="company-course-preview" id="company-preview"><b>本次基礎 ${G.SKILLS[skill]} +${full?0:p.min}–${full?0:p.gain}</b><p>費用 $${course.cost} · 5 秒<br>才智提高高點機率，單項基礎1–3點<br>疲勞 +${G.fatigueCost(a,course)} · 效率 ${p.efficiency*100}%<br>${p.failureChance*100}% 訓練失敗率；失敗零成長，學費與疲勞照常</p></div>
 
-      ${window.StarDevelopmentUI.progress(a)}<div class="company-task"><b id="company-task-label">${task?esc(G.taskInfo(task).label):'空閒，可以開始'}</b><span id="company-countdown">${task?Math.max(0,Math.ceil((task.ends-current.lastTick)/1000))+' 秒':''}</span><progress id="company-progress" max="100" value="${pct}"></progress></div>
+      <div class="company-task"><b id="company-task-label">${task?esc(G.taskInfo(task).label):'空閒，可以開始'}</b><span id="company-countdown">${task?Math.max(0,Math.ceil((task.ends-current.lastTick)/1000))+' 秒':''}</span><progress id="company-progress" max="100" value="${pct}"></progress></div>
       <p class="company-reason">${full?'此能力已滿':reason||'開始後顯示活動狀態；完成時更新能力、疲勞及結果提示。'}</p>
       <p class="company-footnote">訓練完成後可查看成果。${a.queue.length?`已排 ${a.queue.length} 項待辦。`:'目前無待辦。'}助理${a.assistantEnabled?'已啟用，完成後會繼續代排':'未啟用，由你親自安排'}。</p><div class="company-result" id="company-result">${esc(current.log.find(l=>l.text.includes(a.name))?.text||'每一次練習，都算數。')}</div>`;
   }
   document.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b||b.disabled||!api)return;
-    if(b.dataset.companyContract){artist=b.dataset.companyContract;room='work';render(api);return;}
+    if(b.dataset.companyContract||b.dataset.companyCurrentWork){artist=b.dataset.companyContract||b.dataset.companyCurrentWork;projectView=!!b.dataset.companyContract;room='work';render(api);return;}
     if(b.dataset.companyCourse){const keepFocus=b.matches(':focus-visible');skill=b.dataset.companyCourse;render(api);if(keepFocus)document.querySelector('[data-company-course="'+skill+'"]')?.focus({preventScroll:true});}
-    if(b.dataset.companyRoom){if(['practice','recording'].includes(b.dataset.companyRoom))requestAnimationFrame(()=>document.querySelector('.company-room-bar').scrollIntoView({block:'start',behavior:'instant'}));room=b.dataset.companyRoom;if(room==='reception')desk=current.artists.length?'team':'recruit';skill=room==='recording'?(['sing','speech'].includes(skill)?skill:'sing'):(['sing','speech'].includes(skill)?'act':skill);render(api);}
+    if(b.dataset.companyRoom){if(['practice','recording'].includes(b.dataset.companyRoom))requestAnimationFrame(()=>document.querySelector('.company-room-bar').scrollIntoView({block:'start',behavior:'instant'}));projectView=false;room=b.dataset.companyRoom;if(room==='reception')desk=current.artists.length?'team':'recruit';skill=room==='recording'?(['sing','speech'].includes(skill)?skill:'sing'):(['sing','speech'].includes(skill)?'act':skill);render(api);}
     if(b.dataset.companyDesk){room='reception';desk=b.dataset.companyDesk;render(api);}
     if(b.dataset.companyEquipment||b.dataset.companyPerson)$('company-controls').scrollIntoView({block:'nearest',behavior:'smooth'});
     if(b.dataset.companyRefresh)api.refresh();
@@ -129,6 +133,6 @@
     if(e.target.id==='company-artist'){artist=e.target.value;api.selectArtist?.(artist);render(api);}
     if(e.target.id==='company-course'){skill=e.target.value;render(api);}
   });
-  function tick(state){const a=state.artists.find(x=>x.id===artist);if(a?.task&&$('company-countdown')){const t=a.task;$('company-countdown').textContent=G.taskCountdown(t,state.lastTick);$('company-progress').value=t.production?G.productionProgress(t,state.lastTick).percent:Math.min(100,(state.lastTick-t.started)/(t.ends-t.started)*100);}}
-  window.StarCompany={render,tick,selectArtist:id=>{if(!current.artists.some(a=>a.id===id))return;artist=id;api.selectArtist?.(id);room='reception';desk='team';render(api);},roster:()=>current.artists.map(a=>{const happy=StarChibi.path({...G.identity(current,a.id),...a},'happy');return {id:a.id,name:a.name,storyPending:G.CHAPTER.get(current,a.id)?.pending!=null||(G.FIRST_STORY.get(current,a.id)?.status==='pending'&&G.FIRST_STORY.get(current,a.id)?.work.kind!=='music'),happyPortrait:happy?.endsWith('-happy.webp')?happy:null};}),showRecruitment:()=>{if(!matchMedia('(max-width:540px)').matches||current.hasEverSigned||current.artists.length||current.publicity.pending||current.events.length)return false;room='reception';desk='recruit';render(api);document.querySelector('#company-controls .company-candidates')?.scrollIntoView({block:'start'});return true;},showWork:id=>{const a=current?.artists.find(x=>x.id===id);if(!a?.task||!G.WORK_SCENES[G.locationOf(a)])return false;artist=id;room='work';render(api);return true;},refresh:()=>render(api),openAssistant:()=>{room='reception';desk='secretary';secretaryLine=(secretaryLine+1)%secretaryLines.length;render(api);document.getElementById('company-controls').scrollIntoView({block:'nearest'});document.querySelector('#company-controls [data-panel="recruit"]')?.focus({preventScroll:true});}};
+  function tick(state){for(const p of state.artists){const label=document.querySelector('[data-schedule-countdown="'+p.id+'"]'),bar=document.querySelector('[data-schedule-progress="'+p.id+'"]');if(label&&p.task){label.textContent=G.taskCountdown(p.task,state.lastTick);bar.value=Math.min(100,(state.lastTick-p.task.started)/(p.task.ends-p.task.started)*100);}}const a=state.artists.find(x=>x.id===artist);if(a?.task&&$('company-countdown')){const t=a.task;$('company-countdown').textContent=G.taskCountdown(t,state.lastTick);$('company-progress').value=t.production?G.productionProgress(t,state.lastTick).percent:Math.min(100,(state.lastTick-t.started)/(t.ends-t.started)*100);}}
+  window.StarCompany={render,tick,selectArtist:id=>{if(!current.artists.some(a=>a.id===id))return;artist=id;api.selectArtist?.(id);room='reception';desk='team';render(api);},roster:()=>current.artists.map(a=>{const happy=StarChibi.path({...G.identity(current,a.id),...a},'happy');return {id:a.id,name:a.name,storyPending:G.CHAPTER.get(current,a.id)?.pending!=null||(G.FIRST_STORY.get(current,a.id)?.status==='pending'&&G.FIRST_STORY.get(current,a.id)?.work.kind!=='music'),happyPortrait:happy?.endsWith('-happy.webp')?happy:null};}),showRecruitment:()=>{if(!matchMedia('(max-width:540px)').matches||current.hasEverSigned||current.artists.length||current.publicity.pending||current.events.length)return false;room='reception';desk='recruit';render(api);document.querySelector('#company-controls .company-candidates')?.scrollIntoView({block:'start'});return true;},showWork:id=>{const a=current?.artists.find(x=>x.id===id);if(!a?.task||!G.WORK_SCENES[G.locationOf(a)])return false;artist=id;projectView=false;room='work';render(api);return true;},refresh:()=>render(api),openAssistant:()=>{room='reception';desk='secretary';secretaryLine=(secretaryLine+1)%secretaryLines.length;render(api);document.getElementById('company-controls').scrollIntoView({block:'nearest'});document.querySelector('#company-controls [data-panel="recruit"]')?.focus({preventScroll:true});}};
 })();

@@ -249,8 +249,6 @@
     if(select.innerHTML!==options)select.innerHTML=options;select.value=assistantTarget||'';select.disabled=!state.artists.length;
     const a=targetArtist(),c=targetStrategy();
     $('assistant-target-note').textContent=a?`正在編輯：${a.name}。只修改這位藝人的策略，不影響其他夥伴。`:'請先招募一位藝人，再設定他的代排行程。';
-    $('minimum-pay-status').textContent=(a?a.name:'尚無藝人')+' · 已儲存最低報酬：'+(c.minPay===0?'不限（$0）':money(c.minPay)+'；低於門檻不代接');
-    $('minimum-pay-unlimited').disabled=!a||c.minPay===0;
     for(const el of $('assistant-form').querySelectorAll('input,select,button'))el.disabled=!a;
     const next=a?G.ROTATION.next(state,a):null;$('training-rotation-status').textContent=a?(next?'下一堂：'+(next==='speech'?'聲音表現（口才）':G.SKILLS[next]+'訓練'):'所選課程皆已滿級，需訓練時改為休息。'):'請先招募藝人。';
   }
@@ -288,11 +286,10 @@
   }
   function populateSettings() {
     renderStrategyTarget();const c = targetStrategy();
-    $('priority').value = c.priority.join(','); StarMoney.fillInput($('min-pay'),c.minPay);
+    for(const el of document.querySelectorAll('[data-work-type]'))el.checked=c.priority.includes(el.value);
     $('assistant-mode').value=c.mode;
     $('salary-rate').textContent = '$30 / 每 60 秒服務時間 · 初版薪資';
-    if (![...$('max-fatigue').options].some(o => +o.value === c.maxFatigue)) $('max-fatigue').add(new Option(String(c.maxFatigue), String(c.maxFatigue)));
-    $('max-fatigue').value = String(c.maxFatigue); $('fallback').value = c.fallback; for(const el of document.querySelectorAll('[data-train-skill]'))el.checked=G.trainingSelection(state,targetArtist()).skills.includes(el.value);
+    for(const el of document.querySelectorAll('[data-train-skill]'))el.checked=G.trainingSelection(state,targetArtist()).skills.includes(el.value);
   }
   function showReport(r) {
     // An auto-saved, never-staffed company has no work to report. Keep settlement intact.
@@ -361,21 +358,19 @@
     if (b.dataset.decline && confirm('確定婉拒？五分鐘後可能同名同人加價重邀，最多加價50%。')) mutate(() => G.decide(state, b.dataset.decline, null, false));
   });
   $('assistant-target').addEventListener('change',()=>{assistantTarget=$('assistant-target').value;populateSettings();$('strategy-status').textContent='已切換編輯對象，尚未套用新的修改。';});
-  $('minimum-pay-unlimited').addEventListener('click',()=>{const ok=mutate(()=>saveTargetStrategy({...targetStrategy(),minPay:0}));if(ok){$('min-pay').value=0;$('strategy-status').textContent='最低報酬已儲存為不限（$0）。目前活動完成後，依原策略重新挑選通告。';toast('已套用不限報酬；目前活動照常完成');}});
   $('assistant-form').addEventListener('input',()=>{$('strategy-status').textContent='策略變更尚未套用。上方開關是已儲存的服務狀態；請按套用儲存策略。';});
   $('assistant-form').addEventListener('submit', e => {
     e.preventDefault();
     if(!targetArtist())return;
     const trainSkills=[...document.querySelectorAll('[data-train-skill]:checked')].map(el=>el.value);if(!trainSkills.length){$('strategy-status').textContent='請至少勾選一門課程；已儲存的策略保持不變。';toast('請至少勾選一門課程。');return;}
-    const minPay=StarMoney.parseInput($('min-pay'));if(minPay===null){toast('請輸入 NT$0 到 NT$3,000,000 的最低報酬。');return;}
-    mutate(() => saveTargetStrategy({ mode: $('assistant-mode').value, priority: $('priority').value.split(','), minPay, maxFatigue: +$('max-fatigue').value, fallback: $('fallback').value, trainSkills }));
-    $('strategy-status').textContent = '策略已儲存。目前活動完成後會用新策略；不取消已付費訓練或既有長案。請看上方逐人接案診斷。'; toast(targetArtist().name+'的助理策略已套用');
+    mutate(() => saveTargetStrategy({ mode: $('assistant-mode').value, priority: [...document.querySelectorAll('[data-work-type]:checked')].map(el=>el.value), trainSkills }));
+    $('strategy-status').textContent = '策略已儲存。未勾選的類別不代接；全部取消則培育／休息。目前活動與既有長案保留。'; toast(targetArtist().name+'的助理策略已套用');
   });
   $('close-workspace').addEventListener('click', closeWorkspace);
   $('workspace-dialog').addEventListener('cancel', e => { e.preventDefault(); closeWorkspace(); });
   $('assistant-enabled-roster').addEventListener('change',e=>{const id=e.target.dataset.assistantEnabled;if(!id)return;const a=state.artists.find(a=>a.id===id);if(!a)return;const enabled=e.target.checked;mutate(()=>G.setAssistant(state,enabled,id));toast(enabled?(a.assistantEnabled?a.name+'的代排已啟用；公司共用薪資 '+money(state.payroll.rate)+'/分鐘':'資金不足，未啟用'):a.name+'的代排已關閉；目前行程與手排待辦保留');});
   $('close-modal').addEventListener('click', () => { $('modal').close(); state.report = null; persist(); });
-  $('help')?.addEventListener('click', () => modal('<div class="eyebrow">THE FIRST DAY AT STARLANE</div><h2>從練習生，走向第一個舞台。</h2><p>新公司從 0 人開始。先按「尋找／招募藝人」，從本次出現的兩位候選人選一位（依卡片確定報價簽約、公司初始 1 人名額，可擴至 3 人），再接「街角品牌企劃」或「巷口短篇劇」，5 秒後拿到收入與名氣。再選培育課程，補足出道與通告門檻。</p><ul><li>簽約金採初始九項能力平均與最高值計算，卡片顯示確定報價；已簽藝人保留實付金額，解約支付原實付的 50%。這是初版平衡設計。</li><li>九項能力為演技、歌藝、口才、儀態、動感、體能、才智、自信、名氣。前八項可訓練；名氣由工作累積。疲勞是獨立狀態。</li><li>每則通告所有門檻都必須達標。畫面列出目前值與差距；手動、待辦與助理共用同一檢查。</li><li>出道需名氣 30、儀態 34、自信 34，以及演技／歌藝／口才／動感任一 45。空閒時由你宣布，助理不代做。</li><li>單曲製作4日、單元劇7日、封面2日（初版）；1日約43秒，每5秒更新進度，整件完成才付一次報酬並啟動7日熱度。製作中可休息5秒自動續作；取消不保留進度。普通小通告維持5秒。訓練 5 秒，每次 $80–100、疲勞 +8–12。每次僅指定能力隨機 +1–3；才智提高抽到高點的機率，不額外疊加，才智課也適用。短通告名氣另以2／2.5／1.5為基礎，名氣0–149／150–399／400–699／700–899／900–998時依序按100%／40%／12%／4%／1%累積；不足整點存檔保留。普通通告僅主能力 +1–2；三項需出道的進階通告與主演／長約為重要通告，僅主能力 +1–5。名氣依各類通告的獨立規則計算。疲勞60起成長50%、80起25%，向下取整、成功至少1；訓練基礎失敗率3%，疲勞80以上改為50%（單次判定、不疊加）；失敗當次零成長，原有能力與小數進度保留，學費與疲勞照常、不額外罰款。能力上限999。成長與失敗在開始時固定，重載不重抽。休息 5 秒，疲勞 −45。</li><li>體能0–999 點降低 0–40% 工作疲勞（向上取整）；名氣0–999 點增加 0–20% 報酬；普通長作以15／18／12為基礎，名氣0–149／150–399／400–699／700–899／900–998依100%／50%／15%／5%／2%累積，接案時鎖定，完工才入帳，小數另存。重要邀約及原創企劃維持原規則；三種短案另用短案曲線。</li><li>大型通告完成後疲勞達 85 會失誤：報酬 80%、名氣 50%；自信越高，自信損失越少。自信不是全局成功率。</li><li>可排 3 項不同待辦。無資格、體力或資金不足時略過並記錄。取消不獲得成長或報酬，訓練費退回。</li><li>助理可選開啟：培養優先會依指定能力訓練，通告優先則依已儲存的類型、最低報酬及完成後疲勞上限代排；不符合時訓練或休息。手排優先，出道／主演／長約留你決定。</li><li>每 5 秒及操作後存檔。離線最多結算 4 小時；只有助理開啟才自動接新工作。請固定使用相同瀏覽器與位置，並定期匯出 JSON 備份。</li><li>旗下藝人合計名氣 600 為這版小目標；創作曲目／劇本系統尚未實作。</li></ul>'));
+  $('help')?.addEventListener('click', () => modal('<div class="eyebrow">THE FIRST DAY AT STARLANE</div><h2>從練習生，走向第一個舞台。</h2><p>新公司從 0 人開始。先按「尋找／招募藝人」，從本次出現的兩位候選人選一位（依卡片確定報價簽約、公司初始 1 人名額，可擴至 3 人），再接「街角品牌企劃」或「巷口短篇劇」，5 秒後拿到收入與名氣。再選培育課程，補足出道與通告門檻。</p><ul><li>簽約金採初始九項能力平均與最高值計算，卡片顯示確定報價；已簽藝人保留實付金額，解約支付原實付的 50%。這是初版平衡設計。</li><li>九項能力為演技、歌藝、口才、儀態、動感、體能、才智、自信、名氣。前八項可訓練；名氣由工作累積。疲勞是獨立狀態。</li><li>每則通告所有門檻都必須達標。畫面列出目前值與差距；手動、待辦與助理共用同一檢查。</li><li>出道需名氣 30、儀態 34、自信 34，以及演技／歌藝／口才／動感任一 45。空閒時由你宣布，助理不代做。</li><li>單曲製作4日、單元劇7日、封面2日（初版）；1日約43秒，每5秒更新進度，整件完成才付一次報酬並啟動7日熱度。製作中可休息5秒自動續作；取消不保留進度。普通小通告維持5秒。訓練 5 秒，每次 $80–100、疲勞 +8–12。每次僅指定能力隨機 +1–3；才智提高抽到高點的機率，不額外疊加，才智課也適用。短通告名氣另以2／2.5／1.5為基礎，名氣0–149／150–399／400–699／700–899／900–998時依序按100%／40%／12%／4%／1%累積；不足整點存檔保留。普通通告僅主能力 +1–2；三項需出道的進階通告與主演／長約為重要通告，僅主能力 +1–5。名氣依各類通告的獨立規則計算。疲勞60起成長50%、80起25%，向下取整、成功至少1；訓練基礎失敗率3%，疲勞80以上改為50%（單次判定、不疊加）；失敗當次零成長，原有能力與小數進度保留，學費與疲勞照常、不額外罰款。能力上限999。成長與失敗在開始時固定，重載不重抽。休息 5 秒，疲勞 −45。</li><li>體能0–999 點降低 0–40% 工作疲勞（向上取整）；名氣0–999 點增加 0–20% 報酬；普通長作以15／18／12為基礎，名氣0–149／150–399／400–699／700–899／900–998依100%／50%／15%／5%／2%累積，接案時鎖定，完工才入帳，小數另存。重要邀約及原創企劃維持原規則；三種短案另用短案曲線。</li><li>大型通告完成後疲勞達 85 會失誤：報酬 80%、名氣 50%；自信越高，自信損失越少。自信不是全局成功率。</li><li>可排 3 項不同待辦。無資格、體力或資金不足時略過並記錄。取消不獲得成長或報酬，訓練費退回。</li><li>助理可選開啟：培養優先會依指定能力訓練，通告優先則依勾選的音樂／戲劇／廣告類別代排；未勾選或不符合資格時培育／休息，疲勞由助理安全管理。手排優先，出道／主演／長約留你決定。</li><li>每 5 秒及操作後存檔。離線最多結算 4 小時；只有助理開啟才自動接新工作。請固定使用相同瀏覽器與位置，並定期匯出 JSON 備份。</li><li>旗下藝人合計名氣 600 為這版小目標；創作曲目／劇本系統尚未實作。</li></ul>'));
   function downloadSave(raw, prefix) { const blob = new Blob([raw], { type: 'application/json' }); const url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = prefix + '-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
   $('export').addEventListener('click', () => { if(loadError){const raw=localStorage.getItem(KEY);if(raw){downloadSave(raw,'星序經紀-原始存檔備份');toast('已匯出未變更的原存檔');}return;} if (!sync()) return; persist(); downloadSave(G.save(state), '星序經紀-存檔'); toast('已匯出存檔，請保留下載的 JSON 檔'); });
   $('speed-backup').addEventListener('click',()=>{const raw=localStorage.getItem(SPEED_BACKUP);if(raw)downloadSave(raw,'星序經紀-十分鐘改版前原檔');});

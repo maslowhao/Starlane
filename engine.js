@@ -4,7 +4,7 @@
   else root.StarGame = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (ROSTER, WORKS, PUBLICITY, DEVELOPMENT, CAREER, CUSTOM, DOMAIN_HISTORY, FIRST_STORY, RIVALS, ROTATION, CHAPTER) {
   'use strict';
-  const VERSION = 31;
+  const VERSION = 32;
   const MUSIC=CAREER.MUSIC,REVENUE=WORKS.REVENUE;
   const OFFLINE_SHORT_FACTOR=.7;
   // Only three ordinary short jobs use this curve. Integer units preserve fractional fame exactly.
@@ -94,6 +94,14 @@
     'work-ad':{label:'廣告拍攝現場',background:'../original-v2/desktop/backgrounds/work-ad.webp?v=art-v4',source:'原作通告08 廣告拍攝',clip:'pose'},
     'work-live':{label:'音樂演出現場',background:'work-live.png',foreground:'work-live-front.png',source:'原作打工03 幕後合音',clip:'sing'}
   };
+  function workSceneKey(a,projectOnly=false){
+    if(projectOnly&&a?.project)return {radio:'work-audio',series:'work-tv',cover:'work-ad'}[a.project.jobId]||null;
+    const key=a&&locationOf(a);return WORK_SCENES[key]?key:null;
+  }
+  function workScene(a,projectOnly=false){const key=workSceneKey(a,projectOnly);if(!key)return null;
+    const long=projectOnly?!!a.project:!!(a.task?.projectSegment||a.task?.production||a.task?.action.kind==='special');
+    return {...WORK_SCENES[key],key,long,background:long?'../original-v2/desktop/backgrounds/'+key+'-long.webp?v=art-v5':WORK_SCENES[key].background};
+  }
   function activityClip(a){if(a.task?.production?.rest)return 'rest';const t=a.task?.action;if(!t)return 'idle';if(t.kind==='rest')return 'rest';if(t.kind==='job'&&t.id==='cafe')return 'sing';if(t.kind==='train')return {sing:'record',speech:'speech',act:'act',poise:'pose',confidence:'pose',movement:'dance',stamina:'dance',intellect:'idle'}[t.skill]||'idle';return WORK_SCENES[locationOf(a)]?.clip||'idle';}
   function locationName(a){return WORK_SCENES[locationOf(a)]?.label||{reception:'公司大廳',practice:'表演訓練室',recording:'聲音訓練室',outside:'外出通告'}[locationOf(a)];}
   function locationOf(a) {
@@ -317,14 +325,15 @@
   }
   function settings(s, input) {
     const priority = input.priority;
-    if (!Array.isArray(priority) || priority.length !== 3 || new Set(priority).size !== 3 || priority.some(t => !TYPES[t])) return false;
-    s.assistant = { enabled: !!input.enabled, mode: input.mode === 'train' ? 'train' : 'work', priority: [...priority], minPay: clamp(Number(input.minPay) || 0, 0, 100000), maxFatigue: clamp(Number(input.maxFatigue) || 30, 30, 100), fallback: input.fallback === 'rest' ? 'rest' : 'train', trainSkill: SKILLS[input.trainSkill] ? input.trainSkill : 'sing' };
+    if (!Array.isArray(priority) || priority.length > 3 || new Set(priority).size !== priority.length || priority.some(t => !TYPES[t])) return false;
+    s.assistant = { enabled: !!input.enabled, mode: input.mode === 'train' ? 'train' : 'work', priority: [...priority], minPay: clamp(Number(input.minPay) || 0, 0, 100000), maxFatigue: clamp(Number(input.maxFatigue) || 70, 30, 100), fallback: input.fallback === 'rest' ? 'rest' : 'train', trainSkill: SKILLS[input.trainSkill] ? input.trainSkill : 'sing' };
     return true;
   }
   const STRATEGY_FIELDS=['mode','priority','minPay','maxFatigue','fallback','trainSkill'];
   const DEFAULT_STRATEGY=Object.freeze({mode:'work',priority:Object.freeze(['music','drama','ad']),minPay:0,maxFatigue:70,fallback:'train',trainSkill:'sing'});
+  // Obsolete keys survive only as save history; effective policy always ignores them.
   function strategySnapshot(c){return Object.fromEntries(STRATEGY_FIELDS.map(k=>[k,k==='priority'?[...c[k]]:c[k]]));}
-  function effectiveStrategy(s,a){return {...strategySnapshot(a?.assistantStrategy||DEFAULT_STRATEGY),enabled:a?.assistantEnabled===true};}
+  function effectiveStrategy(s,a){return {...strategySnapshot(a?.assistantStrategy||DEFAULT_STRATEGY),minPay:0,maxFatigue:70,fallback:'train',enabled:a?.assistantEnabled===true};}
   function setArtistStrategy(s,id,input){const a=person(s,id);if(!a)return false;if(!input||typeof input!=='object'||Array.isArray(input))return false;if(Object.hasOwn(input,'trainSkills')&&!ROTATION.valid(input.trainSkills))return false;const skills=Object.hasOwn(input,'trainSkills')?input.trainSkills:Object.hasOwn(input,'trainSkill')?[input.trainSkill]:null;if(skills&&!ROTATION.valid(skills))return false;const temp={};if(!settings(temp,{...effectiveStrategy(s,a),...input,...(skills?{trainSkill:skills[0]}:{}),enabled:s.assistant.enabled}))return false;if(skills)ROTATION.set(s,a,skills);a.assistantStrategy=strategySnapshot(temp.assistant);return true;}
   function nextAction(s, a) {
     const cfg = effectiveStrategy(s,a);
@@ -333,10 +342,10 @@
     if (cfg.mode === 'train') return trainOrRest();
     // Fatigue cap applies to the projected fatigue after completing the job.
     for (const type of cfg.priority) {
-      const offers = JOBS.filter(j => j.type === type && payout(a, j) >= cfg.minPay && !canStart(s, a, { kind: 'job', id: j.id }, true)).sort((x, y) => payout(a, y) / y.duration - payout(a, x) / x.duration);
+      const offers = JOBS.filter(j => j.type === type && !canStart(s, a, { kind: 'job', id: j.id }, true)).sort((x, y) => payout(a, y) / y.duration - payout(a, x) / x.duration);
       if (offers.length) return { kind: 'job', id: offers[0].id };
     }
-    return cfg.fallback === 'train' ? trainOrRest() : { kind: 'rest' };
+    return trainOrRest();
   }
   function dispatch(s, at) {
     assistantFunds(s, at);
@@ -516,7 +525,7 @@
     if(s&&oldVersion<=19){s.version=VERSION;const known=[...(s.works||[]),...(s.archivedWorks||[])];s.companyReputation=known.reduce((n,w)=>n+(REPUTATION_GAIN[w.jobId]||0),0);s.migrationNotice=(s.migrationNotice||'')+' 公司知名度為獨立永久數值；舊檔僅依可核對的已完成作品逐件補記，不以收入、個人名氣或不完整日誌推造短案。既有名額不回收。';}
     if(s&&oldVersion<=20){s.version=VERSION;if(s.payroll){if(oldRate!==undefined&&![30,60,120,180].includes(oldRate))throw new Error('舊薪資資料損壞');s.payroll.remainder*=SALARY_RATE/(oldRate||SALARY_RATE);s.payroll.rate=SALARY_RATE;}s.migrationNotice=(s.migrationNotice||'')+' 助理費改為公司共用30/現實60秒（初版）。歷史已付薪資保留，不退款不追收；未扣款的零碎服務時間按新費率接續。';}
     if(s&&oldVersion<=26){s.version=VERSION;for(const a of s.artists||[])if(a.task?.action?.kind==='job'&&({cafe:360,short:420,local:330})[a.task.action.id]&&a.task.shortBasePay===undefined)a.task.shortBasePay=({cafe:360,short:420,local:330})[a.task.action.id];}
-    if(s&&[27,28,29,30].includes(oldVersion))s.version=VERSION;
+    if(s&&[27,28,29,30,31].includes(oldVersion))s.version=VERSION;
     if(s&&oldVersion<=30){s.customRegistry=[];s.customSerial=0;}
     if(s)CUSTOM.validate(s);
     if(s&&s.customRecruitCardUsed===undefined)s.customRecruitCardUsed=s.customRegistry.length>0;
@@ -530,7 +539,7 @@
     s.artists.forEach((a, i) => {
       const identity = catalog(s).find(p=>p.id===a.id);
       if(s.independentStrategies===1&&a.assistantStrategy===undefined)throw new Error('缺少藝人獨立策略');
-      if(a.assistantStrategy!==undefined){const c=a.assistantStrategy;if(!c||typeof c!=='object'||Array.isArray(c)||Object.keys(c).length!==STRATEGY_FIELDS.length||!STRATEGY_FIELDS.every(k=>Object.hasOwn(c,k))||!['work','train'].includes(c.mode)||!['train','rest'].includes(c.fallback)||!SKILLS[c.trainSkill]||!finite(c.minPay,0,100000)||!finite(c.maxFatigue,30,100)||!Array.isArray(c.priority)||c.priority.length!==3||new Set(c.priority).size!==3||c.priority.some(t=>!TYPES[t]))throw new Error('藝人個別助理策略損壞');}
+      if(a.assistantStrategy!==undefined){const c=a.assistantStrategy;if(!c||typeof c!=='object'||Array.isArray(c)||Object.keys(c).length!==STRATEGY_FIELDS.length||!STRATEGY_FIELDS.every(k=>Object.hasOwn(c,k))||!['work','train'].includes(c.mode)||!['train','rest'].includes(c.fallback)||!SKILLS[c.trainSkill]||!finite(c.minPay,0,100000)||!finite(c.maxFatigue,30,100)||!Array.isArray(c.priority)||c.priority.length>3||new Set(c.priority).size!==c.priority.length||c.priority.some(t=>!TYPES[t]))throw new Error('藝人個別助理策略損壞');}
       if(oldVersion<=29)a.longFameUnits=0;
       if(!Number.isInteger(a.longFameUnits)||a.longFameUnits<0||a.longFameUnits>=LONG_FAME.unit)throw new Error('長作名氣累積資料損壞');
       if(oldVersion<=28)a.shortFameUnits=0;
@@ -594,5 +603,5 @@
     return s;
   }
   function resolvePublicity(s,id,choice){const r=PUBLICITY.resolve(s,id,choice);if(r.ok){log(s,`${r.artistName||'公關事件'}：${r.text}${r.expired?'':` 名氣 ${r.delta>=0?'+':''}${r.delta}；公司資金 ${r.cashDelta>=0?'+':''}$${r.cashDelta}；粉絲 ${r.fanDelta>=0?'+':''}${r.fanDelta} 人。`}`,s.lastTick);unlock(s,s.lastTick);}return r;}
-  return { CHAPTER,RIVALS,ROTATION,trainingSelection:ROTATION.get, FIRST_STORY, DOMAIN_HISTORY, REVENUE, MUSIC, SPECIAL_RECRUIT_IDS,recruitEligible,CUSTOM,catalog,identity,customQuote,createCustom, VERSION, LONG_FAME, longFamePreview, SHORT_FAME, shortFamePreview, CAREER,originalChoice,renameOriginal:CAREER.renameIdea,launchOriginal, DEVELOPMENT, buyEquipment:(s,k,l)=>DEVELOPMENT.buy(s,k,l), OFFLINE_SHORT_FACTOR, PUBLICITY,resolvePublicity, serviceNames,stopServices, receptionProjectStatus,projectPhase,currentActivityLabel, REPUTATION_GAIN, serviceActive, manageProject, workProject, cancelProject, projectLabel, PRODUCTION_DAYS, productionProgress, taskCountdown, restProduction, ACTION_SECONDS, WORKS, EXPANSIONS, expansionQuote, expand, CANDIDATE_COUNT, SPECIAL_CHANCE, activityClip, WORK_SCENES, locationName, rerollCandidates, RELEASE_RATIO, releaseQuote, release, CANDIDATE_WEIGHTS, refreshCandidates, locationOf, MAX_ARTISTS, LEGACY_RECRUIT_COST, SIGNING_PRICE, SIGNING_STATS, signingQuote, recruitQuote, signingFormula, SALARY_RATE, STAT_CAP, OFFLINE_CAP, TYPES, SKILLS, TRAINING, JOBS, PEOPLE, create, recruit, payout, fatigueCost, isSetback, confidenceLoss, fameGain, growthMax, trainingGain, trainingPreview, actionInfo, taskInfo, jobLocks, debutLocks, debut, canStart, start, enqueue, cancel, removeQueue, DEFAULT_STRATEGY, effectiveStrategy, setArtistStrategy, settings, setAssistant, setSalary, nextAction, decide, canDecide, advance, save, restore };
+  return { CHAPTER,RIVALS,ROTATION,trainingSelection:ROTATION.get, FIRST_STORY, DOMAIN_HISTORY, REVENUE, MUSIC, SPECIAL_RECRUIT_IDS,recruitEligible,CUSTOM,catalog,identity,customQuote,createCustom, VERSION, LONG_FAME, longFamePreview, SHORT_FAME, shortFamePreview, CAREER,originalChoice,renameOriginal:CAREER.renameIdea,launchOriginal, DEVELOPMENT, buyEquipment:(s,k,l)=>DEVELOPMENT.buy(s,k,l), OFFLINE_SHORT_FACTOR, PUBLICITY,resolvePublicity, serviceNames,stopServices, receptionProjectStatus,projectPhase,currentActivityLabel, REPUTATION_GAIN, serviceActive, manageProject, workProject, cancelProject, projectLabel, PRODUCTION_DAYS, productionProgress, taskCountdown, restProduction, ACTION_SECONDS, WORKS, EXPANSIONS, expansionQuote, expand, CANDIDATE_COUNT, SPECIAL_CHANCE, activityClip, workSceneKey,workScene, WORK_SCENES, locationName, rerollCandidates, RELEASE_RATIO, releaseQuote, release, CANDIDATE_WEIGHTS, refreshCandidates, locationOf, MAX_ARTISTS, LEGACY_RECRUIT_COST, SIGNING_PRICE, SIGNING_STATS, signingQuote, recruitQuote, signingFormula, SALARY_RATE, STAT_CAP, OFFLINE_CAP, TYPES, SKILLS, TRAINING, JOBS, PEOPLE, create, recruit, payout, fatigueCost, isSetback, confidenceLoss, fameGain, growthMax, trainingGain, trainingPreview, actionInfo, taskInfo, jobLocks, debutLocks, debut, canStart, start, enqueue, cancel, removeQueue, DEFAULT_STRATEGY, effectiveStrategy, setArtistStrategy, settings, setAssistant, setSalary, nextAction, decide, canDecide, advance, save, restore };
 });

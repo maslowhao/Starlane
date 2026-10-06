@@ -1,16 +1,16 @@
 /* v0.17: scene cutlines, compact controls, persistent actor story invitations. */
-body.scene-edition #company-stage:is([data-room=reception],[data-room=practice],[data-room=recording]) .dynamic-person:not(.secretary-npc){bottom:var(--artist-floor-offset,-37px)!important;height:94%!important;max-width:none!important}
+body.scene-edition #company-stage:is([data-room=reception],[data-room=practice],[data-room=recording],[data-room=work]) .dynamic-person:not(.secretary-npc){bottom:var(--artist-floor-offset,-37px)!important;height:94%!important;max-width:none!important}
 body.scene-edition #company-stage[data-room=reception] .dynamic-person:not(.secretary-npc){width:27%!important}
-body.scene-edition #company-stage:is([data-room=practice],[data-room=recording]) .dynamic-person:not(.secretary-npc){width:40%!important}
-body.scene-edition #company-stage:is([data-room=reception],[data-room=practice],[data-room=recording]) .dynamic-person:not(.secretary-npc) .dynamic-visual{height:100%;aspect-ratio:auto;overflow:hidden}
-body.scene-edition #company-stage:is([data-room=reception],[data-room=practice],[data-room=recording]) .dynamic-person:not(.secretary-npc) .dynamic-visual img{padding:0!important;object-fit:fill!important}
+body.scene-edition #company-stage:is([data-room=practice],[data-room=recording],[data-room=work]) .dynamic-person:not(.secretary-npc){width:40%!important}
+body.scene-edition #company-stage:is([data-room=reception],[data-room=practice],[data-room=recording],[data-room=work]) .dynamic-person:not(.secretary-npc) .dynamic-visual{height:100%;aspect-ratio:auto;overflow:hidden}
+body.scene-edition #company-stage:is([data-room=reception],[data-room=practice],[data-room=recording],[data-room=work]) .dynamic-person:not(.secretary-npc) .dynamic-visual img{padding:0!important;object-fit:fill!important}
 body.scene-edition .reception-team-info[data-tab]>.music-chapter-entry,body.scene-edition .reception-team-info[data-tab]>.first-work-story{display:block!important;order:3}
-body.scene-edition #company-stage:is([data-room=reception],[data-room=practice],[data-room=recording]) .dynamic-person:not(.secretary-npc) .dynamic-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:88%;max-width:180px;z-index:5}
+body.scene-edition #company-stage:is([data-room=reception],[data-room=practice],[data-room=recording],[data-room=work]) .dynamic-person:not(.secretary-npc) .dynamic-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:88%;max-width:180px;z-index:5}
 body.scene-edition .dynamic-person.secretary-npc{width:22%!important;height:68%!important}
 body.scene-edition .secretary-npc .secretary-bubble{pointer-events:auto!important;top:auto!important;bottom:calc(100% + 8px)!important;right:0!important;max-width:165px;min-height:36px;cursor:pointer;z-index:8}
 body.scene-edition .artist-story-bubble{position:absolute;z-index:7;top:8%;left:42%;width:max-content;max-width:145px;padding:8px 10px!important;background:#273e50!important;color:#fff4d7!important;border:1px solid #bdaa77!important;border-radius:14px!important;box-shadow:0 3px 10px #0005;font-size:13px;line-height:1.4;cursor:pointer}
-body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .fx-note{width:40px!important;height:35px!important}
-body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .fx-practice-spark{width:clamp(58px,48%,86px)}
+body.scene-edition .company-stage:is([data-room=practice],[data-room=recording],[data-room=work]) .fx-note{width:40px!important;height:35px!important}
+body.scene-edition .company-stage:is([data-room=practice],[data-room=recording],[data-room=work]) .fx-practice-spark{width:clamp(58px,48%,86px)}
 .assistant-artist-toggle{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #617382;border-radius:9px;cursor:pointer}
 .assistant-artist-toggle input{width:20px;height:20px;flex:none}.assistant-artist-toggle span{display:grid;gap:3px}.assistant-artist-toggle small{font-size:12px;color:#c1ced5}
 #assistant-enabled-roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}.assistant-scope{margin-top:16px}.assistant-panel details{margin:10px 0}.assistant-panel .payroll-box{padding:12px}.assistant-panel h2{margin-top:0}
@@ -21,10 +21,10 @@ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording])
  body.scene-edition #company-stage[data-room=reception] .dynamic-person.current-artist{width:56%!important;height:93%!important;bottom:var(--artist-floor-offset,-37px)!important}
  body.scene-edition .dynamic-person.secretary-npc{width:31%!important;height:65%!important}
  body.scene-edition .secretary-npc .secretary-bubble{max-width:112px;right:0!important;font-size:11px}
- body.scene-edition #company-stage:is([data-room=practice],[data-room=recording]) .dynamic-person:not(.secretary-npc){height:96%!important;width:50%!important}
+ body.scene-edition #company-stage:is([data-room=practice],[data-room=recording],[data-room=work]) .dynamic-person:not(.secretary-npc){height:96%!important;width:50%!important}
  body.scene-edition .artist-story-bubble{font-size:12px;top:6%;left:44%;max-width:120px;padding:7px 9px!important}
- body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .fx-practice-spark{width:58px}
- body.scene-edition .company-stage:is([data-room=practice],[data-room=recording]) .fx-note{width:34px!important;height:30px!important}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording],[data-room=work]) .fx-practice-spark{width:58px}
+ body.scene-edition .company-stage:is([data-room=practice],[data-room=recording],[data-room=work]) .fx-note{width:34px!important;height:30px!important}
 }
 
 body.scene-edition .rival-principal-portrait.art-cutline-frame{height:300px;width:220px;max-width:100%;margin:0 auto}
@@ -32,5 +32,23 @@ body.scene-edition .rival-principal-portrait.art-cutline-frame{height:300px;widt
 @media(max-width:540px){body.scene-edition .rival-principal-portrait.art-cutline-frame{height:250px;width:185px}}
 
 .eami-preview-scene{aspect-ratio:16/9!important}.eami-preview-artist{bottom:0!important;height:86%!important}.eami-preview-artist .half-portrait{max-height:none!important;border-radius:0}
-body.scene-edition #company-stage:is([data-room=practice],[data-room=recording]) .dynamic-person:not(.secretary-npc){height:calc(var(--artist-scene-height,300px)*.96)!important}
-body.scene-edition #company-stage:is([data-room=practice],[data-room=recording]) .artist-story-bubble{top:0;left:calc(100% - 30px);transform:translateX(-50%)}
+body.scene-edition #company-stage:is([data-room=practice],[data-room=recording],[data-room=work]) .dynamic-person:not(.secretary-npc){height:calc(var(--artist-scene-height,300px)*.96)!important}
+body.scene-edition #company-stage:is([data-room=practice],[data-room=recording],[data-room=work]) .artist-story-bubble{top:0;left:calc(100% - 30px);transform:translateX(-50%)}
+
+#reception-activity{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;padding:10px;min-width:0}
+#reception-activity[hidden]{display:none}
+.reception-schedule{min-width:0;padding:10px;border:1px solid #526475;border-radius:9px;background:#243647;font-size:12px}
+.reception-schedule p{margin:5px 0}.reception-schedule small{display:block;line-height:1.6}.reception-schedule button{font-size:11px;padding:5px 8px;margin:4px 4px 0 0}.reception-schedule progress{max-width:100%}.schedule-long{color:#f0d195}
+.work-directions{min-width:0;border:1px solid #526475;border-radius:8px;margin:12px 0;padding:12px}#work-types{display:flex;gap:16px;flex-wrap:wrap}#work-types label{display:flex;align-items:center;gap:6px}#work-types input{width:auto}.work-directions small{display:block;line-height:1.7}
+.debut-photo{aspect-ratio:16/9;background:#23364a}.debut-background{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.eami-preview-artist{height:96%!important;width:50%!important;left:25%!important}
+@media(max-width:540px){#reception-activity{grid-template-columns:1fr}.company-stage[data-room=work] .company-room-visual{height:220px}.company-stage[data-room=work] .company-room-image{height:100%;object-fit:cover}}
+
+#reception-activity .reception-schedule .current-activity{padding:0;margin:3px 0;font-size:12px;background:none;line-height:1.5}
+#reception-activity .reception-schedule .company-task{margin:4px 0;padding:0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:7px}
+#reception-activity .reception-schedule .company-task span{grid-column:2;grid-row:1;font-size:10px}
+#reception-activity .reception-schedule .company-task progress{grid-column:1;grid-row:1;margin:0;height:6px}
+#reception-activity .reception-schedule button{padding:4px 7px;margin:3px 3px 0 0;font-size:11px}
+.button-sound{border-top:1px solid #526475;padding-top:8px;margin-top:2px}
+@media(min-width:701px){body.scene-edition .studio-toolbar{position:static;max-width:none;width:100%}body.scene-edition .studio-toolbar>.reception-music{flex-basis:100%;width:100%}}
+@media(max-width:360px){#train-skills{grid-template-columns:1fr}.workspace-dialog .assistant-panel{padding-left:8px;padding-right:8px}}

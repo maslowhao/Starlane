@@ -1,7 +1,7 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(!root.StarUpdateNotice)root.StarUpdateNotice=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
   // Public release version is independent of the engine's save schema number.
-  const RELEASE={version:'0.17.0',items:['每位藝人可獨立啟用助理；既有策略、待辦與舊檔啟用狀態保留','故事邀請改由藝人開口，外出也能在藝人手帳續讀；接案與自創配點更清楚','秘書、兩家競爭公司與四類工作場景換新；公關選項顯示金錢、粉絲、名氣獎懲及風險']};
+  const RELEASE={version:'0.18.0',items:['個別助理改為音樂／戲劇／廣告多選；移除最低報酬限制並自動安全休息','公司接待同時顯示所有藝人行程，長案現場可查看，通告人物放大','陳勝天、出道攝影棚與公關秘書換新；指定場景音樂及獨立按鈕音效上線']};
   const KEY='starlane-seen-release';
   function create({existing,enabled=true,storage,session,release=RELEASE}){
     let pending=false,seen=null,writable=false;

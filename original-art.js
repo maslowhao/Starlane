@@ -98,12 +98,12 @@
   },
   "principal-2": {
     "kind": "character",
-    "desktop": "assets/original-v2/desktop/characters/principal-2.webp?v=art-v4",
-    "mobile": "assets/original-v2/mobile/characters/principal-2.webp?v=art-v4",
+    "desktop": "assets/original-v2/desktop/characters/principal-2-v018.webp?v=art-v5",
+    "mobile": "assets/original-v2/mobile/characters/principal-2-v018.webp?v=art-v5",
     "bounds": [
-      0.099609375,
-      0.26953125,
-      0.900390625,
+      0.1376953125,
+      0.07161458333333333,
+      0.861328125,
       0.96875
     ],
     "cutline": 0.96875
@@ -139,6 +139,43 @@
     "kind": "background",
     "desktop": "assets/original-v2/desktop/backgrounds/work-film.webp?v=art-v4",
     "mobile": "assets/original-v2/mobile/backgrounds/work-film.webp?v=art-v4"
+  },
+  "secretary-panic": {
+    "kind": "character",
+    "desktop": "assets/original-v2/desktop/characters/secretary-panic.webp?v=art-v5",
+    "mobile": "assets/original-v2/mobile/characters/secretary-panic.webp?v=art-v5",
+    "bounds": [
+      0.1630859375,
+      0.07161458333333333,
+      0.8359375,
+      0.96875
+    ],
+    "cutline": 0.96875
+  },
+  "debut-announcement": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/debut-announcement.webp?v=art-v5",
+    "mobile": "assets/original-v2/mobile/backgrounds/debut-announcement.webp?v=art-v5"
+  },
+  "work-audio-long": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/work-audio-long.webp?v=art-v5",
+    "mobile": "assets/original-v2/mobile/backgrounds/work-audio-long.webp?v=art-v5"
+  },
+  "work-tv-long": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/work-tv-long.webp?v=art-v5",
+    "mobile": "assets/original-v2/mobile/backgrounds/work-tv-long.webp?v=art-v5"
+  },
+  "work-ad-long": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/work-ad-long.webp?v=art-v5",
+    "mobile": "assets/original-v2/mobile/backgrounds/work-ad-long.webp?v=art-v5"
+  },
+  "work-film-long": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/work-film-long.webp?v=art-v5",
+    "mobile": "assets/original-v2/mobile/backgrounds/work-film-long.webp?v=art-v5"
   }
 };
  const aliases={
@@ -155,7 +192,7 @@
   "assets/locations/creative-ad.png": "shise-advertising",
   "assets/locations/global-film.png": "yuanying-film",
   "assets/company/training-speech.png": "voice-training",
-  "assets/artists/secretary-panic.png": "secretary"
+  "assets/artists/secretary-panic.png": "secretary-panic"
 };
  const lookup=key=>assets[aliases[key]]||Object.values(assets).find(a=>a.desktop===key||a.mobile===key);
  const canonical=key=>lookup(key)?.desktop||key;
