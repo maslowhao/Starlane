@@ -52,11 +52,11 @@
   function catalog(s){return [...PEOPLE,...CUSTOM.people(s)];}
   function identity(s,id){return PEOPLE.find(p=>p.id===id)||CUSTOM.people(s).find(p=>p.id===id);}
   function customQuote(s,d){if(s.customRecruitCardUsed||s.hasEverSigned||s.artists.length||s.customRegistry.length)return {ok:false,reason:'自創藝人僅限新公司第一位藝人；本局已完成首次簽約。'};const check=CUSTOM.inspect(d);if(!check.ok)return check;const normalized=check.name.normalize('NFKC').toLocaleLowerCase('en');if(s.artists.some(a=>a.name.normalize('NFKC').toLocaleLowerCase('en')===normalized)||PEOPLE.some(a=>a.name.normalize('NFKC').toLocaleLowerCase('en')===normalized))return {ok:false,reason:'這個姓名已由現有藝人使用，請換一個名字。'};const quote=signingQuote({...check.stats,fame:0}),candidate={...check.stats,fame:0,debuted:false};const eligible=JOBS.filter(j=>!j.productionDays&&!jobLocks(candidate,j).length).map(j=>j.name);if(s.artists.length>=s.capacity)return {ok:false,reason:'公司名額已滿，請先完成擴充或辦理解約。',quote,eligible};if(s.cash<quote.fee)return {ok:false,reason:'公司資金不足，簽約需要 $'+quote.fee+'。',quote,eligible};return {ok:true,...check,quote,eligible};}
-  function createCustom(s,d){const q=customQuote(s,d);if(!q.ok)return q;const id='custom_'+(s.customSerial+1),record={id,name:q.name,portraitId:d.portraitId,personalityId:d.personalityId,stats:{...q.stats}},candidate=CUSTOM.definition(record);s.customSerial++;s.customRegistry.push(record);s.customRecruitCardUsed=true;refreshCandidates(s,s.candidates);s.cash-=q.quote.fee;s.artists.push({...candidate,assistantStrategy:strategySnapshot(DEFAULT_STRATEGY),contractFee:q.quote.fee,debuted:false,shortFameUnits:0,longFameUnits:0,fatigue:0,task:null,project:null,queue:[],growthProgress:{}});s.hasEverSigned=true;s.refreshRemaining=0;log(s,`${q.name}以自創素人身分加入公司，實付簽約金 $${q.quote.fee}；名氣0、總能力162。`,s.lastTick);CHAPTER.scan(s);return {ok:true,id,fee:q.quote.fee};}
+  function createCustom(s,d){const q=customQuote(s,d);if(!q.ok)return q;const id='custom_'+(s.customSerial+1),record={id,name:q.name,portraitId:d.portraitId,personalityId:d.personalityId,stats:{...q.stats}},candidate=CUSTOM.definition(record);s.customSerial++;s.customRegistry.push(record);s.customRecruitCardUsed=true;refreshCandidates(s,s.candidates);s.cash-=q.quote.fee;s.artists.push({...candidate,assistantEnabled:false,assistantStrategy:strategySnapshot(DEFAULT_STRATEGY),contractFee:q.quote.fee,debuted:false,shortFameUnits:0,longFameUnits:0,fatigue:0,task:null,project:null,queue:[],growthProgress:{}});s.hasEverSigned=true;s.refreshRemaining=0;log(s,`${q.name}以自創素人身分加入公司，實付簽約金 $${q.quote.fee}；名氣0、總能力162。`,s.lastTick);CHAPTER.scan(s);return {ok:true,id,fee:q.quote.fee};}
   function signingFormula() { return `簽約金＝${SIGNING_PRICE.base}＋九項平均×${SIGNING_PRICE.averageWeight}＋最高能力×${SIGNING_PRICE.peakWeight}，四捨五入至 ${SIGNING_PRICE.step} 元。含名氣；採初始能力，疲勞與稀有度不加價。`; }
   function create(now = Date.now()) {
     const s = { version: VERSION, growthRng: 362436069, rng: 123456789, cash: 2500, totalEarned: 0, totalJobs: 0, companyReputation:0, startedAt: now, lastTick: now,
-      independentStrategies:1, customRegistry:[],customSerial:0,customRecruitCardUsed:false,artists: [], capacity:1, hasEverSigned:false, refreshRemaining:3,
+      assistantActivation:1, independentStrategies:1, customRegistry:[],customSerial:0,customRecruitCardUsed:false,artists: [], capacity:1, hasEverSigned:false, refreshRemaining:3,
       assistant: { enabled: false, mode: 'work', priority: ['music', 'drama', 'ad'], minPay: 0, maxFatigue: 70, fallback: 'train', trainSkill: 'sing' },
       payroll: { rate: SALARY_RATE, paid: 0, activeMs: 0, remainder: 0, stoppedAt: null, lastCharge:null },
       events: [], resolvedEvents: [], log: [], report: null };
@@ -88,10 +88,10 @@
     s.refreshRemaining--;return {ok:true};
   }
   const WORK_SCENES={
-    'work-audio':{label:'錄音通告現場',background:'work-audio.png',foreground:'work-audio-front.png',source:'原作通告05 唱片錄製',clip:'record'},
-    'work-tv':{label:'電視劇拍攝現場',background:'work-tv.png',source:'原作通告01 電視劇拍攝',clip:'act'},
-    'work-film':{label:'電影拍攝現場',background:'work-film.png',source:'原作通告03 電影拍攝',clip:'act'},
-    'work-ad':{label:'廣告拍攝現場',background:'work-ad.png',source:'原作通告08 廣告拍攝',clip:'pose'},
+    'work-audio':{label:'錄音通告現場',background:'../original-v2/desktop/backgrounds/work-audio.webp?v=art-v4',source:'原作通告05 唱片錄製',clip:'record'},
+    'work-tv':{label:'電視劇拍攝現場',background:'../original-v2/desktop/backgrounds/work-tv.webp?v=art-v4',source:'原作通告01 電視劇拍攝',clip:'act'},
+    'work-film':{label:'電影拍攝現場',background:'../original-v2/desktop/backgrounds/work-film.webp?v=art-v4',source:'原作通告03 電影拍攝',clip:'act'},
+    'work-ad':{label:'廣告拍攝現場',background:'../original-v2/desktop/backgrounds/work-ad.webp?v=art-v4',source:'原作通告08 廣告拍攝',clip:'pose'},
     'work-live':{label:'音樂演出現場',background:'work-live.png',foreground:'work-live-front.png',source:'原作打工03 幕後合音',clip:'sing'}
   };
   function activityClip(a){if(a.task?.production?.rest)return 'rest';const t=a.task?.action;if(!t)return 'idle';if(t.kind==='rest')return 'rest';if(t.kind==='job'&&t.id==='cafe')return 'sing';if(t.kind==='train')return {sing:'record',speech:'speech',act:'act',poise:'pose',confidence:'pose',movement:'dance',stamina:'dance',intellect:'idle'}[t.skill]||'idle';return WORK_SCENES[locationOf(a)]?.clip||'idle';}
@@ -122,7 +122,7 @@
     if (s.cash < quote.fee) return { ok: false, reason: `簽約需要 $${quote.fee}，公司資金不足` };
     s.cash -= quote.fee;
     s.candidates=s.candidates.filter(x=>x!==id);
-    s.artists.push({ ...clone(candidate), assistantStrategy:strategySnapshot(DEFAULT_STRATEGY), contractFee: quote.fee, debuted: false, fame: candidate.fame, shortFameUnits: 0,longFameUnits:0, fatigue: 0, task: null, project:null, queue: [] });
+    s.artists.push({ ...clone(candidate), assistantEnabled:false,assistantStrategy:strategySnapshot(DEFAULT_STRATEGY), contractFee: quote.fee, debuted: false, fame: candidate.fame, shortFameUnits: 0,longFameUnits:0, fatigue: 0, task: null, project:null, queue: [] });
     s.artists.forEach(a=>a.growthProgress??={});s.hasEverSigned=true;s.customRecruitCardUsed=true;s.refreshRemaining=0;refreshCandidates(s,s.candidates);
     log(s, `${candidate.name}以練習生身分加入星序，實付簽約金 $${quote.fee}（${quote.basis}）。公司 ${s.artists.length}/${s.capacity} 人。`, s.lastTick);
     return { ok: true };
@@ -133,7 +133,7 @@
     if(q.busy)return {ok:false,reason:'請等目前活動及長案完成，或先明確取消長案後再辦理解約'};
     if(s.cash<q.fee)return {ok:false,reason:'資金不足以支付解約金'};
     if(s.trainingRotation)delete s.trainingRotation.artists[id];s.cash-=q.fee;PUBLICITY.expire(s,id);CAREER.release(s,id);s.artists=s.artists.filter(p=>p.id!==id);
-    if(!s.artists.length)s.assistant.enabled=false;
+    syncAssistant(s);
     log(s,`${a.name}解約，支付簽約費 ${q.base} 的 ${q.ratio*100}%：$${q.fee}。再次簽約將從初始能力開始。`,s.lastTick);
     return {ok:true};
   }
@@ -252,9 +252,10 @@
     DOMAIN_HISTORY.accepted(s,id,action);CHAPTER.started(s,id,action);
     return { ok: true };
   }
-  function serviceActive(s){return !!s.assistant.enabled||s.artists.some(a=>a.project?.assisted);}
-  function serviceNames(s){return [...(s.assistant.enabled?['一般代排']:[]),...s.artists.filter(a=>a.project?.assisted).map(a=>`${a.name}的長案管理`)];}
-  function stopServices(s){s.assistant.enabled=false;for(const a of s.artists)if(a.project?.assisted)pauseProject(s,a.id);log(s,'已停止全部助理服務，不再計薪；长案與製作進度保留，短行程可完成。'.replace('长','長'),s.lastTick);return {ok:true};}
+  function syncAssistant(s){s.assistant.enabled=s.artists.some(a=>a.assistantEnabled===true);return s.assistant.enabled;}
+  function serviceActive(s){return s.artists.some(a=>a.assistantEnabled===true||a.project?.assisted);}
+  function serviceNames(s){return [...s.artists.filter(a=>a.assistantEnabled).map(a=>`${a.name}的代排`),...s.artists.filter(a=>a.project?.assisted).map(a=>`${a.name}的長案管理`)];}
+  function stopServices(s){s.assistant.enabled=false;for(const a of s.artists)a.assistantEnabled=false;for(const a of s.artists)if(a.project?.assisted)pauseProject(s,a.id);log(s,'已停止全部助理服務，不再計薪；长案與製作進度保留，短行程可完成。'.replace('长','長'),s.lastTick);return {ok:true};}
   function projectFatigue(p){return Math.floor(p.template.contract.fatigue*(p.done+1)/p.days)-Math.floor(p.template.contract.fatigue*p.done/p.days);}
   function pauseProject(s,id,at=s.lastTick){const a=person(s,id),p=a?.project;if(!p)return {ok:false,reason:'沒有進行中長案'};p.assisted=false;if(a.task?.projectSegment){p.segmentMs=Math.max(.001,a.task.ends-at);a.task=null;}return {ok:true};}
   function manageProject(s,id,enabled){const a=person(s,id),p=a?.project;if(!p)return {ok:false,reason:'沒有進行中長案'};if(!enabled)return pauseProject(s,id);if(s.cash<1)return {ok:false,reason:'資金不足，請補足後恢復管理'};p.assisted=true;s.payroll.stoppedAt=null;dispatch(s,s.lastTick);return {ok:true};}
@@ -297,14 +298,18 @@
   function removeQueue(s, id, index) { const a = person(s, id); if (a && Number.isInteger(index) && index >= 0) a.queue.splice(index, 1); }
   function assistantFunds(s, at) {
     if(!s.artists.length){s.assistant.enabled=false;return false;}
-    if(serviceActive(s)&&s.cash<1){s.assistant.enabled=false;for(const a of s.artists)if(a.project?.assisted)pauseProject(s,a.id,at);s.payroll.stoppedAt=at;log(s,'助理服務暫停：資金不足。一般代排與長案管理均停止，合約與進度保留，補足後請手動恢復。',at);}
+    if(serviceActive(s)&&s.cash<1){s.assistant.enabled=false;for(const a of s.artists)a.assistantEnabled=false;for(const a of s.artists)if(a.project?.assisted)pauseProject(s,a.id,at);s.payroll.stoppedAt=at;log(s,'助理服務暫停：資金不足。一般代排與長案管理均停止，合約與進度保留，補足後請手動恢復。',at);}
     return serviceActive(s);
   }
-  function setAssistant(s, enabled) {
-    s.assistant.enabled = !!enabled;
-    if (enabled) s.payroll.stoppedAt = null;
-    assistantFunds(s, s.lastTick);
-    return s.assistant.enabled;
+  function setAssistant(s, enabled, id) {
+    // No UI bulk-enable entry: optional id-less call is retained for legacy integrations.
+    const targets=id===undefined?s.artists:s.artists.filter(a=>a.id===id);
+    if(!targets.length)return false;
+    for(const a of targets)a.assistantEnabled=!!enabled;
+    syncAssistant(s);
+    if(enabled)s.payroll.stoppedAt=null;
+    assistantFunds(s,s.lastTick);
+    return targets.some(a=>a.assistantEnabled);
   }
   function setSalary(s, rate) {
     if (Number(rate) !== SALARY_RATE) return false;
@@ -319,7 +324,7 @@
   const STRATEGY_FIELDS=['mode','priority','minPay','maxFatigue','fallback','trainSkill'];
   const DEFAULT_STRATEGY=Object.freeze({mode:'work',priority:Object.freeze(['music','drama','ad']),minPay:0,maxFatigue:70,fallback:'train',trainSkill:'sing'});
   function strategySnapshot(c){return Object.fromEntries(STRATEGY_FIELDS.map(k=>[k,k==='priority'?[...c[k]]:c[k]]));}
-  function effectiveStrategy(s,a){return {...strategySnapshot(a?.assistantStrategy||DEFAULT_STRATEGY),enabled:s.assistant.enabled};}
+  function effectiveStrategy(s,a){return {...strategySnapshot(a?.assistantStrategy||DEFAULT_STRATEGY),enabled:a?.assistantEnabled===true};}
   function setArtistStrategy(s,id,input){const a=person(s,id);if(!a)return false;if(!input||typeof input!=='object'||Array.isArray(input))return false;if(Object.hasOwn(input,'trainSkills')&&!ROTATION.valid(input.trainSkills))return false;const skills=Object.hasOwn(input,'trainSkills')?input.trainSkills:Object.hasOwn(input,'trainSkill')?[input.trainSkill]:null;if(skills&&!ROTATION.valid(skills))return false;const temp={};if(!settings(temp,{...effectiveStrategy(s,a),...input,...(skills?{trainSkill:skills[0]}:{}),enabled:s.assistant.enabled}))return false;if(skills)ROTATION.set(s,a,skills);a.assistantStrategy=strategySnapshot(temp.assistant);return true;}
   function nextAction(s, a) {
     const cfg = effectiveStrategy(s,a);
@@ -345,8 +350,8 @@
         const r = start(s, a.id, action, at, 'queue');
         if (!r.ok) log(s, `${a.name}略過「${actionInfo(action).label}」：${r.reason}`, at);
       }
-      if (!a.task && s.assistant.enabled && assistantFunds(s, at)) start(s, a.id, nextAction(s, a), at, 'assistant');
-      if(!a.task&&a.project&&s.assistant.enabled&&assistantFunds(s,at))start(s,a.id,nextAction(s,a),at,'assistant');
+      if (!a.task && a.assistantEnabled && assistantFunds(s, at)) start(s, a.id, nextAction(s, a), at, 'assistant');
+      if(!a.task&&a.project&&a.assistantEnabled&&assistantFunds(s,at))start(s,a.id,nextAction(s,a),at,'assistant');
     }
     assistantFunds(s, at);
   }
@@ -560,6 +565,9 @@
     if(s.independentStrategies!==undefined&&s.independentStrategies!==1)throw new Error('藝人策略版本不相容');
     for(const a of s.artists)if(a.assistantStrategy===undefined)a.assistantStrategy=strategySnapshot(s.assistant);
     s.independentStrategies=1;
+    if(s.assistantActivation!==undefined&&s.assistantActivation!==1)throw new Error("藝人代排開關版本不相容");
+    for(const a of s.artists){if(s.assistantActivation===undefined&&a.assistantEnabled===undefined)a.assistantEnabled=!!s.assistant.enabled;if(typeof a.assistantEnabled!=="boolean")throw new Error("藝人代排開關損壞");}
+    s.assistantActivation=1;syncAssistant(s);
     s.log = s.log.filter(l => l && typeof l.text === 'string' && finite(l.at)).slice(0, 60);
     if(s.hasEverSigned===undefined){s.hasEverSigned=s.artists.length>0||s.totalJobs>0||s.totalEarned>0||s.log.some(l=>/以練習生身分加入|解約|加入公司/.test(l.text));s.refreshRemaining=s.hasEverSigned?0:3;s.migrationNotice=(s.migrationNotice||'')+(s.hasEverSigned?' 舊檔已有簽約／工作紀錄，不補發開局刷新。':' 舊檔未見簽約紀錄，補發三次開局刷新。');}
     if(typeof s.hasEverSigned!=='boolean'||!Number.isInteger(s.refreshRemaining)||s.refreshRemaining<0||s.refreshRemaining>3||(s.hasEverSigned&&s.refreshRemaining!==0))throw new Error('開局刷新資料損壞');
@@ -585,6 +593,6 @@
     s.report = null;
     return s;
   }
-  function resolvePublicity(s,id,choice){const r=PUBLICITY.resolve(s,id,choice);if(r.ok){log(s,`${r.artistName||'公關事件'}：${r.text}${r.expired?'':` 個人名氣 ${r.delta>=0?'+':''}${r.delta}。`}`,s.lastTick);unlock(s,s.lastTick);}return r;}
+  function resolvePublicity(s,id,choice){const r=PUBLICITY.resolve(s,id,choice);if(r.ok){log(s,`${r.artistName||'公關事件'}：${r.text}${r.expired?'':` 名氣 ${r.delta>=0?'+':''}${r.delta}；公司資金 ${r.cashDelta>=0?'+':''}$${r.cashDelta}；粉絲 ${r.fanDelta>=0?'+':''}${r.fanDelta} 人。`}`,s.lastTick);unlock(s,s.lastTick);}return r;}
   return { CHAPTER,RIVALS,ROTATION,trainingSelection:ROTATION.get, FIRST_STORY, DOMAIN_HISTORY, REVENUE, MUSIC, SPECIAL_RECRUIT_IDS,recruitEligible,CUSTOM,catalog,identity,customQuote,createCustom, VERSION, LONG_FAME, longFamePreview, SHORT_FAME, shortFamePreview, CAREER,originalChoice,renameOriginal:CAREER.renameIdea,launchOriginal, DEVELOPMENT, buyEquipment:(s,k,l)=>DEVELOPMENT.buy(s,k,l), OFFLINE_SHORT_FACTOR, PUBLICITY,resolvePublicity, serviceNames,stopServices, receptionProjectStatus,projectPhase,currentActivityLabel, REPUTATION_GAIN, serviceActive, manageProject, workProject, cancelProject, projectLabel, PRODUCTION_DAYS, productionProgress, taskCountdown, restProduction, ACTION_SECONDS, WORKS, EXPANSIONS, expansionQuote, expand, CANDIDATE_COUNT, SPECIAL_CHANCE, activityClip, WORK_SCENES, locationName, rerollCandidates, RELEASE_RATIO, releaseQuote, release, CANDIDATE_WEIGHTS, refreshCandidates, locationOf, MAX_ARTISTS, LEGACY_RECRUIT_COST, SIGNING_PRICE, SIGNING_STATS, signingQuote, recruitQuote, signingFormula, SALARY_RATE, STAT_CAP, OFFLINE_CAP, TYPES, SKILLS, TRAINING, JOBS, PEOPLE, create, recruit, payout, fatigueCost, isSetback, confidenceLoss, fameGain, growthMax, trainingGain, trainingPreview, actionInfo, taskInfo, jobLocks, debutLocks, debut, canStart, start, enqueue, cancel, removeQueue, DEFAULT_STRATEGY, effectiveStrategy, setArtistStrategy, settings, setAssistant, setSalary, nextAction, decide, canDecide, advance, save, restore };
 });

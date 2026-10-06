@@ -103,14 +103,14 @@
   function renderRecruitment() {
     StarExpansionUI.render($('recruit-expansion'),state);
     $('signing-formula').textContent=StarMoney.signingFormula(G)+' 此為初版平衡公式。';
-    $('recruit-count').textContent=`公司 ${state.artists.length}/${state.capacity} 人 · 依九項能力報價`;
+    
     $('recruit-candidates').innerHTML=G.PEOPLE.filter(p=>state.candidates.slice(0,state.customRecruitCardUsed?2:1).includes(p.id)).map(p=>{const quote=G.recruitQuote(p.id),hired=state.artists.some(a=>a.id===p.id),full=state.artists.length>=state.capacity,poor=state.cash<quote.fee;
       return `<article class="recruit-card ${p.color}"><div class="recruit-person">${recruitmentPortrait(p.id)}<div><h3>${esc(p.name)}</h3><span>${p.role}方向</span><p>${p.tag}</p></div></div><p><strong>簽約金 ${money(quote.fee)}</strong><br><small>${quote.basis}</small></p><div class="recruit-skills">${Object.entries(G.SKILLS).map(([k,label])=>`${label} ${p[k]}`).join(' · ')} · 名氣 ${p.fame}</div><small>${esc(StarDisplayCopy.trait(p.trait))}</small>${backgroundCard(p)}<button class="primary" data-recruit="${p.id}" ${hired||full||poor?'disabled':''}>${hired?'已加入公司':full?'目前名額已滿，請先擴充':poor?'資金不足，需要 '+money(quote.fee):'招募 '+p.name+' · '+money(quote.fee)}</button></article>`;
-    }).join('')+(state.customRecruitCardUsed?'':`<article class="recruit-card custom-recruit-card"><div class="custom-slot-symbol" aria-hidden="true">＋</div><h3>自創藝人</h3><p>姓名、肖像、個性由你決定。基礎141＋自由21點；單項上限36，名氣0。</p><p>刷新或取消均保留此卡；首次簽下任何藝人後即轉普通候選；自創僅限第一位。簽約費沿用能力公式。</p><button data-custom-create ${state.artists.length>=state.capacity?'disabled':''}>${state.artists.length>=state.capacity?'公司已滿，請先擴充':'建立我的藝人'}</button></article>`);
+    }).join('')+(state.customRecruitCardUsed?'':`<article class="recruit-card custom-recruit-card"><button type="button" class="custom-slot-symbol" data-custom-create aria-label="建立自創藝人">＋</button><h3>自創藝人</h3><p>姓名、肖像、個性由你決定。基礎141＋自由21點；單項上限36，名氣0。</p><p>刷新或取消均保留此卡；首次簽下任何藝人後即轉普通候選；自創僅限第一位。簽約費沿用能力公式。</p><button data-custom-create ${state.artists.length>=state.capacity?'disabled':''}>${state.artists.length>=state.capacity?'公司已滿，請先擴充':'建立我的藝人'}</button></article>`);
   }
   function closeHeat(){document.body.classList.remove('heat-mode');$('heat-page').hidden=true;$('heat-page').innerHTML='';document.querySelector('[data-heat]').classList.remove('active');document.querySelector('[data-home]').classList.add('active');}
   function openHeat(){if($('workspace-dialog').open)closeWorkspace();document.body.classList.add('heat-mode');$('heat-page').hidden=false;window.StarWorksUI.renderHeat(state,DEMO);document.querySelector('[data-home]').classList.remove('active');document.querySelector('[data-heat]').classList.add('active');window.scrollTo(0,0);$('heat-title').focus({preventScroll:true});}
-  const businessDialog=document.createElement('dialog');businessDialog.id='company-business-dialog';businessDialog.className='company-business-dialog';businessDialog.setAttribute('aria-labelledby','company-business-title');businessDialog.innerHTML='<header><div><small id="company-business-owner"></small><h2 id="company-business-title"></h2></div><button type="button" id="close-company-business" aria-label="關閉公司業務，返回大廳">關閉 ✕</button></header><p id="company-business-note"></p><div id="company-business-content"></div>';document.body.append(businessDialog);
+  const businessDialog=document.createElement('dialog');businessDialog.id='company-business-dialog';businessDialog.className='company-business-dialog';businessDialog.setAttribute('aria-labelledby','company-business-title');businessDialog.innerHTML='<header><div><small id="company-business-owner"></small><h2 id="company-business-title"></h2></div><button type="button" id="close-company-business" aria-label="關閉公司業務，返回大廳">關閉 ✕</button></header><details class="job-rules"><summary>公司業務說明</summary><p id="company-business-note"></p></details><div id="company-business-content"></div>';document.body.append(businessDialog);
   const businessSlots=new Map(['panel-artist-switch','pane-board','pane-opportunities'].map(id=>{const node=$(id),anchor=document.createComment('business-slot:'+id);node.before(anchor);return [id,anchor];}));
   function closeCompanyBusiness(){if(businessDialog.open)businessDialog.close();for(const [id,anchor]of businessSlots)if($(id).closest('#company-business-dialog'))anchor.after($(id));}
   function openCompanyBusiness(opener){
@@ -135,7 +135,7 @@
     if (opener) panelOpener = opener;
     for (const name of Object.keys(Scene.PANELS)) $('pane-' + name).hidden = name !== panel;
     $('workspace-title').textContent = Scene.PANELS[panel];
-    $('room-hint').textContent = hint || ({publicity:'抽到事件後，由你決定回應方式。結果與選擇會保留。',artist:'每個人都有自己的步調。看看近況，再決定下一步。',board:'先選夥伴，再親自安排工作。助理策略與服務請回小秘書開啟「助理設定／代排」。',assistant:'設定策略、訓練方向與服務。只開此頁或套用未啟用策略，不會啟用代排。',office:'公司營運與設備升級。通告及助理設定可從小秘書選單分別開啟。',rivals:'這座城市還有其他正在努力的人。認識四家經紀公司與負責人。',journal:'把每一次努力，留在公司的日誌裡。',opportunities:'有些機會，值得親自做決定。',recruit:'六位原創藝人；首次簽約前保留自創入口，可免費刷新三次。公司從一人名額擴至三人。'})[panel];
+    $('room-hint').textContent = hint || ({publicity:'抽到事件後，由你決定回應方式。結果與選擇會保留。',artist:'每個人都有自己的步調。看看近況，再決定下一步。',board:'先選夥伴，再親自安排工作。助理策略與服務請回小秘書開啟「助理設定／代排」。',assistant:'設定策略、訓練方向與服務。只開此頁或套用未啟用策略，不會啟用代排。',office:'公司營運與設備升級。通告及助理設定可從小秘書選單分別開啟。',rivals:'這座城市還有其他正在努力的人。認識兩家經紀公司與負責人。',journal:'把每一次努力，留在公司的日誌裡。',opportunities:'有些機會，值得親自做決定。',recruit:'六位原創藝人；首次簽約前保留自創入口，可免費刷新三次。公司從一人名額擴至三人。'})[panel];
     const company=StarCompanyRoutes.companies[opener?.dataset.company];
     if(company){$('workspace-title').textContent=company.name+' · '+company.business;$('room-hint').textContent=company.note;}
     $('panel-artist-switch').hidden = !['artist','board'].includes(panel);
@@ -218,7 +218,7 @@
       const full = a.queue.length >= 3;
       const requirements = window.StarQualificationUI.job(a,j);
       const shortFame=G.shortFamePreview(a,j), rewardArtist=j.productionDays?{...a,fatigue:0}:a, longFame=G.longFamePreview(rewardArtist,j), durationSeconds=Math.round(j.duration);
-      return `<article class="offer"><div class="offer-top"><span class="type-tag type-${j.type}">${G.TYPES[j.type]}</span><small>◷ ${j.productionDays?`製作 ${j.productionDays} 日（約 ${Math.floor(durationSeconds/60)} 分 ${durationSeconds%60} 秒）`:`${j.duration} 秒`}</small></div><h3>${musicOffer?`《${esc(musicOffer.title)}》`:j.name}</h3>${musicOffer?`<p class="music-offer-identity">${esc(j.name)}</p>`:''}<small class="job-company">${StarCompanyRoutes.companies[StarCompanyRoutes.jobCompany(j.id)].name}</small><p>${j.id==='radio'?'錄製並推出一首正式單曲。':j.desc}</p>${j.productionDays?`<p class="reward-note">製作管理預估薪資 ${money(Math.ceil(j.duration/60*G.SALARY_RATE))}</p>`:''}<div class="offer-details"><strong>${money(G.payout(rewardArtist, j))}</strong><span>${shortFame?`名氣累積 +${shortFame.amount}（本次入帳 +${shortFame.gain}）`:longFame?`個人名氣 +${longFame.gain}`:`個人名氣 +${G.fameGain(rewardArtist, j)}`}</span><span>公司知名度 +${G.REPUTATION_GAIN[j.id]}</span><span>疲勞 +${G.fatigueCost(a, j)}</span></div>${!j.productionDays?`<div class="job-gains">成長：${j.debuted?'重要通告':'普通通告'} · 僅${G.SKILLS[j.skill]}基礎 +1–${G.growthMax(j)}（疲勞降低效果；上限999）</div>`:''}<div class="requirement">門檻：${requirements}</div><p class="booking-condition">${duplicate?'此通告已在行程中，或已有進行中的長案。':full?'待辦已滿。':fatigued?'疲勞太高，請先休息。':a.task?'目前忙碌；符合資格的通告可依既有規則加入待辦。':''}</p><div class="unlock-reason ${tooLow ? 'locked' : ''}">${tooLow ? '尚未解鎖：' + locks.join('；') : '✓ 已符合門檻，可接案'}</div>${shortFame?`<p class="short-fame-note">${a.fame>=999?'個人名氣已達上限。':`短案名氣按目前階段 ${Math.round(shortFame.rate*100)}% 累積；目前下點進度 ${(a.shortFameUnits||0)/10}%，本次完成後 ${shortFame.unitsAfter/10}%。不足1點會存檔保留。`} 普通長作另用獨立遞減；重要邀約維持原規則。</p>`:''}${j.productionDays?'<div class="reward-note">報酬未扣製作管理薪資。</div>':`<div class="reward-note">報酬已含個性／名氣加成，未扣助理薪資；疲勞已按體能減免。${j.productionDays?'長案報酬與名氣在接受時鎖定，疲勞按製作日分攤。':'離線短案現金實收70%，長作品不折扣。'}${a.task ? '待辦實際收益以執行時能力為準。' : ''}</div>`}${!j.productionDays && G.isSetback(a, j) ? `<div class="risk-note">疲勞失誤風險：本次報酬 80%、名氣 50%（已反映），自信 −${G.confidenceLoss(a)}。建議先休息。</div>` : ''}<button data-job="${j.id}" ${musicOffer?`data-offer-id="${musicOffer.id}"`: ''} ${tooLow || duplicate || fatigued || full ? 'disabled' : ''}>${tooLow ? '尚未符合門檻' : duplicate ? '已在行程中' : fatigued ? '請先休息' : full ? '待辦已滿' : a.task ? '加入待辦 ＋' : j.productionDays?'接受長案並啟用管理 →':'安排行程 →'}</button></article>`;
+      return `<article class="offer"><div class="offer-top"><span class="type-tag type-${j.type}">${G.TYPES[j.type]}</span><small>${j.productionDays?'長案 · '+j.productionDays+'日':'短案 · '+j.duration+'秒'}</small></div><h3>${musicOffer?'《'+esc(musicOffer.title)+'》':j.name}</h3>${musicOffer?'<small>'+esc(j.name)+'</small>':''}<p class="booking-assignee">派給 <b>${esc(a.name)}</b></p><div class="requirement">條件：${requirements}</div><div class="offer-details"><strong>報酬 ${money(G.payout(rewardArtist,j))}</strong><span>費用：${j.productionDays?'管理薪資約 '+money(Math.ceil(j.duration/60*G.SALARY_RATE)):'親自安排無費用'}</span><span>名氣 +${shortFame?shortFame.amount:longFame?longFame.gain:G.fameGain(rewardArtist,j)}</span><span>疲勞 +${G.fatigueCost(a,j)}</span></div><div class="unlock-reason ${tooLow?'locked':''}">${tooLow?'尚未符合：'+locks.join('；'):'已符合門檻'}</div><p class="booking-condition">${duplicate?'已有同案或進行中長案。':full?'待辦已滿。':fatigued?'疲勞太高，請先休息。':a.task?'目前忙碌，接受後加入待辦。':''}</p>${!j.productionDays&&G.isSetback(a,j)?'<p class="risk-note">疲勞失誤：報酬80%、名氣50%（已反映），自信 −'+G.confidenceLoss(a)+'</p>':''}<button data-job="${j.id}" ${musicOffer?'data-offer-id="'+musicOffer.id+'"':''} ${tooLow||duplicate||fatigued||full?'disabled':''}>${tooLow?'尚未符合門檻':duplicate?'已在行程中':fatigued?'請先休息':full?'待辦已滿':a.task?'加入待辦 ＋':j.productionDays?'接受長案並啟用管理':'安排行程'}</button><details class="job-rules" data-job-rules="${j.id}"><summary>工作說明與結算規則</summary><p>${j.desc}</p><p>公司知名度 +${G.REPUTATION_GAIN[j.id]}。${j.productionDays?'約 '+Math.floor(durationSeconds/60)+' 分 '+durationSeconds%60+' 秒；整案交付才結算報酬。接受時鎖定報酬與名氣，可暫停管理改親自製作。':'成長只增加'+G.SKILLS[j.skill]+'，基礎 +1–'+G.growthMax(j)+'；離線現金實收70%。'}</p>${shortFame?'<p>名氣按階段累積，本次入帳 +'+shortFame.gain+'；不足1點保存。</p>':''}<p>報酬已含藝人條件，未扣助理薪資；公司共用 ${money(G.SALARY_RATE)}/分鐘。手排待辦優先，實際結果依執行時狀態。</p></details></article>`;
     }).join('');
   }
   let eventKey = '';
@@ -229,7 +229,7 @@
       recruit:(id,done)=>{const r=mutate(()=>{const v=G.recruit(state,id);if(v.ok){selected=id;done(id);}return v;});if(r)toast(r.ok?'新夥伴加入了！點圖中入口去練習或錄音。':r.reason);},
       action:(id,action)=>{window.StarDynamic?.clearReactions();const r=mutate(()=>G.enqueue(state,id,action));if(r)toast(r.ok?'行程開始，留在房間看進度吧。':r.reason);},
       cancel:id=>{mutate(()=>G.cancel(state,id));toast('已取消目前行程；訓練費依原規則退回。');},
-      assistant:enabled=>{mutate(()=>G.setAssistant(state,enabled));populateSettings();},
+      assistant:enabled=>{mutate(()=>G.setAssistant(state,enabled,selected));populateSettings();},
       mode:(id,mode)=>{mutate(()=>G.setArtistStrategy(state,id,{mode}));populateSettings();}
     });
   }
@@ -237,6 +237,12 @@
   function targetArtist(){return state.artists.find(a=>a.id===assistantTarget);}
   function targetStrategy(){return G.effectiveStrategy(state,targetArtist());}
   function saveTargetStrategy(input){return G.setArtistStrategy(state,assistantTarget,input);}
+  function renderAssistantRoster(){
+    $('assistant-enabled-roster').innerHTML=state.artists.map(a=>`<label class="assistant-artist-toggle"><input type="checkbox" data-assistant-enabled="${a.id}" ${a.assistantEnabled?'checked':''}><span><b>${esc(a.name)}</b><small>${a.assistantEnabled?'代排啟用':'親自安排'}${a.project?.assisted?' · 長案管理另已啟用':''}</small></span></label>`).join('')||'<p>請先招募藝人。</p>';
+    $('assistant-toggle-status').textContent=G.serviceActive(state)?'計薪中 · '+G.serviceNames(state).join('、'):'全部服務關閉 · 不計薪';
+    $('assistant-toggle-status').dataset.enabled=String(G.serviceActive(state));
+    $('assistant-roster-note').textContent='只勾選要代排的藝人；新夥伴預設關閉。薪資全公司只計一份。';
+  }
   function renderStrategyTarget(){
     if(!targetArtist())assistantTarget=state.artists[0]?.id||null;
     const select=$('assistant-target'),options=state.artists.length?state.artists.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join(''):'<option value="">請先招募藝人</option>';
@@ -248,7 +254,7 @@
     for(const el of $('assistant-form').querySelectorAll('input,select,button'))el.disabled=!a;
     const next=a?G.ROTATION.next(state,a):null;$('training-rotation-status').textContent=a?(next?'下一堂：'+(next==='speech'?'聲音表現（口才）':G.SKILLS[next]+'訓練'):'所選課程皆已滿級，需訓練時改為休息。'):'請先招募藝人。';
   }
-  function renderSignature(){return state.artists.map(a => [a.task?.started, a.task?.action.kind, a.task?.production?.rest?.ends, a.project?.done,a.project?.assisted,a.project?.nextAt,a.fame, a.fatigue, ...Object.keys(G.SKILLS).map(k => a[k])].join(',')).join('|') + ':' + state.assistant.enabled+':'+state.works.length+':'+Object.values(state.fansByArtist).join(',')+':'+state.works.reduce((n,w)=>n+w.settled,0)+':'+state.events.map(e=>e.id).join(',')+':'+(state.publicity.pending?.id||'');}
+  function renderSignature(){return state.artists.map(a => [a.task?.started, a.task?.action.kind, a.task?.production?.rest?.ends, a.project?.done,a.project?.assisted,a.project?.nextAt,a.assistantEnabled,a.fame, a.fatigue, ...Object.keys(G.SKILLS).map(k => a[k])].join(',')).join('|') + ':' + state.assistant.enabled+':'+state.works.length+':'+Object.values(state.fansByArtist).join(',')+':'+state.works.reduce((n,w)=>n+w.settled,0)+':'+state.events.map(e=>e.id).join(',')+':'+(state.publicity.pending?.id||'');}
   function render() {
     G.CHAPTER.scan(state);
     window.StarDevelopmentUI.render(state);
@@ -258,11 +264,7 @@
     $('cash').textContent = money(state.cash); $('fame').innerHTML = fame.toLocaleString() + ' <em>名氣</em>';
     $('jobs').innerHTML = state.totalJobs.toLocaleString() + ' <em>場</em>'; $('earnings').textContent = '累積收入 ' + money(state.totalEarned);
     $('assistant-state').textContent = state.assistant.enabled ? '一般代排中' : G.serviceActive(state)?'長案管理中／計薪中':'親自帶班';
-    $('auto-enabled').checked = state.assistant.enabled;
-    $('auto-enabled').disabled = !state.artists.length;
-    $('assistant-toggle-status').textContent=state.assistant.enabled?'一般代排：開啟（已儲存） · 服務計薪中':G.serviceActive(state)?'一般代排：關閉（已儲存） · 長案管理仍計薪':'一般代排：關閉（已儲存） · 未啟用計薪服務';
-    $('assistant-toggle-status').dataset.enabled=String(state.assistant.enabled);
-    $('assistant-roster-note').textContent=state.artists.length?'代排依各人有效策略安排；薪資全公司只計一份，出道仍由你決定。':'公司尚無藝人，請先招募；目前不能啟用助理，也不計薪。';
+    renderAssistantRoster();
     renderStrategyTarget();
     const diagnostic=$('assistant-diagnostics'),openDiagnostics=new Set([...$('assistant-diagnostics').querySelectorAll('article:has(details[open])')].map(e=>e.dataset.id));
     diagnostic.innerHTML=state.artists.map(a=>{const d=window.StarAssistantStatus.inspect(G,state,a);return `<article data-id="${a.id}"><strong>${esc(a.name)} · 獨立策略</strong><p>${esc(d.current)}</p><p>${esc(d.plan)}</p>${d.queue||d.project?'<small>玩家待辦與既有長案製作優先；以下為目前能力、疲勞與報酬條件預覽。</small>':'<small>以下以目前狀態預覽，完成活動後會依新狀態重新判斷。</small>'}<details ${openDiagnostics.has(a.id)?'open':''}><summary>查看各通告資格與報酬</summary><ul>${d.offers.map(o=>`<li><b>${esc(o.name)}</b>：${esc(o.reasons.length?o.reasons.join('；'):'符合條件 · 預估 $'+o.pay)}</li>`).join('')}</ul></details></article>`;}).join('');
@@ -286,7 +288,7 @@
   }
   function populateSettings() {
     renderStrategyTarget();const c = targetStrategy();
-    $('auto-enabled').checked = c.enabled; $('priority').value = c.priority.join(','); StarMoney.fillInput($('min-pay'),c.minPay);
+    $('priority').value = c.priority.join(','); StarMoney.fillInput($('min-pay'),c.minPay);
     $('assistant-mode').value=c.mode;
     $('salary-rate').textContent = '$30 / 每 60 秒服務時間 · 初版薪資';
     if (![...$('max-fatigue').options].some(o => +o.value === c.maxFatigue)) $('max-fatigue').add(new Option(String(c.maxFatigue), String(c.maxFatigue)));
@@ -310,6 +312,7 @@
     const b = e.target.closest('button,[data-select]'); if (!b || b.disabled || stopped) return;
     if(b.dataset.idea){const r=mutate(()=>G.originalChoice(state,b.dataset.idea,b.dataset.ideaChoice));if(r)toast(r.ok?'企劃決定已記錄。':r.reason);return;}
     if(b.dataset.compose){const r=mutate(()=>G.enqueue(state,b.dataset.composer,{kind:'compose',ideaId:b.dataset.compose}));if(r)toast(r.ok?'創作準備開始。':r.reason);return;}
+    if(b.hasAttribute('data-first-story-open')){const id=b.dataset.firstStoryOpen;openPanel('artist','',b);const card=document.querySelector(`[data-first-story="${id}"]`);if(card){card.open=true;card.scrollIntoView({block:'center'});}return;}
     if(b.hasAttribute('data-music-story')){const id=b.dataset.musicStory||G.CHAPTER.pending(state)?.artist.id;if(id)window.StarMusicChapterUI.open(state,id,mutate);return;}
     if(b.dataset.firstStoryChoice){b.disabled=true;const r=mutate(()=>G.FIRST_STORY.resolve(state,b.dataset.firstStoryId,b.dataset.firstStoryChoice));if(r&&!r.ok)toast(r.reason);return;}
     if(b.hasAttribute('data-custom-create')){closeHeat();closeWorkspace();window.StarCustomUI.open({state:()=>state,confirm:d=>{const r=mutate(()=>{const result=G.createCustom(state,d);if(result.ok){selected=result.id;trainChoices[result.id]='sing';}return result;});if(r?.ok)toast('自創藝人已簽約加入，可開始安排培育。');return r;}});return;}
@@ -318,7 +321,7 @@
     if(b.dataset.originalNameSave||b.dataset.originalLaunch){const id=b.dataset.originalNameSave||b.dataset.originalLaunch,value=b.closest('article').querySelector('[data-original-title]')?.value;const r=mutate(()=>{const result=b.dataset.originalLaunch?G.launchOriginal(state,id,value):G.renameOriginal(state,id,value);if(result.ok)StarCareerUI.clearDraft(id);return result;});if(r)toast(r.ok?(b.dataset.originalLaunch?'原創單曲開始四天製作，歌名已鎖定。':'歌名已儲存。'):r.reason);return;}
     if(b.dataset.equipment){const r=mutate(()=>G.buyEquipment(state,b.dataset.equipment,Number(b.dataset.level)));if(r)toast(r.ok?'設備升級完成，已付款 $'+r.fee:r.reason);return;}
     if(b.hasAttribute('data-stop-services')){mutate(()=>G.stopServices(state));toast('全部助理服務已停止；長案進度保留，親自安排不計薪。');return;}
-    if(b.dataset.publicityId){const r=mutate(()=>G.resolvePublicity(state,b.dataset.publicityId,b.dataset.publicityChoice));if(r)toast(r.ok?r.text:r.reason);return;}
+    if(b.dataset.publicityId){const r=mutate(()=>G.resolvePublicity(state,b.dataset.publicityId,b.dataset.publicityChoice));if(r)toast(r.ok?r.text+' '+StarPublicityUI.result(r):r.reason);return;}
     if(b.dataset.projectManage){const result=mutate(()=>G.manageProject(state,b.dataset.projectManage,b.dataset.enable==='true'));if(result)toast(result.ok?(b.dataset.enable==='true'?'長案管理已恢復，與其他服務共用公司30/分鐘薪時計。':'這件長案管理已暫停；進度保留，其他服務是否計薪請看資金欄。'):result.reason);return;}
     if(b.dataset.projectWork){const result=mutate(()=>G.workProject(state,b.dataset.projectWork));if(result){if(result.ok)showManualWork(b.dataset.projectWork);else toast(result.reason);}return;}
     if(b.dataset.projectCancel){if(confirm('確認取消整件長案？已完成製作日不支付部分報酬；短案收入與能力保留。'))mutate(()=>G.cancelProject(state,b.dataset.projectCancel));return;}
@@ -370,7 +373,7 @@
   });
   $('close-workspace').addEventListener('click', closeWorkspace);
   $('workspace-dialog').addEventListener('cancel', e => { e.preventDefault(); closeWorkspace(); });
-  $('auto-enabled').addEventListener('change', () => { const enabled = $('auto-enabled').checked; mutate(() => G.setAssistant(state, enabled)); toast(enabled ? state.assistant.enabled ? `助理已上班，薪資 ${money(state.payroll.rate)}/分鐘，從公司資金支付` : '公司資金不足，無法啟用助理' : G.serviceActive(state)?'一般代排已關閉；長案管理仍計薪，可於藝人卡暫停':'助理服務已停止，不再計薪；現有短行程會完成'); });
+  $('assistant-enabled-roster').addEventListener('change',e=>{const id=e.target.dataset.assistantEnabled;if(!id)return;const a=state.artists.find(a=>a.id===id);if(!a)return;const enabled=e.target.checked;mutate(()=>G.setAssistant(state,enabled,id));toast(enabled?(a.assistantEnabled?a.name+'的代排已啟用；公司共用薪資 '+money(state.payroll.rate)+'/分鐘':'資金不足，未啟用'):a.name+'的代排已關閉；目前行程與手排待辦保留');});
   $('close-modal').addEventListener('click', () => { $('modal').close(); state.report = null; persist(); });
   $('help')?.addEventListener('click', () => modal('<div class="eyebrow">THE FIRST DAY AT STARLANE</div><h2>從練習生，走向第一個舞台。</h2><p>新公司從 0 人開始。先按「尋找／招募藝人」，從本次出現的兩位候選人選一位（依卡片確定報價簽約、公司初始 1 人名額，可擴至 3 人），再接「街角品牌企劃」或「巷口短篇劇」，5 秒後拿到收入與名氣。再選培育課程，補足出道與通告門檻。</p><ul><li>簽約金採初始九項能力平均與最高值計算，卡片顯示確定報價；已簽藝人保留實付金額，解約支付原實付的 50%。這是初版平衡設計。</li><li>九項能力為演技、歌藝、口才、儀態、動感、體能、才智、自信、名氣。前八項可訓練；名氣由工作累積。疲勞是獨立狀態。</li><li>每則通告所有門檻都必須達標。畫面列出目前值與差距；手動、待辦與助理共用同一檢查。</li><li>出道需名氣 30、儀態 34、自信 34，以及演技／歌藝／口才／動感任一 45。空閒時由你宣布，助理不代做。</li><li>單曲製作4日、單元劇7日、封面2日（初版）；1日約43秒，每5秒更新進度，整件完成才付一次報酬並啟動7日熱度。製作中可休息5秒自動續作；取消不保留進度。普通小通告維持5秒。訓練 5 秒，每次 $80–100、疲勞 +8–12。每次僅指定能力隨機 +1–3；才智提高抽到高點的機率，不額外疊加，才智課也適用。短通告名氣另以2／2.5／1.5為基礎，名氣0–149／150–399／400–699／700–899／900–998時依序按100%／40%／12%／4%／1%累積；不足整點存檔保留。普通通告僅主能力 +1–2；三項需出道的進階通告與主演／長約為重要通告，僅主能力 +1–5。名氣依各類通告的獨立規則計算。疲勞60起成長50%、80起25%，向下取整、成功至少1；訓練基礎失敗率3%，疲勞80以上改為50%（單次判定、不疊加）；失敗當次零成長，原有能力與小數進度保留，學費與疲勞照常、不額外罰款。能力上限999。成長與失敗在開始時固定，重載不重抽。休息 5 秒，疲勞 −45。</li><li>體能0–999 點降低 0–40% 工作疲勞（向上取整）；名氣0–999 點增加 0–20% 報酬；普通長作以15／18／12為基礎，名氣0–149／150–399／400–699／700–899／900–998依100%／50%／15%／5%／2%累積，接案時鎖定，完工才入帳，小數另存。重要邀約及原創企劃維持原規則；三種短案另用短案曲線。</li><li>大型通告完成後疲勞達 85 會失誤：報酬 80%、名氣 50%；自信越高，自信損失越少。自信不是全局成功率。</li><li>可排 3 項不同待辦。無資格、體力或資金不足時略過並記錄。取消不獲得成長或報酬，訓練費退回。</li><li>助理可選開啟：培養優先會依指定能力訓練，通告優先則依已儲存的類型、最低報酬及完成後疲勞上限代排；不符合時訓練或休息。手排優先，出道／主演／長約留你決定。</li><li>每 5 秒及操作後存檔。離線最多結算 4 小時；只有助理開啟才自動接新工作。請固定使用相同瀏覽器與位置，並定期匯出 JSON 備份。</li><li>旗下藝人合計名氣 600 為這版小目標；創作曲目／劇本系統尚未實作。</li></ul>'));
   function downloadSave(raw, prefix) { const blob = new Blob([raw], { type: 'application/json' }); const url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = prefix + '-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
@@ -428,7 +431,7 @@
     if (Date.now() - lastSave >= 5000) persist();
   }, 500);
   // Clicking controls re-renders the relevant area immediately; blur resumes live updates.
-  $('rival-cards').innerHTML=window.StarRivals.map(company=>`<article class="rival-card" data-rival="${company.id}"><div class="rival-identity"><div class="rival-identity-text"><div class="rival-banner"><h3>${esc(company.name)}</h3></div><p class="rival-principal">負責人：<strong>${esc(company.principal)}</strong></p><h4>旗下藝人</h4>${G.RIVALS.PEOPLE.filter(p=>p.company===company.id).map(p=>`<p class="rival-artist-name">${esc(p.name)}</p>`).join('')}</div><figure class="rival-principal-portrait"><img ${StarImages.attrs(company.portrait)} alt="${esc(company.principal)}的半身立繪"></figure></div></article>`).join('');
+  $('rival-cards').innerHTML=window.StarRivals.map(company=>`<article class="rival-card" data-rival="${company.id}"><div class="rival-identity"><div class="rival-identity-text"><div class="rival-banner"><h3>${esc(company.name)}</h3></div><p class="rival-principal">負責人：<strong>${esc(company.principal)}</strong></p><h4>旗下藝人</h4>${G.RIVALS.PEOPLE.filter(p=>p.company===company.id).map(p=>`<p class="rival-artist-name">${esc(p.name)}</p>`).join('')}</div><figure class="rival-principal-portrait art-cutline-frame"><img data-art-id="principal-${company.id}" ${StarImages.attrs(company.portrait)} alt="${esc(company.principal)}的半身立繪"></figure></div></article>`).join('');
   $('train-skills').innerHTML=Object.entries(G.SKILLS).map(([k,label])=>`<label><input type="checkbox" data-train-skill value="${k}">${k==='speech'?'聲音表現（口才）':label+'訓練'}</label>`).join('');
   try { $('equipment-backup').hidden=!localStorage.getItem(EQUIPMENT_BACKUP);$('career-backup').hidden=!localStorage.getItem(CAREER_BACKUP);$('five-backup').hidden=!localStorage.getItem(FIVE_BACKUP);$('salary-backup').hidden=!localStorage.getItem(SALARY_BACKUP);$('daily-backup').hidden=!localStorage.getItem(DAILY_BACKUP);$('speed-backup').hidden=!localStorage.getItem(SPEED_BACKUP);$('production-backup').hidden=!localStorage.getItem(PRODUCTION_BACKUP);$('archive-backup').hidden=!localStorage.getItem(ARCHIVE_BACKUP); $('backup').hidden = !localStorage.getItem(BACKUP); } catch { /* storage may be unavailable */ }
   populateSettings(); render(); persist();

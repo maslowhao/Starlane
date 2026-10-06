@@ -19,7 +19,7 @@
  const tradeoffs=document.getElementById('work-tradeoffs'),tradeoffsHome=document.createComment('business-rules-original');tradeoffs.before(tradeoffsHome);
  const rules=document.createElement('details');rules.className='mobile-business-rules';rules.innerHTML='<summary>短案 5 秒／長作品分日製作 · 規則</summary>';
  function arrangeRules(){
-  if(small.matches&&document.getElementById('company-business-dialog').open){if(tradeoffs.parentElement!==rules){rules.open=false;tradeoffsHome.after(rules);rules.append(tradeoffs);}}
+  if(document.getElementById('company-business-dialog').open){if(tradeoffs.parentElement!==rules){rules.open=false;tradeoffsHome.after(rules);rules.append(tradeoffs);}}
   else{if(tradeoffs.previousSibling!==tradeoffsHome)tradeoffsHome.after(tradeoffs);rules.remove();}
  }
  new MutationObserver(arrangeRules).observe(document.getElementById('company-business-dialog'),{attributes:true,attributeFilter:['open']});

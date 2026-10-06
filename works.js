@@ -35,7 +35,7 @@
    if(!integer(w.id)||!w.id||w.id>s.workSerial||ids.has(w.id)||!people.some(p=>p.id===w.artistId)||typeof w.artistName!=='string'||typeof w.title!=='string'||!allowed||!finite(w.releasedAt)||!finite(w.stageMs)||!w.stageMs||w.stageMs>86400000||(!finite(w.ageMs)||w.ageMs>w.stageMs*7)||!integer(w.settled,7)||w.settled!==Math.floor((w.ageMs+.001)/w.stageMs)||!integer(w.quality,100)||![.85,1].includes(w.fit)||!Number.isFinite(w.related)||w.related<0||w.related>999||!integer(w.launchFame,999)||!Number.isFinite(w.conversion)||w.conversion<0||w.conversion>1||!CURVES.some(c=>c.name===w.curve)||!Array.isArray(w.stages)||w.stages.length!==7||!w.stages.every(x=>integer(x.views,10000000)&&integer(x.fans,x.views)))fail();
    ids.add(w.id);const settled=w.stages.slice(0,w.settled);if(w.views!==settled.reduce((n,x)=>n+x.views,0)||w.fans!==settled.reduce((n,x)=>n+x.fans,0))fail();fans[w.artistId]=(fans[w.artistId]||0)+w.fans;
   }
-  for(const h of s.publicity?.history||[]){if(h.fanDelta){if(!Number.isInteger(h.fanDelta)||h.fanDelta>0||h.fanDelta < -30)fail();fans[h.artistId]=(fans[h.artistId]||0)+h.fanDelta;}}
+  for(const h of s.publicity?.history||[]){if(h.fanDelta){if(!Number.isInteger(h.fanDelta)||h.fanDelta>80||h.fanDelta < -30)fail();fans[h.artistId]=(fans[h.artistId]||0)+h.fanDelta;}}
   for(const id of new Set([...Object.keys(fans),...Object.keys(s.fansByArtist)]))if(!people.some(p=>p.id===id)||(s.fansByArtist[id]!==undefined&&!integer(s.fansByArtist[id]))||(s.fansByArtist[id]||0)!==(fans[id]||0))fail();
  }
  return {REVENUE,CONFIG,CURVES,JOB_KINDS,init,profile,create,advance,validate,encode,decode};

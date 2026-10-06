@@ -3,12 +3,12 @@
  const assets={
   "secretary": {
     "kind": "character",
-    "desktop": "assets/original-v2/desktop/characters/secretary.webp?v=secretary-v3",
-    "mobile": "assets/original-v2/mobile/characters/secretary.webp?v=secretary-v3",
+    "desktop": "assets/original-v2/desktop/characters/secretary.webp?v=art-v4",
+    "mobile": "assets/original-v2/mobile/characters/secretary.webp?v=art-v4",
     "bounds": [
-      0.1796875,
+      0.1708984375,
       0.07161458333333333,
-      0.8203125,
+      0.828125,
       0.96875
     ],
     "cutline": 0.96875
@@ -95,6 +95,50 @@
     "kind": "background",
     "desktop": "assets/original-v2/desktop/backgrounds/yuanying-film.webp",
     "mobile": "assets/original-v2/mobile/backgrounds/yuanying-film.webp"
+  },
+  "principal-2": {
+    "kind": "character",
+    "desktop": "assets/original-v2/desktop/characters/principal-2.webp?v=art-v4",
+    "mobile": "assets/original-v2/mobile/characters/principal-2.webp?v=art-v4",
+    "bounds": [
+      0.099609375,
+      0.26953125,
+      0.900390625,
+      0.96875
+    ],
+    "cutline": 0.96875
+  },
+  "principal-3": {
+    "kind": "character",
+    "desktop": "assets/original-v2/desktop/characters/principal-3.webp?v=art-v4",
+    "mobile": "assets/original-v2/mobile/characters/principal-3.webp?v=art-v4",
+    "bounds": [
+      0.1337890625,
+      0.072265625,
+      0.865234375,
+      0.96875
+    ],
+    "cutline": 0.96875
+  },
+  "work-audio": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/work-audio.webp?v=art-v4",
+    "mobile": "assets/original-v2/mobile/backgrounds/work-audio.webp?v=art-v4"
+  },
+  "work-tv": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/work-tv.webp?v=art-v4",
+    "mobile": "assets/original-v2/mobile/backgrounds/work-tv.webp?v=art-v4"
+  },
+  "work-ad": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/work-ad.webp?v=art-v4",
+    "mobile": "assets/original-v2/mobile/backgrounds/work-ad.webp?v=art-v4"
+  },
+  "work-film": {
+    "kind": "background",
+    "desktop": "assets/original-v2/desktop/backgrounds/work-film.webp?v=art-v4",
+    "mobile": "assets/original-v2/mobile/backgrounds/work-film.webp?v=art-v4"
   }
 };
  const aliases={

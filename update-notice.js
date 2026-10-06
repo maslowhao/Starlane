@@ -1,7 +1,7 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(!root.StarUpdateNotice)root.StarUpdateNotice=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
   // Public release version is independent of the engine's save schema number.
-  const RELEASE={version:'0.16.1',items:['公司煥新：小秘書、四位負責人與七個場景換上原創美術','介面更清楚：Q版人物與圖示、場景下方行程、跟隨藝人的問候，以及手機能力名稱','招募保留六位原創與自創藝人；含已移除角色的舊檔，請先匯出備份再重新開局']};
+  const RELEASE={version:'0.17.0',items:['每位藝人可獨立啟用助理；既有策略、待辦與舊檔啟用狀態保留','故事邀請改由藝人開口，外出也能在藝人手帳續讀；接案與自創配點更清楚','秘書、兩家競爭公司與四類工作場景換新；公關選項顯示金錢、粉絲、名氣獎懲及風險']};
   const KEY='starlane-seen-release';
   function create({existing,enabled=true,storage,session,release=RELEASE}){
     let pending=false,seen=null,writable=false;

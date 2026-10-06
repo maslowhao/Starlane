@@ -1,5 +1,5 @@
 (()=>{const G=StarGame;
-function progress(a){return `<p class="growth-note">成長會隨能力放慢：0–299 原速、300–599 為1/4、600–799 為1/8、800–998 為1/16；每次仍5秒，上限999。不足1點會保存累積，並非失敗。<br>${Object.entries(G.SKILLS).map(([k,n])=>`${n} 下點 ${Math.floor((a.growthProgress?.[k]||0)*100)}%`).join(' · ')}</p>`;}
+function progress(a){return `<p class="growth-note">${Object.entries(G.SKILLS).map(([k,n])=>`${n} 下點 ${Math.floor((a.growthProgress?.[k]||0)*100)}%`).join(' · ')}</p>`;}
 
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const amount=(kind,level)=>kind==='training'?`訓練累積 +${Math.round(G.DEVELOPMENT.effect(kind,level)*100)}%`:`作品品質 +${G.DEVELOPMENT.effect(kind,level)}`;
